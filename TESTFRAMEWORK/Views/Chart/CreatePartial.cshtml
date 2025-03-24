@@ -1,0 +1,33 @@
+﻿@model TESTFRAMEWORK.Models.DepartmentViewModel
+
+@using (Html.BeginForm("CreateDepartment", "Chart", FormMethod.Post, new { id = "createForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-header">
+        <h5 class="modal-title">เพิ่มฝ่ายใหม่</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DepartmentName, "ชื่อฝ่าย")
+            @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.WorkGroupId, "กลุ่มงาน")
+            @Html.DropDownListFor(m => m.WorkGroupId, ViewBag.WorkGroupList as SelectList, "-- เลือกกลุ่มงาน --", new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.StatusId, "สถานะ")
+            @Html.DropDownListFor(m => m.StatusId, ViewBag.StatusList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="submit" class="btn btn-primary">บันทึก</button>
+    </div>
+}

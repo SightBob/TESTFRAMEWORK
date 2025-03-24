@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6c3a514a75c940999a0d1dbfbba429cf" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="Research_DBModel.department" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.division" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.ResearchAssistant_tbl" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.Researcher_tbl" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.ResearchFile_tbl" Width="1.5" PointX="15" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.ResearchProject_tbl" Width="1.5" PointX="12.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.Status_tbl" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.StatusProject_tbl" Width="1.5" PointX="10.5" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.sysdiagram" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.TypeEC_tbl" Width="1.5" PointX="10.5" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.TypeResearch" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.User" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Research_DBModel.work_groups" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Research_DBModel.FK__departmen__Statu__3A81B327" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__departmen__work___398D8EEE" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__divisions__depar__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__Researche__depar__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__divisions__Statu__3C69FB99" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__Researche__divis__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchA__Proje__3D5E1FD2" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchA__Resea__3E52440B" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__Researche__TypeR__45F365D3" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__Researche__work___4316F928" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchP__HeadR__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchF__Proje__4222D4EF" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchP__Statu__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="Research_DBModel.FK__ResearchP__TypeE__3F466844" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

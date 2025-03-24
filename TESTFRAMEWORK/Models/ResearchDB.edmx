@@ -1,0 +1,968 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Research_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="departments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="work_group_id" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="divisions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="department_id" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchAssistant_tbl">
+          <Key>
+            <PropertyRef Name="ResearchAssistantID" />
+          </Key>
+          <Property Name="ResearchAssistantID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectID" Type="int" />
+          <Property Name="ResearcherNumber" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Researcher_tbl">
+          <Key>
+            <PropertyRef Name="ResearcherNumber" />
+          </Key>
+          <Property Name="ResearcherNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="work_group_id" Type="int" />
+          <Property Name="department_id" Type="int" />
+          <Property Name="division_id" Type="int" />
+          <Property Name="TypeResearch" Type="int" />
+          <Property Name="title" Type="nvarchar" MaxLength="15" />
+          <Property Name="OtherInfo" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="ResearchFile_tbl">
+          <Key>
+            <PropertyRef Name="FileID" />
+          </Key>
+          <Property Name="FileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectID" Type="int" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FileType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileData" Type="varbinary(max)" Nullable="false" />
+          <Property Name="UploadDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ResearchProject_tbl">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FiscalYear" Type="date" />
+          <Property Name="ProjectCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProjectName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TypeECID" Type="int" Nullable="false" />
+          <Property Name="HeadResearcherId" Type="varchar" MaxLength="20" />
+          <Property Name="ECApprovalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ECApprovalDate" Type="date" />
+          <Property Name="ECExpirationDate" Type="date" />
+          <Property Name="ResearchApprovalDate" Type="date" />
+          <Property Name="ResearchExpirationDate" Type="date" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="StatusProjectID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status_tbl">
+          <Key>
+            <PropertyRef Name="StatusID" />
+          </Key>
+          <Property Name="StatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatusProject_tbl">
+          <Key>
+            <PropertyRef Name="StatusProjectID" />
+          </Key>
+          <Property Name="StatusProjectID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeStatus" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TypeEC_tbl">
+          <Key>
+            <PropertyRef Name="TypeECID" />
+          </Key>
+          <Property Name="TypeECID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ECTypeName" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TypeResearch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LoginId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="char" MaxLength="1" />
+          <Property Name="IsLocked" Type="char" MaxLength="1" />
+          <Property Name="FirstLogin" Type="char" MaxLength="1" />
+          <Property Name="DeleteFlag" Type="char" MaxLength="1" />
+          <Property Name="CreatedAt" Type="datetime" />
+        </EntityType>
+        <EntityType Name="work_groups">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__departmen__Statu__3A81B327">
+          <End Role="Status_tbl" Type="Self.Status_tbl" Multiplicity="1" />
+          <End Role="departments" Type="Self.departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status_tbl">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="departments">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__departmen__work___398D8EEE">
+          <End Role="work_groups" Type="Self.work_groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="departments" Type="Self.departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="work_groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="departments">
+              <PropertyRef Name="work_group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__divisions__depar__3B75D760">
+          <End Role="departments" Type="Self.departments" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="divisions" Type="Self.divisions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="divisions">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__divisions__Statu__3C69FB99">
+          <End Role="Status_tbl" Type="Self.Status_tbl" Multiplicity="1" />
+          <End Role="divisions" Type="Self.divisions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status_tbl">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="divisions">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchA__Proje__3D5E1FD2">
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchAssistant_tbl" Type="Self.ResearchAssistant_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchAssistant_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchA__Resea__3E52440B">
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchAssistant_tbl" Type="Self.ResearchAssistant_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Researcher_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Principal>
+            <Dependent Role="ResearchAssistant_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__depar__440B1D61">
+          <End Role="departments" Type="Self.departments" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__divis__44FF419A">
+          <End Role="divisions" Type="Self.divisions" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="divisions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="division_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__TypeR__45F365D3">
+          <End Role="TypeResearch" Type="Self.TypeResearch" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeResearch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="TypeResearch" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__work___4316F928">
+          <End Role="work_groups" Type="Self.work_groups" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="work_groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="work_group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchF__Proje__4222D4EF">
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchFile_tbl" Type="Self.ResearchFile_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchFile_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__HeadR__412EB0B6">
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="0..1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Researcher_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="HeadResearcherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__Statu__403A8C7D">
+          <End Role="StatusProject_tbl" Type="Self.StatusProject_tbl" Multiplicity="1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusProject_tbl">
+              <PropertyRef Name="StatusProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="StatusProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__TypeE__3F466844">
+          <End Role="TypeEC_tbl" Type="Self.TypeEC_tbl" Multiplicity="1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeEC_tbl">
+              <PropertyRef Name="TypeECID" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="TypeECID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Research_DBModelStoreContainer">
+          <EntitySet Name="departments" EntityType="Self.departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="divisions" EntityType="Self.divisions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchAssistant_tbl" EntityType="Self.ResearchAssistant_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Researcher_tbl" EntityType="Self.Researcher_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchFile_tbl" EntityType="Self.ResearchFile_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProject_tbl" EntityType="Self.ResearchProject_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status_tbl" EntityType="Self.Status_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusProject_tbl" EntityType="Self.StatusProject_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TypeEC_tbl" EntityType="Self.TypeEC_tbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TypeResearch" EntityType="Self.TypeResearch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="work_groups" EntityType="Self.work_groups" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__departmen__Statu__3A81B327" Association="Self.FK__departmen__Statu__3A81B327">
+            <End Role="Status_tbl" EntitySet="Status_tbl" />
+            <End Role="departments" EntitySet="departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__departmen__work___398D8EEE" Association="Self.FK__departmen__work___398D8EEE">
+            <End Role="work_groups" EntitySet="work_groups" />
+            <End Role="departments" EntitySet="departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__divisions__depar__3B75D760" Association="Self.FK__divisions__depar__3B75D760">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="divisions" EntitySet="divisions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__divisions__Statu__3C69FB99" Association="Self.FK__divisions__Statu__3C69FB99">
+            <End Role="Status_tbl" EntitySet="Status_tbl" />
+            <End Role="divisions" EntitySet="divisions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchA__Proje__3D5E1FD2" Association="Self.FK__ResearchA__Proje__3D5E1FD2">
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+            <End Role="ResearchAssistant_tbl" EntitySet="ResearchAssistant_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchA__Resea__3E52440B" Association="Self.FK__ResearchA__Resea__3E52440B">
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+            <End Role="ResearchAssistant_tbl" EntitySet="ResearchAssistant_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__depar__440B1D61" Association="Self.FK__Researche__depar__440B1D61">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__divis__44FF419A" Association="Self.FK__Researche__divis__44FF419A">
+            <End Role="divisions" EntitySet="divisions" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__TypeR__45F365D3" Association="Self.FK__Researche__TypeR__45F365D3">
+            <End Role="TypeResearch" EntitySet="TypeResearch" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__work___4316F928" Association="Self.FK__Researche__work___4316F928">
+            <End Role="work_groups" EntitySet="work_groups" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchF__Proje__4222D4EF" Association="Self.FK__ResearchF__Proje__4222D4EF">
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+            <End Role="ResearchFile_tbl" EntitySet="ResearchFile_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__HeadR__412EB0B6" Association="Self.FK__ResearchP__HeadR__412EB0B6">
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__Statu__403A8C7D" Association="Self.FK__ResearchP__Statu__403A8C7D">
+            <End Role="StatusProject_tbl" EntitySet="StatusProject_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__TypeE__3F466844" Association="Self.FK__ResearchP__TypeE__3F466844">
+            <End Role="TypeEC_tbl" EntitySet="TypeEC_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Research_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="work_group_id" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Status_tbl" Relationship="Self.FK__departmen__Statu__3A81B327" FromRole="departments" ToRole="Status_tbl" />
+          <NavigationProperty Name="work_groups" Relationship="Self.FK__departmen__work___398D8EEE" FromRole="departments" ToRole="work_groups" />
+          <NavigationProperty Name="divisions" Relationship="Self.FK__divisions__depar__3B75D760" FromRole="departments" ToRole="divisions" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__Researche__depar__440B1D61" FromRole="departments" ToRole="Researcher_tbl" />
+        </EntityType>
+        <EntityType Name="division">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="department_id" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="department" Relationship="Self.FK__divisions__depar__3B75D760" FromRole="divisions" ToRole="departments" />
+          <NavigationProperty Name="Status_tbl" Relationship="Self.FK__divisions__Statu__3C69FB99" FromRole="divisions" ToRole="Status_tbl" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__Researche__divis__44FF419A" FromRole="divisions" ToRole="Researcher_tbl" />
+        </EntityType>
+        <EntityType Name="ResearchAssistant_tbl">
+          <Key>
+            <PropertyRef Name="ResearchAssistantID" />
+          </Key>
+          <Property Name="ResearchAssistantID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectID" Type="Int32" />
+          <Property Name="ResearcherNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ResearchProject_tbl" Relationship="Self.FK__ResearchA__Proje__3D5E1FD2" FromRole="ResearchAssistant_tbl" ToRole="ResearchProject_tbl" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__ResearchA__Resea__3E52440B" FromRole="ResearchAssistant_tbl" ToRole="Researcher_tbl" />
+        </EntityType>
+        <EntityType Name="Researcher_tbl">
+          <Key>
+            <PropertyRef Name="ResearcherNumber" />
+          </Key>
+          <Property Name="ResearcherNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="work_group_id" Type="Int32" />
+          <Property Name="department_id" Type="Int32" />
+          <Property Name="division_id" Type="Int32" />
+          <Property Name="TypeResearch" Type="Int32" />
+          <Property Name="title" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="OtherInfo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="department" Relationship="Self.FK__Researche__depar__440B1D61" FromRole="Researcher_tbl" ToRole="departments" />
+          <NavigationProperty Name="division" Relationship="Self.FK__Researche__divis__44FF419A" FromRole="Researcher_tbl" ToRole="divisions" />
+          <NavigationProperty Name="ResearchAssistant_tbl" Relationship="Self.FK__ResearchA__Resea__3E52440B" FromRole="Researcher_tbl" ToRole="ResearchAssistant_tbl" />
+          <NavigationProperty Name="TypeResearch1" Relationship="Self.FK__Researche__TypeR__45F365D3" FromRole="Researcher_tbl" ToRole="TypeResearch" />
+          <NavigationProperty Name="work_groups" Relationship="Self.FK__Researche__work___4316F928" FromRole="Researcher_tbl" ToRole="work_groups" />
+          <NavigationProperty Name="ResearchProject_tbl" Relationship="Self.FK__ResearchP__HeadR__412EB0B6" FromRole="Researcher_tbl" ToRole="ResearchProject_tbl" />
+        </EntityType>
+        <EntityType Name="ResearchFile_tbl">
+          <Key>
+            <PropertyRef Name="FileID" />
+          </Key>
+          <Property Name="FileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectID" Type="Int32" />
+          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FileType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FileData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="UploadDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ResearchProject_tbl" Relationship="Self.FK__ResearchF__Proje__4222D4EF" FromRole="ResearchFile_tbl" ToRole="ResearchProject_tbl" />
+        </EntityType>
+        <EntityType Name="ResearchProject_tbl">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FiscalYear" Type="DateTime" Precision="0" />
+          <Property Name="ProjectCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProjectName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TypeECID" Type="Int32" Nullable="false" />
+          <Property Name="HeadResearcherId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ECApprovalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ECApprovalDate" Type="DateTime" Precision="0" />
+          <Property Name="ECExpirationDate" Type="DateTime" Precision="0" />
+          <Property Name="ResearchApprovalDate" Type="DateTime" Precision="0" />
+          <Property Name="ResearchExpirationDate" Type="DateTime" Precision="0" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusProjectID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ResearchAssistant_tbl" Relationship="Self.FK__ResearchA__Proje__3D5E1FD2" FromRole="ResearchProject_tbl" ToRole="ResearchAssistant_tbl" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__ResearchP__HeadR__412EB0B6" FromRole="ResearchProject_tbl" ToRole="Researcher_tbl" />
+          <NavigationProperty Name="ResearchFile_tbl" Relationship="Self.FK__ResearchF__Proje__4222D4EF" FromRole="ResearchProject_tbl" ToRole="ResearchFile_tbl" />
+          <NavigationProperty Name="StatusProject_tbl" Relationship="Self.FK__ResearchP__Statu__403A8C7D" FromRole="ResearchProject_tbl" ToRole="StatusProject_tbl" />
+          <NavigationProperty Name="TypeEC_tbl" Relationship="Self.FK__ResearchP__TypeE__3F466844" FromRole="ResearchProject_tbl" ToRole="TypeEC_tbl" />
+        </EntityType>
+        <EntityType Name="Status_tbl">
+          <Key>
+            <PropertyRef Name="StatusID" />
+          </Key>
+          <Property Name="StatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="departments" Relationship="Self.FK__departmen__Statu__3A81B327" FromRole="Status_tbl" ToRole="departments" />
+          <NavigationProperty Name="divisions" Relationship="Self.FK__divisions__Statu__3C69FB99" FromRole="Status_tbl" ToRole="divisions" />
+        </EntityType>
+        <EntityType Name="StatusProject_tbl">
+          <Key>
+            <PropertyRef Name="StatusProjectID" />
+          </Key>
+          <Property Name="StatusProjectID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ResearchProject_tbl" Relationship="Self.FK__ResearchP__Statu__403A8C7D" FromRole="StatusProject_tbl" ToRole="ResearchProject_tbl" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TypeEC_tbl">
+          <Key>
+            <PropertyRef Name="TypeECID" />
+          </Key>
+          <Property Name="TypeECID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ECTypeName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ResearchProject_tbl" Relationship="Self.FK__ResearchP__TypeE__3F466844" FromRole="TypeEC_tbl" ToRole="ResearchProject_tbl" />
+        </EntityType>
+        <EntityType Name="TypeResearch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__Researche__TypeR__45F365D3" FromRole="TypeResearch" ToRole="Researcher_tbl" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LoginId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="IsLocked" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="FirstLogin" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DeleteFlag" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="work_groups">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="departments" Relationship="Self.FK__departmen__work___398D8EEE" FromRole="work_groups" ToRole="departments" />
+          <NavigationProperty Name="Researcher_tbl" Relationship="Self.FK__Researche__work___4316F928" FromRole="work_groups" ToRole="Researcher_tbl" />
+        </EntityType>
+        <Association Name="FK__departmen__Statu__3A81B327">
+          <End Role="Status_tbl" Type="Self.Status_tbl" Multiplicity="1" />
+          <End Role="departments" Type="Self.department" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status_tbl">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="departments">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__departmen__work___398D8EEE">
+          <End Role="work_groups" Type="Self.work_groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="departments" Type="Self.department" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="work_groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="departments">
+              <PropertyRef Name="work_group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__divisions__depar__3B75D760">
+          <End Role="departments" Type="Self.department" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="divisions" Type="Self.division" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="divisions">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__depar__440B1D61">
+          <End Role="departments" Type="Self.department" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="department_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__divisions__Statu__3C69FB99">
+          <End Role="Status_tbl" Type="Self.Status_tbl" Multiplicity="1" />
+          <End Role="divisions" Type="Self.division" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status_tbl">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="divisions">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__divis__44FF419A">
+          <End Role="divisions" Type="Self.division" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="divisions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="division_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchA__Proje__3D5E1FD2">
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchAssistant_tbl" Type="Self.ResearchAssistant_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchAssistant_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchA__Resea__3E52440B">
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchAssistant_tbl" Type="Self.ResearchAssistant_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Researcher_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Principal>
+            <Dependent Role="ResearchAssistant_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__TypeR__45F365D3">
+          <End Role="TypeResearch" Type="Self.TypeResearch" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeResearch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="TypeResearch" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Researche__work___4316F928">
+          <End Role="work_groups" Type="Self.work_groups" Multiplicity="0..1" />
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="work_groups">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Researcher_tbl">
+              <PropertyRef Name="work_group_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__HeadR__412EB0B6">
+          <End Role="Researcher_tbl" Type="Self.Researcher_tbl" Multiplicity="0..1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Researcher_tbl">
+              <PropertyRef Name="ResearcherNumber" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="HeadResearcherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchF__Proje__4222D4EF">
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ResearchFile_tbl" Type="Self.ResearchFile_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchFile_tbl">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__Statu__403A8C7D">
+          <End Role="StatusProject_tbl" Type="Self.StatusProject_tbl" Multiplicity="1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusProject_tbl">
+              <PropertyRef Name="StatusProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="StatusProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ResearchP__TypeE__3F466844">
+          <End Role="TypeEC_tbl" Type="Self.TypeEC_tbl" Multiplicity="1" />
+          <End Role="ResearchProject_tbl" Type="Self.ResearchProject_tbl" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TypeEC_tbl">
+              <PropertyRef Name="TypeECID" />
+            </Principal>
+            <Dependent Role="ResearchProject_tbl">
+              <PropertyRef Name="TypeECID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Research_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="departments" EntityType="Self.department" />
+          <EntitySet Name="divisions" EntityType="Self.division" />
+          <EntitySet Name="ResearchAssistant_tbl" EntityType="Self.ResearchAssistant_tbl" />
+          <EntitySet Name="Researcher_tbl" EntityType="Self.Researcher_tbl" />
+          <EntitySet Name="ResearchFile_tbl" EntityType="Self.ResearchFile_tbl" />
+          <EntitySet Name="ResearchProject_tbl" EntityType="Self.ResearchProject_tbl" />
+          <EntitySet Name="Status_tbl" EntityType="Self.Status_tbl" />
+          <EntitySet Name="StatusProject_tbl" EntityType="Self.StatusProject_tbl" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="TypeEC_tbl" EntityType="Self.TypeEC_tbl" />
+          <EntitySet Name="TypeResearches" EntityType="Self.TypeResearch" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="work_groups" EntityType="Self.work_groups" />
+          <AssociationSet Name="FK__departmen__Statu__3A81B327" Association="Self.FK__departmen__Statu__3A81B327">
+            <End Role="Status_tbl" EntitySet="Status_tbl" />
+            <End Role="departments" EntitySet="departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__departmen__work___398D8EEE" Association="Self.FK__departmen__work___398D8EEE">
+            <End Role="work_groups" EntitySet="work_groups" />
+            <End Role="departments" EntitySet="departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__divisions__depar__3B75D760" Association="Self.FK__divisions__depar__3B75D760">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="divisions" EntitySet="divisions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__depar__440B1D61" Association="Self.FK__Researche__depar__440B1D61">
+            <End Role="departments" EntitySet="departments" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__divisions__Statu__3C69FB99" Association="Self.FK__divisions__Statu__3C69FB99">
+            <End Role="Status_tbl" EntitySet="Status_tbl" />
+            <End Role="divisions" EntitySet="divisions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__divis__44FF419A" Association="Self.FK__Researche__divis__44FF419A">
+            <End Role="divisions" EntitySet="divisions" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchA__Proje__3D5E1FD2" Association="Self.FK__ResearchA__Proje__3D5E1FD2">
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+            <End Role="ResearchAssistant_tbl" EntitySet="ResearchAssistant_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchA__Resea__3E52440B" Association="Self.FK__ResearchA__Resea__3E52440B">
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+            <End Role="ResearchAssistant_tbl" EntitySet="ResearchAssistant_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__TypeR__45F365D3" Association="Self.FK__Researche__TypeR__45F365D3">
+            <End Role="TypeResearch" EntitySet="TypeResearches" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Researche__work___4316F928" Association="Self.FK__Researche__work___4316F928">
+            <End Role="work_groups" EntitySet="work_groups" />
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__HeadR__412EB0B6" Association="Self.FK__ResearchP__HeadR__412EB0B6">
+            <End Role="Researcher_tbl" EntitySet="Researcher_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchF__Proje__4222D4EF" Association="Self.FK__ResearchF__Proje__4222D4EF">
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+            <End Role="ResearchFile_tbl" EntitySet="ResearchFile_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__Statu__403A8C7D" Association="Self.FK__ResearchP__Statu__403A8C7D">
+            <End Role="StatusProject_tbl" EntitySet="StatusProject_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ResearchP__TypeE__3F466844" Association="Self.FK__ResearchP__TypeE__3F466844">
+            <End Role="TypeEC_tbl" EntitySet="TypeEC_tbl" />
+            <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Research_DBModelStoreContainer" CdmEntityContainer="Research_DBEntities">
+          <EntitySetMapping Name="departments">
+            <EntityTypeMapping TypeName="Research_DBModel.department">
+              <MappingFragment StoreEntitySet="departments">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="work_group_id" ColumnName="work_group_id" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="divisions">
+            <EntityTypeMapping TypeName="Research_DBModel.division">
+              <MappingFragment StoreEntitySet="divisions">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchAssistant_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.ResearchAssistant_tbl">
+              <MappingFragment StoreEntitySet="ResearchAssistant_tbl">
+                <ScalarProperty Name="ResearchAssistantID" ColumnName="ResearchAssistantID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="ResearcherNumber" ColumnName="ResearcherNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Researcher_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.Researcher_tbl">
+              <MappingFragment StoreEntitySet="Researcher_tbl">
+                <ScalarProperty Name="ResearcherNumber" ColumnName="ResearcherNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="work_group_id" ColumnName="work_group_id" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="division_id" ColumnName="division_id" />
+                <ScalarProperty Name="TypeResearch" ColumnName="TypeResearch" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="OtherInfo" ColumnName="OtherInfo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchFile_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.ResearchFile_tbl">
+              <MappingFragment StoreEntitySet="ResearchFile_tbl">
+                <ScalarProperty Name="FileID" ColumnName="FileID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="FileType" ColumnName="FileType" />
+                <ScalarProperty Name="FileData" ColumnName="FileData" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProject_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.ResearchProject_tbl">
+              <MappingFragment StoreEntitySet="ResearchProject_tbl">
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="FiscalYear" ColumnName="FiscalYear" />
+                <ScalarProperty Name="ProjectCode" ColumnName="ProjectCode" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="TypeECID" ColumnName="TypeECID" />
+                <ScalarProperty Name="HeadResearcherId" ColumnName="HeadResearcherId" />
+                <ScalarProperty Name="ECApprovalCode" ColumnName="ECApprovalCode" />
+                <ScalarProperty Name="ECApprovalDate" ColumnName="ECApprovalDate" />
+                <ScalarProperty Name="ECExpirationDate" ColumnName="ECExpirationDate" />
+                <ScalarProperty Name="ResearchApprovalDate" ColumnName="ResearchApprovalDate" />
+                <ScalarProperty Name="ResearchExpirationDate" ColumnName="ResearchExpirationDate" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="StatusProjectID" ColumnName="StatusProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.Status_tbl">
+              <MappingFragment StoreEntitySet="Status_tbl">
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusProject_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.StatusProject_tbl">
+              <MappingFragment StoreEntitySet="StatusProject_tbl">
+                <ScalarProperty Name="StatusProjectID" ColumnName="StatusProjectID" />
+                <ScalarProperty Name="TypeStatus" ColumnName="TypeStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Research_DBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TypeEC_tbl">
+            <EntityTypeMapping TypeName="Research_DBModel.TypeEC_tbl">
+              <MappingFragment StoreEntitySet="TypeEC_tbl">
+                <ScalarProperty Name="TypeECID" ColumnName="TypeECID" />
+                <ScalarProperty Name="ECTypeName" ColumnName="ECTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TypeResearches">
+            <EntityTypeMapping TypeName="Research_DBModel.TypeResearch">
+              <MappingFragment StoreEntitySet="TypeResearch">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="type_name" ColumnName="type_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Research_DBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="FirstLogin" ColumnName="FirstLogin" />
+                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="work_groups">
+            <EntityTypeMapping TypeName="Research_DBModel.work_groups">
+              <MappingFragment StoreEntitySet="work_groups">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

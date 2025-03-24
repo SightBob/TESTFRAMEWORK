@@ -1,0 +1,462 @@
+﻿@model TESTFRAMEWORK.Models.ResearchProjectViewModel
+
+@{
+    ViewBag.Title = "แก้ไขโครงการวิจัย";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- โหลด CSS ของ Select2 (ในที่นี้ใส่ไว้ในหน้าเลย) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+
+
+    .select2-container .select2-selection--single,
+    .select2-container--default .select2-selection--single .select2-selection__rendered,
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        height: 39px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        padding-top: .25rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px !important;
+    }
+
+    .file-list {
+        margin-top: 15px;
+    }
+
+    .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 15px;
+        margin-bottom: 8px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        border: 1px solid #e9ecef;
+    }
+
+    .file-actions {
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
+<h2 class="mb-4">แก้ไขโครงการวิจัย</h2>
+
+@using (Html.BeginForm("Edit", "Research", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ResearchProject.ProjectID)
+
+    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card">
+        <h4 class="mb-3">รายละเอียดโครงการ</h4>
+
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "ปีงบประมาณ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.ProjectCode, "รหัสโครงการ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(m => m.ResearchProject.ProjectCode, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.ProjectName, "ชื่อโครงการ", new { @class = "font-weight-bold" })
+                    @Html.EditorFor(model => model.ResearchProject.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- ประเภท EC -->
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.Label("ประเภท EC", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.ResearchProject.TypeECID, ViewBag.TypeECList as SelectList, "-- เลือกประเภท EC --", new { @class = "form-control type_ec" })
+                </div>
+            </div>
+
+            <!-- หัวหน้าโครงการ (Select2) -->
+            <div class="col-md-3">
+                @Html.Label("หัวหน้าโครงการ", new { @class = "font-weight-bold" })
+                @Html.DropDownListFor(m => m.ResearchProject.HeadResearcherId,
+                           ViewBag.HeadResearcherList as SelectList,
+                           "-- เลือกหัวหน้าโครงการ --",
+                           new { @class = "js-example-basic-single form-control headResearcher" })
+
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
+                    <input type="text" id="headWorkGroup" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("สำนักวิชา / หน่วยงาน", new { @class = "font-weight-bold" })
+                    <input type="text" id="headDepartment" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("ฝ่าย / แผนก", new { @class = "font-weight-bold" })
+                    <input type="text" id="headDivition" class="form-control" disabled>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+        <h4 class="mb-3">👥 ผู้วิจัยร่วม</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="assistantTable">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th style="width: 400px;">รหัสและชื่อผู้วิจัยร่วม</th>
+                        <th>
+                            กลุ่มงาน
+                        </th>
+                        <th>
+                            สำนักวิชา /หน่วยงาน
+                        </th>
+                        <th>ฝ่าย / แผนก</th>
+                        <th>ประเภท</th>
+                        <th>ลบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ResearchAssistants != null && Model.ResearchAssistants.Any())
+                    {
+                        for (int i = 0; i < Model.ResearchAssistants.Count; i++)
+                        {
+                            <tr id="assistant_@i">
+                                <td>
+                                    <select class="form-control researcherSelect"
+                                            name="ResearchAssistants[@i].ResearcherNumber"
+                                            style="width: 100%;">
+                                        <option value="">-- เลือกนักวิจัย --</option>
+                                        @foreach (var item in Model.HeadResearcherList)
+                                        {
+                                            <option value="@item.Value" @(item.Value == Model.ResearchAssistants[i].ResearcherNumber ? "selected" : "")>@item.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td><input type="text" class="form-control assistantWorkgroup" disabled /></td>
+                                <td><input type="text" class="form-control assistantFaculty" disabled /></td>
+                                <td><input type="text" class="form-control assistantDivisions" disabled /></td>
+                                <td><input type="text" class="form-control assistantType" disabled /></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(@i)">ลบ</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-primary mt-2" onclick="addAssistant()">+ เพิ่มผู้วิจัยร่วม</button>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.ECApprovalCode, "รหัส EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalCode, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.ECApprovalDate, "วันที่อนุมัติ EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ECExpirationDate, "วันหมดอายุ EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", id = "date_ec", type = "date" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ECExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.Note, "หมายเหตุ", new { @class = "font-weight-bold" })
+                    @Html.TextAreaFor(model => model.ResearchProject.Note, new { @class = "form-control", rows = 4 })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.Note, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="my-4">
+        <h4 class="mb-3">📎 ไฟล์แนบ</h4>
+
+        @if (Model.ResearchProject.ResearchFile_tbl != null && Model.ResearchProject.ResearchFile_tbl.Any())
+        {
+            <div class="card shadow-sm p-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>📄 ชื่อไฟล์</th>
+                                <th class="text-center">ดาวน์โหลด</th>
+                                <th class="text-center">🗑️ ลบไฟล์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model.ResearchProject.ResearchFile_tbl)
+                            {
+                            <tr>
+                                <td>
+                                    <i class="bi bi-file-earmark-text text-primary"></i>
+                                    @file.FileName
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("DownloadFile", "Research", new { fileId = file.FileID })" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-download"></i> ดาวน์โหลด
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <input type="hidden" name="fileId" value="@file.FileID" />
+                                    <button type="button" onclick="confirmDelete(@file.FileID)" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-download"></i> ลบ
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span>ไม่มีไฟล์แนบ</span>
+            </div>
+        }
+
+        <div class="form-group mt-4">
+            <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
+            <input type="file" name="files" multiple class="form-control" />
+        </div>
+
+        <div class="form-group mt-4">
+            @Html.LabelFor(m => m.ResearchProject.StatusProjectID, "สถานะโครงการ", new { @class = "font-weight-bold" })
+            @Html.DropDownListFor(m => m.ResearchProject.StatusProjectID, ViewBag.StatusProjectList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control" })
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center mt-4">
+            <button type="submit" id="saveBtn" class="btn btn-success px-4 me-3">
+                <i class="fas fa-save"></i> บันทึกข้อมูล
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <!-- โหลด JS ของ jQuery และ Select2 จาก _Layout.cshtml (หรือที่อื่น) ให้เรียบร้อยก่อนโค้ดนี้ -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        function confirmDelete(fileId) {
+            if (confirm('คุณต้องการลบไฟล์นี้หรือไม่?')) {
+                $.ajax({
+                    url: '/Research/DeleteFile',
+                    type: 'POST',
+                    data: { fileId: fileId },
+                    success: function (response) {
+                        if (response.success) {
+                            // Optional: Remove the deleted file row from the UI
+                            alert('ลบไฟล์สำเร็จ');
+                            location.reload(); // Reload the page or update UI as needed
+                        } else {
+                            alert('ลบไฟล์ไม่สำเร็จ: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('เกิดข้อผิดพลาดในการลบไฟล์');
+                    }
+                });
+            }
+        }
+
+
+        $(document).on("change", ".type_ec", function () {
+            let selectedValue = $(this).val(); // ดึงค่าจาก dropdown
+
+            if (selectedValue == "1") {
+                $("#date_ec").prop("disabled", true);
+            } else {
+                $("#date_ec").prop("disabled", false);
+            }
+        });
+
+        // ตัวนับ index ของผู้วิจัยร่วม
+        let assistantIndex = @(Model.ResearchAssistants != null ? Model.ResearchAssistants.Count : 0);
+
+        // ฟังก์ชัน เพิ่มผู้วิจัยร่วม (Append แถวใหม่)
+        function addAssistant() {
+            let html = `
+                <tr id="assistant_${assistantIndex}">
+                    <td>
+                        <select class="form-control researcherSelect js-example-basic-single"
+                                 name="ResearchAssistants[${assistantIndex}].ResearcherNumber"
+                                style="width: 100%;">
+                            <option value="">-- เลือกนักวิจัย --</option>
+                            @foreach (var item in Model.HeadResearcherList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control assistantWorkgroup" disabled /></td>
+                    <td><input type="text" class="form-control assistantFaculty" disabled /></td>
+                    <td><input type="text" class="form-control assistantDivisions" disabled /></td>
+                    <td><input type="text" class="form-control assistantType" disabled /></td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(${assistantIndex})">ลบ</button>
+                    </td>
+                </tr>
+            `;
+
+            // ใส่แถวลงใน table
+            $("#assistantTable tbody").append(html);
+
+            // re-initialize Select2 กับ select ตัวใหม่
+            $(`#assistant_${assistantIndex} .js-example-basic-single`).select2({
+                placeholder: "-- เลือกนักวิจัย --",
+                allowClear: true,
+                width: '100%'
+            });
+
+            assistantIndex++;
+        }
+
+        // ลบผู้วิจัยร่วม
+        function removeAssistant(index) {
+            $("#assistant_" + index).remove();
+        }
+
+        // ลบไฟล์แนบ
+        function deleteFile(fileId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบไฟล์นี้?')) {
+                $.post('@Url.Action("DeleteFile", "Research")', { fileId: fileId }, function (data) {
+                    if (data.success) {
+                        // ลบ element ออกจาก DOM
+                        $("#file_" + fileId).fadeOut('fast', function() {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert('ไม่สามารถลบไฟล์ได้: ' + data.message);
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            // โหลดข้อมูลคณะของหัวหน้าโครงการจากเริ่มต้น
+            $.get("@Url.Action("GetResearcherDetails", "Research")", {
+                researcherNumber: $(".headResearcher").val()
+            }, function (data) {
+                $("#headFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
+            });
+
+            // โหลดข้อมูลคณะและประเภทของผู้วิจัยร่วมตอนเริ่มต้น
+            $(".researcherSelect").each(function() {
+                let selectedResearcher = $(this).val();
+                let row = $(this).closest("tr");
+
+                if (selectedResearcher) {
+                    $.get("@Url.Action("GetResearcherDetails", "Research")", {
+                        researcherNumber: selectedResearcher
+                    }, function (data) {
+                        row.find(".assistantWorkgroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
+                        row.find(".assistantFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
+                        row.find(".assistantDivisions").val(data ? data.Divisions : "ไม่พบข้อมูล");
+                        row.find(".assistantType").val(data ? data.TypeResearch : "ไม่พบข้อมูล");
+
+                        $("#headWorkGroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
+                        $("#headDepartment").val(data ? data.Faculty : "ไม่พบข้อมูล");
+                        $("#headDivition").val(data ? data.Divisions : "ไม่พบข้อมูล");
+                    });
+                }
+            });
+
+            // Select2 กับ select หัวหน้าโครงการ
+            $('.js-example-basic-single').select2({
+                placeholder: "-- เลือกหัวหน้าโครงการ --",
+                allowClear: true,
+                width: '100%'
+            });
+
+            // เมื่อเลือกหัวหน้าโครงการ ให้เรียก AJAX ไปเอาข้อมูลคณะมาแสดง
+            $(document).on("change", ".headResearcher", function () {
+                let researcherId = $(this).val();
+
+                $.get("@Url.Action("GetResearcherDetails", "Research")", { researcherNumber: researcherId }, function (data) {
+                    $("#headFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
+                    $("#headWorkGroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
+                    $("#headDepartment").val(data ? data.Faculty : "ไม่พบข้อมูล");
+                    $("#headDivition").val(data ? data.Divisions : "ไม่พบข้อมูล");
+                });
+            });
+
+            // เมื่อเลือกผู้วิจัยร่วม ให้เรียก AJAX ไปเอาข้อมูลคณะและประเภทวิจัย
+            $(document).on("change", ".researcherSelect", function () {
+                let selectedResearcher = $(this).val();
+                let row = $(this).closest("tr");
+
+                $.get("@Url.Action("GetResearcherDetails", "Research")", { researcherNumber: selectedResearcher }, function (data) {
+                    row.find(".assistantWorkgroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
+                    row.find(".assistantFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
+                    row.find(".assistantDivisions").val(data ? data.Divisions : "ไม่พบข้อมูล");
+                    row.find(".assistantType").val(data ? data.TypeResearch : "ไม่พบข้อมูล");
+
+                });
+            });
+        });
+    </script>
+}

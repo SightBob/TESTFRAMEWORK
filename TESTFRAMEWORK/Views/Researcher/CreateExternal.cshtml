@@ -1,0 +1,41 @@
+﻿@model TESTFRAMEWORK.Models.ResearcherViewModel
+
+<h2>เพิ่มนักวิจัยภายนอก</h2>
+
+@using (Html.BeginForm("CreateExternal", "Researcher", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <!-- Title -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Title)
+        </div>
+    </div>
+
+    <!-- Name -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+    </div>
+
+    <!-- TypeResearch -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.TypeResearchId, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("TypeResearchId", ViewBag.TypeResearchList as SelectList, "กรุณาเลือก", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="บันทึก" class="btn btn-primary" />
+        </div>
+    </div>
+}

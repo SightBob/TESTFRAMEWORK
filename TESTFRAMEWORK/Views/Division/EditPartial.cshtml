@@ -1,0 +1,38 @@
+﻿@model TESTFRAMEWORK.Models.DivisionViewModel
+
+@using (Html.BeginForm("SaveDivision", "Division", FormMethod.Post, new { id = "editForm" })) // ✅ แก้ชื่อ Action
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-header">
+        <h5 class="modal-title">แก้ไขข้อมูลแผนก</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+
+    <div class="modal-body">
+        @Html.HiddenFor(m => m.Id) <!-- ซ่อน ID -->
+        <!-- ฝ่าย -->
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DepartmentId, "ฝ่าย")
+            @Html.DropDownListFor(m => m.DepartmentId, ViewBag.DepartmentList as SelectList, "-- เลือกฝ่าย --", new { @class = "form-control" })
+        </div>
+     
+        <!-- ชื่อแผนก -->
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DivisionName, "ชื่อแผนก") <!-- ✅ แก้เป็น "แผนก" -->
+            @Html.TextBoxFor(m => m.DivisionName, new { @class = "form-control" })
+        </div>
+
+
+        <!-- ✅ สถานะ -->
+        <div class="mb-3">
+            @Html.LabelFor(m => m.StatusId, "สถานะ")
+            @Html.DropDownListFor(m => m.StatusId, ViewBag.StatusList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="submit" class="btn btn-primary">บันทึก</button>
+    </div>
+}

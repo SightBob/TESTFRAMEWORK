@@ -1,0 +1,31 @@
+﻿@model TESTFRAMEWORK.Models.WorkGroupViewModel
+
+@using (Html.BeginForm("SaveWorkGroup", "WorkGroups", FormMethod.Post, new { id = "editForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-header">
+        <h5 class="modal-title">แก้ไขข้อมูลกลุ่มงาน</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+
+    <div class="modal-body">
+        @Html.HiddenFor(m => m.Id) 
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.WorkGroupName, "ชื่อกลุ่มงาน")
+            @Html.TextBoxFor(m => m.WorkGroupName, new { @class = "form-control" })
+        </div>
+
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.StatusId, "สถานะ")
+            @Html.DropDownListFor(m => m.StatusId, ViewBag.StatusList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="submit" class="btn btn-primary">บันทึก</button>
+    </div>
+}

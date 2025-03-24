@@ -1,0 +1,123 @@
+﻿@model IEnumerable<TESTFRAMEWORK.Models.DepartmentViewModel>
+
+@{
+    ViewBag.Title = "ฝ่าย (พร้อม Filter)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- SweetAlert และ DataTables -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<style>
+    div.dataTables_wrapper div.dataTables_filter label {
+        display: none;
+    }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y mt-xl-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-primary btn-custom text-white" onclick="showCreateModal()">
+            + เพิ่มฝ่าย
+        </button>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-4 p-3">
+                <div class="table-responsive">
+                    <table id="example" class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>กลุ่มงาน</th>
+                                <th>ชื่อฝ่าย</th>
+                                <th>แก้ไข</th>
+                            </tr>
+                            <tr>
+                                <th><input type="text" class="form-control form-control-sm" placeholder="ค้นหากลุ่มงาน"></th>
+                                <th><input type="text" class="form-control form-control-sm" placeholder="ค้นหาชื่อฝ่าย"></th>
+                                <th></th> <!-- คอลัมน์ "แก้ไข" ต้องมี <th> เปล่า -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@(item.WorkGroupName ?? "ไม่มีข้อมูล")</td>
+                                    <td>@item.DepartmentName</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" onclick="showEditModal(@item.Id)">
+                                            ✏️ แก้ไข
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editModalContent">
+            <!-- Partial View จะถูกโหลดมาแปะตรงนี้ผ่าน Ajax -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#example').DataTable({
+                lengthMenu: [
+                    [15, 25, 50, -1],
+                    [15, 25, 50, 'All']
+                ]
+            });
+
+            // ✅ ให้ Filter Row ทำงานได้
+            $('#example thead tr:eq(1) th input').on('keyup change', function () {
+                var index = $(this).parent().index();
+                table.column(index).search(this.value).draw();
+            });
+        });
+
+        // === Modal for Create ===
+        function showCreateModal() {
+            $.ajax({
+                url: '@Url.Action("CreatePartial", "Division")',
+                type: 'GET',
+                success: function (html) {
+                    $('#editModalContent').html(html);
+                    var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                    modal.show();
+                },
+                error: function () {
+                    alert('Error loading create form');
+                }
+            });
+        }
+
+        // === Modal for Edit ===
+        function showEditModal(id) {
+            $.ajax({
+                url: '@Url.Action("EditPartial", "Division")',
+                data: { id: id },
+                type: 'GET',
+                success: function (html) {
+                    $('#editModalContent').html(html);
+                    var modal = new bootstrap.Modal(document.getElementById('editModal'));
+                    modal.show();
+                },
+                error: function () {
+                    alert('Error loading edit form');
+                }
+            });
+        }
+    </script>
+}
