@@ -7,7 +7,7 @@
 
 <h2 class="mb-4">แก้ไขข้อมูลนักวิจัย</h2>
 
-@using (Html.BeginForm("Edit", "Researcher", FormMethod.Post))
+@using (Html.BeginForm("EditInternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -26,24 +26,6 @@
             </div>
         }
 
-        <!-- ✅ ประเภทผู้ใช้ -->
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                <label class="font-weight-bold d-block">ประเภทผู้ใช้</label>
-
-                <div class="form-check">
-                    <input type="radio" name="UserType" value="บุคคลภายใน" id="internal" class="form-check-input user-type" checked>
-                    <label class="form-check-label" for="internal">บุคคลภายใน</label>
-                </div>
-
-                <div class="form-check">
-                    <input type="radio" name="UserType" value="บุคคลภายนอก" id="external" class="form-check-input user-type">
-                    <label class="form-check-label" for="external">บุคคลภายนอก</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- ✅ ข้อมูลพื้นฐาน -->
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group mb-3">
@@ -56,10 +38,10 @@
             <div class="col-md-2">
                 <div class="form-group mb-3">
                     @Html.Label("คำนำหน้า", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.Title, new SelectList(new[] {
-                        "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                        "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร."
-                    }), "-- กรุณาเลือก --", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.Title,
+                        (SelectList)ViewBag.TitleList,
+                        "-- เลือกคำนำหน้า --",
+                        new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -76,6 +58,7 @@
         <!-- ✅ บุคคลภายใน: กลุ่มงาน / ฝ่ายงาน / แผนก -->
         <div id="internal-fields">
             <div class="row">
+                <!-- ✅ กลุ่มงาน -->
                 <div class="col-md-3">
                     <div class="form-group mb-3">
                         @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
@@ -86,21 +69,23 @@
                     </div>
                 </div>
 
+                <!-- ✅ ฝ่ายงาน -->
                 <div class="col-md-3">
                     <div class="form-group mb-3">
                         @Html.Label("ฝ่ายงาน", new { @class = "font-weight-bold" })
                         @Html.DropDownListFor(m => m.DepartmentId,
-                            new SelectList(Enumerable.Empty<SelectListItem>()),
+                            ViewBag.DepartmentList as SelectList,
                             "-- เลือกฝ่ายงาน --",
                             new { @class = "form-control", id = "departmentDropdown" })
                     </div>
                 </div>
 
+                <!-- ✅ แผนก -->
                 <div class="col-md-3">
                     <div class="form-group mb-3">
                         @Html.Label("แผนก", new { @class = "font-weight-bold" })
                         @Html.DropDownListFor(m => m.DivisionId,
-                            new SelectList(Enumerable.Empty<SelectListItem>()),
+                            ViewBag.DivisionList as SelectList,
                             "-- เลือกแผนก --",
                             new { @class = "form-control", id = "divisionDropdown" })
                     </div>
@@ -163,25 +148,47 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // ✅ เมื่อเลือก "กลุ่มงาน" → โหลด "ฝ่ายงาน"
-            $("#workGroupDropdown").change(function () {
-                var workGroupId = $(this).val();
-                $("#departmentDropdown").html('<option value="">-- เลือกฝ่ายงาน --</option>');
-                $("#divisionDropdown").html('<option value="">-- เลือกแผนก --</option>');
+       $(document).ready(function () {
+    // ✅ เมื่อเลือก "กลุ่มงาน" → โหลด "ฝ่ายงาน"
+    $("#workGroupDropdown").change(function () {
+        var workGroupId = $(this).val();
+        $("#departmentDropdown").html('<option value="">-- เลือกฝ่ายงาน --</option>');
+        $("#divisionDropdown").html('<option value="">-- เลือกแผนก --</option>');
 
-                if (!workGroupId) return;
+        if (!workGroupId) return;
 
-                $.get("@Url.Action("GetDepartmentsByWorkGroup", "Researcher")", { workGroupId: workGroupId })
-                    .done(function (data) {
-                        $.each(data, function (index, item) {
-                            $("#departmentDropdown").append($('<option></option>').val(item.Value).text(item.Text));
-                        });
-                    })
-                    .fail(function () {
-                        console.error("ไม่สามารถโหลดข้อมูลฝ่ายงานได้");
-                    });
+        $.get("@Url.Action("GetDepartmentsByWorkGroup", "Researcher")", { workGroupId: workGroupId })
+            .done(function (data) {
+                $.each(data, function (index, item) {
+                    $("#departmentDropdown").append($('<option></option>').val(item.Value).text(item.Text));
+                });
+            })
+            .fail(function () {
+                console.error("ไม่สามารถโหลดข้อมูลฝ่ายงานได้");
             });
+    });
+
+    // ✅ เมื่อเลือก "ฝ่ายงาน" → โหลด "แผนก"
+    $("#departmentDropdown").change(function () {
+        var departmentId = $(this).val();
+        $("#divisionDropdown").html('<option value="">-- เลือกแผนก --</option>');
+
+        if (!departmentId) return;
+
+        $.get("@Url.Action("GetDivisionsByDepartment", "Researcher")", { departmentId: departmentId })
+            .done(function (data) {
+                $.each(data, function (index, item) {
+                    $("#divisionDropdown").append($('<option></option>').val(item.Value).text(item.Text));
+                });
+            })
+            .fail(function () {
+                console.error("ไม่สามารถโหลดข้อมูลแผนกได้");
+            });
+    });
+
+    // ✅ ตั้งค่า Dropdown Lists ให้แสดงค่าที่เลือกไว้
+    $("#workGroupDropdown").trigger("change"); // โหลดฝ่ายงานและแผนกเมื่อหน้าโหลดเสร็จ
+});
 
             // ✅ เมื่อเลือก "ฝ่ายงาน" → โหลด "แผนก"
             $("#departmentDropdown").change(function () {
@@ -203,3 +210,4 @@
         });
     </script>
 }
+

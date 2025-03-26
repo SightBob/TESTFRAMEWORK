@@ -79,5 +79,57 @@ namespace TESTFRAMEWORK.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        // ============== CREATE ==============
+        // ============== CREATE ==============
+        [HttpGet]
+        public PartialViewResult CreatePartial()
+        {
+            // สำหรับฟอร์มสร้างใหม่
+            var viewModel = new DepartmentViewModel();
+
+            // Dropdown ของ Work Groups ทั้งหมด
+            ViewBag.WorkGroupList = new SelectList(
+                db.work_groups.ToList(),
+                "id",
+                "name"
+            );
+
+            // เพิ่ม Dropdown สำหรับ Status
+            ViewBag.StatusList = new SelectList(
+                db.Status_tbl.ToList(),
+                "StatusID",
+                "StatusName"
+            );
+
+            return PartialView("CreatePartial", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateDepartment(DepartmentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // โหลด dropdown ใหม่เมื่อ ModelState ไม่ถูกต้อง
+                ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name", model.WorkGroupId);
+                ViewBag.StatusList = new SelectList(db.Status_tbl, "StatusID", "StatusName", model.StatusId);
+                return PartialView("CreatePartial", model);
+            }
+
+            var newDept = new department
+            {
+                name = model.DepartmentName,  // ✅ ชื่อแผนก
+                work_group_id = model.WorkGroupId,  // ✅ ID ของกลุ่มงาน
+                Status = model.StatusId  // ✅ สถานะ
+            };
+
+            db.departments.Add(newDept);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

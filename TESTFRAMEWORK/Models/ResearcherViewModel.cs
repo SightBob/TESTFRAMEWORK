@@ -8,7 +8,7 @@ namespace TESTFRAMEWORK.Models
 {
     public class ResearcherViewModel
     {
-        [Required(ErrorMessage = "กรุณากรอกรหัสนักวิจัย")]
+        //[Required(ErrorMessage = "กรุณากรอกรหัสนักวิจัย")]
         public string ResearcherNumber { get; set; }
 
         [Required(ErrorMessage = "กรุณากรอกชื่อนำหน้า")]

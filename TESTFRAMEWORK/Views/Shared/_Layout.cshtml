@@ -658,17 +658,19 @@
                                 <li class="menu-item">
                                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                                         @*<i class="menu-icon tf-icons mdi mdi-window-maximize"></i>*@
-                                        <div data-i18n="ข้อมูลพื้นฐาน">ข้อมูลผู้วิจัย</div>
+                                        <div data-i18n="ข้อมูลผู้วิจัย">ข้อมูลผู้วิจัย</div>
                                     </a>
                                     <ul class="menu-sub">
                                         <li class="menu-item">
                                             <a href="@Url.Action("Index", "Researcher")" class="menu-link">
-                                                <div data-i18n="ข้อมูลผู้วิจัย">บุคคลภายใน</div>
+                                                <div data-i18n="บุคคลภายใน
+                                                     
+                                                     ">บุคคลภายใน</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="@Url.Action("Index", "Researcher")" class="menu-link">
-                                                <div data-i18n="ข้อมูลผู้วิจัย">บุคคลภายนอก</div>
+                                            <a href="@Url.Action("ExternalResearchers", "Researcher")" class="menu-link">
+                                                <div data-i18n="บุคคลภายนอก">บุคคลภายนอก</div>
                                             </a>
                                         </li>
                                     </ul>

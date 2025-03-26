@@ -11,16 +11,17 @@
 
     <div class="modal-body">
         @Html.HiddenFor(m => m.Id) <!-- ซ่อน ID -->
-        <!-- ชื่อฝ่าย -->
-        <div class="mb-3">
-            @Html.LabelFor(m => m.DepartmentName, "ชื่อฝ่าย")
-            @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
-        </div>
 
         <!-- กลุ่มงาน -->
         <div class="mb-3">
             @Html.LabelFor(m => m.WorkGroupId, "กลุ่มงาน")
             @Html.DropDownListFor(m => m.WorkGroupId, ViewBag.WorkGroupList as SelectList, "-- เลือกกลุ่มงาน --", new { @class = "form-control" })
+        </div>
+        
+    <!-- ชื่อฝ่าย -->
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DepartmentName, "ชื่อฝ่าย")
+            @Html.TextBoxFor(m => m.DepartmentName, new { @class = "form-control" })
         </div>
 
         <!-- ✅ สถานะ -->

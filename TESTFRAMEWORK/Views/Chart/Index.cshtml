@@ -45,7 +45,11 @@
                             {
                                 <tr>
                                     <td>@(item.WorkGroupName ?? "ไม่มีข้อมูล")</td>
-                                    <td>@item.DepartmentName</td>
+                                    <td>@item.DepartmentName
+                                       @if (item.StatusId == 2) // ถ้าเป็น Inactive ให้ขึ้น "ยกเลิก"
+                                        {
+                                            <span class="text-danger">(ยกเลิก)</span>
+                                        }</td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" onclick="showEditModal(@item.Id)">
                                             ✏️ แก้ไข
@@ -90,7 +94,7 @@
         // === Modal for Create ===
         function showCreateModal() {
             $.ajax({
-                url: '@Url.Action("CreatePartial", "Division")',
+                url: '@Url.Action("CreatePartial", "Chart")',
                 type: 'GET',
                 success: function (html) {
                     $('#editModalContent').html(html);
@@ -106,7 +110,7 @@
         // === Modal for Edit ===
         function showEditModal(id) {
             $.ajax({
-                url: '@Url.Action("EditPartial", "Division")',
+                url: '@Url.Action("EditPartial", "Chart")',
                 data: { id: id },
                 type: 'GET',
                 success: function (html) {

@@ -24,7 +24,6 @@
                         <thead>
                             <tr>
                                 <th>ชื่อกลุ่มงาน</th>
-                                <th>สถานะ</th>
                                 <th>แก้ไข</th>
                             </tr>
                         </thead>
@@ -32,8 +31,14 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.WorkGroupName</td>
-                                    <td>@item.StatusName</td>
+                                    <td>
+                                        @item.WorkGroupName
+                                        @if (item.StatusId == 2) // ถ้าเป็น Inactive ให้ขึ้น "ยกเลิก"
+                                        {
+                                            <span class="text-danger">(ยกเลิก)</span>
+                                        }
+                                    </td>
+
                                     <td>
                                         <button class="btn btn-sm btn-warning" onclick="showEditModal(@item.Id)">
                                             ✏️ แก้ไข

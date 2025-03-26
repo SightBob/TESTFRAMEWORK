@@ -12,7 +12,6 @@
     @Html.AntiForgeryToken()
 
     <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card p-4">
-        <h4 class="mb-3">ข้อมูลนักวิจัย</h4>
 
         @if (!ViewData.ModelState.IsValid)
         {
@@ -85,7 +84,6 @@
                 </div>
 
                 <!-- ✅ แผนก -->
-                <!-- ✅ แผนก -->
                 <div class="col-md-3">
                     <div class="form-group mb-3">
                         @Html.Label("แผนก", new { @class = "font-weight-bold" })
@@ -107,14 +105,6 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-
-        <!-- ✅ บุคคลภายนอก: ข้อมูลเพิ่มเติม -->
-        <div id="external-fields" style="display: none;">
-            <div class="form-group mb-3">
-                @Html.Label("หน่วยงาน / บริษัท", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control" })
             </div>
         </div>
 

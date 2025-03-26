@@ -2939,14 +2939,13 @@
     <Content Include="Views\Division\Index.cshtml" />
     <Content Include="Views\Division\CreatePartial.cshtml" />
     <Content Include="Views\Division\EditPartial.cshtml" />
-    <Content Include="Views\Researcher\Edit.cshtml" />
     <Content Include="Views\Researcher\CreateInternal.cshtml" />
     <Content Include="Views\Researcher\CreateExternal.cshtml" />
+    <Content Include="Views\Researcher\EditExternal.cshtml" />
+    <Content Include="Views\Researcher\EditInternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ExternalResearcher\" />
-    <Folder Include="Views\InternalResearcher\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

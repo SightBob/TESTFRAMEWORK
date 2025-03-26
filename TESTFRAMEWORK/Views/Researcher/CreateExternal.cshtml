@@ -1,41 +1,100 @@
 ﻿@model TESTFRAMEWORK.Models.ResearcherViewModel
 
-<h2>เพิ่มนักวิจัยภายนอก</h2>
+@{
+    ViewBag.Title = "เพิ่มนักวิจัย";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-@using (Html.BeginForm("CreateExternal", "Researcher", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+<h2 class="mb-4 text-primary">เพิ่มนักวิจัย</h2>
+
+@using (Html.BeginForm("CreateExternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-    <!-- Title -->
-    <div class="form-group">
-        @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Title)
-        </div>
-    </div>
+    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card p-4 shadow">
 
-    <!-- Name -->
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Name)
-        </div>
-    </div>
+        <!-- แสดงข้อความแจ้งเตือนเมื่อมีข้อผิดพลาด -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>กรุณาตรวจสอบข้อมูล:</strong>
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
 
-    <!-- TypeResearch -->
-    <div class="form-group">
-        @Html.LabelFor(model => model.TypeResearchId, new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("TypeResearchId", ViewBag.TypeResearchList as SelectList, "กรุณาเลือก", new { @class = "form-control" })
-        </div>
-    </div>
+        <!-- ✅ ข้อมูลพื้นฐาน -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.Label("คำนำหน้า", new { @class = "form-label fw-bold" })
+                    <div class="input-group">
+                        @Html.DropDownListFor(m => m.Title, new SelectList(new[]
+                        {
+                            "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+                            "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+                        }), "-- กรุณาเลือก --", new { @class = "form-select", id = "titleDropdown" })
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control ms-lg-2", style = "display:none;", placeholder = "ระบุคำนำหน้า", id = "otherTitle" })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
+                </div>
+            </div>
 
-    <!-- Submit Button -->
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="บันทึก" class="btn btn-primary" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.Label("ชื่อ", new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ ข้อมูลหน่วยงาน / บริษัท -->
+        <div id="internal-fields" class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.Label("หน่วยงาน / บริษัท", new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control", placeholder = "ระบุชื่อหน่วยงานหรือบริษัท" })
+                    @Html.ValidationMessageFor(m => m.OtherInfo, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ ปุ่มดำเนินการ -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success px-4">
+                <i class="fas fa-save me-2"></i>บันทึกข้อมูล
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">ยกเลิก</a>
         </div>
     </div>
+}
+
+@section scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle input field when "อื่นๆ" is selected
+            $('#titleDropdown').change(function () {
+                if ($(this).val() === "อื่นๆ") {
+                    $('#otherTitle').fadeIn();
+                } else {
+                    $('#otherTitle').fadeOut();
+                }
+            });
+
+            // Handle form submission to capture custom title
+            $('form').submit(function () {
+                if ($('#titleDropdown').val() === "อื่นๆ") {
+                    $('#titleDropdown').val($('#otherTitle').val());
+                }
+            });
+        });
+    </script>
 }

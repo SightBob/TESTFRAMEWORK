@@ -80,36 +80,29 @@ namespace TESTFRAMEWORK.Controllers
             return RedirectToAction("Index");
         }
 
-
-
         // ============== EDIT ==============
-        [HttpGet]
         public PartialViewResult EditPartial(int id)
         {
-            var div = db.divisions.Find(id);
-            if (div == null)
+            var division = db.divisions.Find(id);
+            if (division == null)
             {
                 return PartialView("EditPartial", new DivisionViewModel());
             }
 
             var viewModel = new DivisionViewModel
             {
-                Id = div.id,
-                DivisionName = div.name,
-                DepartmentId = div.department_id,
-                StatusId = div.Status
+                Id = division.id,
+                DivisionName = division.name,
+                DepartmentId = division.department_id,
+                StatusId = division.Status
             };
 
-            // ✅ โหลด Dropdown ฝ่าย
+            // Populate Dropdowns
             ViewBag.DepartmentList = new SelectList(db.departments.ToList(), "id", "name", viewModel.DepartmentId);
-
-            // ✅ โหลด Dropdown สถานะ
             ViewBag.StatusList = new SelectList(db.Status_tbl.ToList(), "StatusID", "StatusName", viewModel.StatusId);
 
             return PartialView("EditPartial", viewModel);
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
