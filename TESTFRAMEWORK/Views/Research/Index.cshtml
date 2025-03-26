@@ -10,71 +10,86 @@
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-
 <style>
-    .container-custom {
-        max-width: 95%;
-    }
+        .container-custom {
+            max-width: 95%;
+        }
 
-    .table thead th {
-        background-color: #007bff;
-        color: white;
-        text-align: center;
-        position: relative;
-        top: 0;
-        z-index: 0;
-    }
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            position: relative;
+            top: 0;
+            z-index: 0;
+        }
 
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
 
-    .btn-custom {
-        padding: 0.5rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 30px;
-    }
+        .btn-custom {
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 30px;
+        }
 
-    .dataTables_filter input {
-        border-radius: 20px;
-        padding: 0.5rem;
-    }
+        .dataTables_filter input {
+            border-radius: 20px;
+            padding: 0.5rem;
+        }
 
-    .table td {
-        vertical-align: middle;
-    }
+        .table td {
+            vertical-align: middle;
+        }
 
-    .table .btn {
-        padding: 0.25rem 0.75rem;
-        font-size: 0.875rem;
-    }
+        .table .btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
 
-    .project-name-column {
-        min-width: 300px !important;
-        max-width: 600px;
-        word-wrap: break-word;
-        white-space: normal;
-    }
+        .project-name-column {
+            min-width: 300px !important;
+            max-width: 600px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
 
-    .form-control.form-control-sm {
-        border-radius: 20px !important;
-        margin-bottom: 1rem;
-    }
+        .form-control.form-control-sm {
+            border-radius: 20px !important;
+            margin-bottom: 1rem;
+        }
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: none !important;
-        border: none !important;
-    }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: none !important;
+            border: none !important;
+        }
+
+        .active {
+            color: #F26522 !important;
+        }
+
+        .nav-tabs .tab-slider {
+            background-color: #F26522 !important;
+        }
+
 </style>
 
 <div class="container-xxl flex-grow-1 container-p-y mt-xl-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
-        @Html.ActionLink("➕ เพิ่มข้อมูล", "Create", null, new { @class = "btn btn-primary btn-custom text-white" })
-    </div>
+
     <div class="row">
         <div class="col-xl-12">
             <div class="card mb-4">
+                <div class="d-flex justify-content-between align-items-center p-3">
+                    <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
+                    <button class="btn btn-custom text-white" style="background-color: #F26522;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-plus icon-thicker m-md-1 " viewBox="0 0 16 16">
+                            <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
+                        </svg>
+                        @Html.ActionLink(" เพิ่มข้อมูล", "Create", null, new { @class = "text-white", style = "text-decoration: none;" })
+                    </button>
+
+                </div>
                 <div class="card-header p-0">
                     <div class="nav-align-top">
                         <ul class="nav nav-tabs" role="tablist">
@@ -116,9 +131,36 @@
                                                 <tr>
                                                     <!-- ปีงบประมาณ -->
                                                     <td>
-                                                        @(item.FiscalYear.HasValue
+                                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                                            @(item.FiscalYear.HasValue
                                                             ? item.FiscalYear.Value.ToString("yyyy")
                                                             : "-")
+
+                                                            @{
+                                                                if (item.ResearchExpirationDate.HasValue)
+                                                                {
+                                                                    var expirationDate = item.ResearchExpirationDate.Value; // เพิ่มปี 54
+                                                                    var remainingDays = (expirationDate - DateTime.Now).Days;
+
+                                                                    if (remainingDays <= 30)
+                                                                    {
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#FF0000" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle  spinner-grow" style="margin-left: 5px">
+                                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                                                        </svg>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span></span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>-</span> <!-- กรณีไม่มีวันหมดอายุ -->
+                                                                }
+                                                            }
+                                                        </div>
                                                     </td>
                                                     <!-- รหัสโครงการ -->
                                                     <td>@item.ProjectCode</td>

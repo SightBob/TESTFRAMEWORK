@@ -633,6 +633,7 @@
     <Content Include="Content\assets\img\products\sup-game-box-400.png" />
     <Content Include="Content\assets\img\products\woodenchair.png" />
     <Content Include="Content\assets\img\products\xbox-series-x.png" />
+    <Content Include="Content\assets\img\SUTHLOGO-01.png" />
     <Content Include="Content\assets\json\ajax.php" />
     <Content Include="Content\assets\js\app-academy-course-details.js" />
     <Content Include="Content\assets\js\app-academy-course.js" />

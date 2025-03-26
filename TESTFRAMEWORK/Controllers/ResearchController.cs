@@ -18,6 +18,8 @@ namespace TESTFRAMEWORK.Controllers
         // GET: Research/Index
         public ActionResult Index()
         {
+     
+
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)
@@ -43,6 +45,8 @@ namespace TESTFRAMEWORK.Controllers
 
         public ActionResult Expire()
         {
+
+
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)

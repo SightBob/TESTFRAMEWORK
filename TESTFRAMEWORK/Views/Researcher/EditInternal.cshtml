@@ -39,9 +39,9 @@
                 <div class="form-group mb-3">
                     @Html.Label("คำนำหน้า", new { @class = "font-weight-bold" })
                     @Html.DropDownListFor(m => m.Title,
-                        (SelectList)ViewBag.TitleList,
-                        "-- เลือกคำนำหน้า --",
-                        new { @class = "form-control" })
+                                          (SelectList)ViewBag.TitleList,
+                                          "-- เลือกคำนำหน้า --",
+                                          new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
                 </div>
             </div>

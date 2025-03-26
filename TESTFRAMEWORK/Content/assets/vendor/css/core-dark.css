@@ -3260,14 +3260,14 @@ textarea.form-control-lg {
 }
 
 .nav-tabs {
-  --bs-nav-tabs-border-width: var(--bs-border-width);
-  --bs-nav-tabs-border-color: #464963;
-  --bs-nav-tabs-border-radius: var(--bs-border-radius);
-  --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg) var(--bs-secondary-bg) #464963;
-  --bs-nav-tabs-link-active-color: #fff;
-  --bs-nav-tabs-link-active-bg: #30334e;
-  --bs-nav-tabs-link-active-border-color: #30334e;
-  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+    --bs-nav-tabs-border-width: var(--bs-border-width);
+    --bs-nav-tabs-border-color: #464963;
+    --bs-nav-tabs-border-radius: var(--bs-border-radius);
+    --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg) var(--bs-secondary-bg) #464963;
+    --bs-nav-tabs-link-active-color: #fff;
+    --bs-nav-tabs-link-active-bg: #30334e;
+    --bs-nav-tabs-link-active-border-color: #F26522;
+    border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
 }
 .nav-tabs .nav-link {
   margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));

@@ -367,9 +367,7 @@ namespace TESTFRAMEWORK.Controllers
             }
 
             // โหลด Dropdown List สำหรับ Title และตั้งค่า researcher.Title เป็นค่าที่ถูกเลือก
-            ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                                               "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." },
-                                              researcher.Title); // ตั้งค่า researcher.Title เป็น selected
+            ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }, researcher.Title);
 
             // โหลด Dropdown Lists สำหรับ WorkGroup, Department, Division, TypeResearch
             ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name", researcher.WorkGroupId);
