@@ -2942,8 +2942,8 @@
     <Content Include="Views\Division\EditPartial.cshtml" />
     <Content Include="Views\Researcher\CreateInternal.cshtml" />
     <Content Include="Views\Researcher\CreateExternal.cshtml" />
-    <Content Include="Views\Researcher\EditExternal.cshtml" />
     <Content Include="Views\Researcher\EditInternal.cshtml" />
+    <Content Include="Views\Researcher\EditExternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -387,41 +387,111 @@ namespace TESTFRAMEWORK.Controllers
             return View(researcher);
         }
 
-        public ActionResult EditExternal(string id)
+   // GET: EditExternal
+public ActionResult EditExternal(string id)
+{
+    if (string.IsNullOrEmpty(id))
+    {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "รหัสนักวิจัยไม่ถูกต้อง");
+    }
+
+    try
+    {
+        // ดึงข้อมูลนักวิจัยและแมปไปยัง ResearcherViewModel
+        var researcher = db.Researcher_tbl
+                           .Where(r => r.ResearcherNumber == id)
+                           .Select(r => new ResearcherViewModel
+                           {
+                               ResearcherNumber = r.ResearcherNumber,
+                               Title = r.title,
+                               Name = r.Name,
+                               OtherInfo = r.OtherInfo,
+                               TypeResearchId = r.TypeResearch
+                           })
+                           .FirstOrDefault();
+
+        if (researcher == null)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            // ดึงข้อมูลนักวิจัยจากฐานข้อมูล
-            var researcher = db.Researcher_tbl
-                               .Where(r => r.ResearcherNumber == id)
-                               .Select(r => new ResearcherViewModel
-                               {
-                                   ResearcherNumber = r.ResearcherNumber,
-                                   Title = r.title,  // ดึงค่าคำนำหน้า
-                           Name = r.Name,
-                                   OtherInfo = r.OtherInfo,
-                                   TypeResearchId = r.TypeResearch
-                               })
-                               .FirstOrDefault();
-
-            if (researcher == null)
-            {
-                return HttpNotFound();
-            }
-
-            ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                                           "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." },
-                                   researcher.Title);
-
-            // โหลด Dropdown List สำหรับ TypeResearch
-            ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
-
-            return View(researcher);
+            return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
         }
 
+        // จัดการ dropdown list สำหรับคำนำหน้า
+        var titleOptions = new[] {
+            "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+            "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+        };
+        ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
+
+        // ดึงรายการประเภทการวิจัย
+        ViewBag.TypeResearchList = new SelectList(
+            db.TypeResearches,
+            "id",
+            "type_name",
+            researcher.TypeResearchId
+        );
+
+        return View(researcher);
+    }
+    catch (Exception ex)
+    {
+        // บันทึกข้อผิดพลาด (เช่น log error) และแสดงหน้าข้อผิดพลาดทั่วไป
+        // Logger.LogError(ex, "เกิดข้อผิดพลาดในการดึงข้อมูลนักวิจัย");
+        return View("Error", new HandleErrorInfo(ex, "Researchers", "EditExternal"));
+    }
+}
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditExternal(ResearcherViewModel model)
+        {
+            // ถ้าเลือก "อื่นๆ" ให้ใช้ค่า TitleCustom
+            if (model.Title == "อื่นๆ")
+            {
+                if (string.IsNullOrWhiteSpace(model.TitleCustom))
+                {
+                    ModelState.AddModelError("TitleCustom", "กรุณากรอกคำนำหน้าแบบกำหนดเอง");
+                }
+                else
+                {
+                    // ใช้ค่าของ TitleCustom แทน Title
+                    model.Title = model.TitleCustom;
+                }
+            }
+
+            // ตรวจสอบความยาวของชื่อ
+            if (!string.IsNullOrWhiteSpace(model.Name) &&
+                (model.Name.Length < 2 || model.Name.Length > 100))
+            {
+                ModelState.AddModelError("Name", "ชื่อต้องมีความยาวระหว่าง 2-100 ตัวอักษร");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var researcher = db.Researcher_tbl.FirstOrDefault(r => r.ResearcherNumber == model.ResearcherNumber);
+                if (researcher == null)
+                {
+                    return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
+                }
+
+                researcher.title = model.Title;
+                researcher.Name = model.Name;
+                researcher.OtherInfo = model.OtherInfo;
+
+                db.SaveChanges();
+
+                return RedirectToAction("ExternalResearchers");
+            }
+
+            // เตรียม dropdown lists สำหรับกรณีที่ต้องส่งกลับ
+            var titleOptions = new[] {
+        "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+        "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+    };
+            ViewBag.TitleList = new SelectList(titleOptions, model.Title);
+
+            return View(model);
+        }
 
     }
 }

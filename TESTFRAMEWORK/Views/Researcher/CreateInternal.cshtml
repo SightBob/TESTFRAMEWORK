@@ -5,13 +5,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    h4 {
+        margin-bottom: 0px;
+    }
+</style>
+
 <h2 class="mb-4">เพิ่มนักวิจัย</h2>
 
 @using (Html.BeginForm("CreateInternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card p-4">
+<div class="container-xxl mt-xl-5"  style="max-width: 95%; ">
+        <div class="" style="background-color: #F26522; padding: 1rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+            <h4 class="text-white">เพิ่มข้อมูลนักวิจัย (บุคคลภายใน)</h4>
+        </div>
+
+    <div class="flex-grow-1 container-p-y card px-3" style="border-top-left-radius: 0px; border-top-right-radius: 0px;">
 
         @if (!ViewData.ModelState.IsValid)
         {
@@ -50,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="form-group mb-3">
                     @Html.Label("ชื่อ", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
@@ -115,6 +126,7 @@
             <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
         </div>
     </div>
+</div>
 }
 
 

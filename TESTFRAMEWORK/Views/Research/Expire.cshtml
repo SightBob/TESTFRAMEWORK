@@ -75,19 +75,27 @@
     }
 </style>
 
+
 <div class="container-xxl flex-grow-1 container-p-y mt-xl-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
-        @Html.ActionLink("➕ เพิ่มข้อมูล", "Create", null, new { @class = "btn btn-primary btn-custom text-white" })
-    </div>
+
     <div class="row">
         <div class="col-xl-12">
             <div class="card mb-4">
+                <div class="d-flex justify-content-between align-items-center p-3">
+                    <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
+                    <button class="btn btn-custom text-white" style="background-color: #F26522;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-plus icon-thicker m-md-1 " viewBox="0 0 16 16">
+                            <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
+                        </svg>
+                        @Html.ActionLink(" เพิ่มข้อมูล", "Create", null, new { @class = "text-white", style = "text-decoration: none;" })
+                    </button>
+
+                </div>
                 <div class="card-header p-0">
                     <div class="nav-align-top">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
-                                @Html.ActionLink("กำลังดำเนินการ", "Index", "Research", null, new { @class = "nav-link" })
+                                @Html.ActionLink("กำลังดำเนินการ", "Index", "Research", null, new { @class = "nav-link " })
                             </li>
                             <li class="nav-item">
                                 @Html.ActionLink("สำเร็จ", "Success", "Research", null, new { @class = "nav-link" })
