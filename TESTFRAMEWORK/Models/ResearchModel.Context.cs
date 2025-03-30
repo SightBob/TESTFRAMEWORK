@@ -13,10 +13,10 @@ namespace TESTFRAMEWORK.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Research_DBEntities : DbContext
+    public partial class Research_DBEntities1 : DbContext
     {
-        public Research_DBEntities()
-            : base("name=Research_DBEntities")
+        public Research_DBEntities1()
+            : base("name=Research_DBEntities1")
         {
         }
     

@@ -10,7 +10,7 @@ namespace TESTFRAMEWORK.Controllers
     public class WorkGroupsController : Controller
     {
         // GET: WorkGroups
-        private Research_DBEntities db = new Research_DBEntities();
+        private Research_DBEntities1 db = new Research_DBEntities1();
 
         // ✅ GET: แสดงตาราง Work Groups
         public ActionResult Index()

@@ -10,7 +10,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ResearcherController : Controller
     {
-        private Research_DBEntities db = new Research_DBEntities();
+        private Research_DBEntities1 db = new Research_DBEntities1();
 
         // ✅ GET: Researcher/Index (หน้าแสดงรายชื่อนักวิจัย)
         public ActionResult Index()

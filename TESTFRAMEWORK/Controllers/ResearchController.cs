@@ -13,7 +13,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ResearchController : Controller
     {
-        private Research_DBEntities db = new Research_DBEntities();
+        private Research_DBEntities1 db = new Research_DBEntities1();
 
         // GET: Research/Index
         public ActionResult Index()

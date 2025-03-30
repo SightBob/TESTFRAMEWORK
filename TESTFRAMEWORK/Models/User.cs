@@ -17,12 +17,5 @@ namespace TESTFRAMEWORK.Models
         public int UserId { get; set; }
         public string LoginId { get; set; }
         public string PasswordHash { get; set; }
-        public string FullName { get; set; }
-        public string UserType { get; set; }
-        public string IsActive { get; set; }
-        public string IsLocked { get; set; }
-        public string FirstLogin { get; set; }
-        public string DeleteFlag { get; set; }
-        public Nullable<System.DateTime> CreatedAt { get; set; }
     }
 }

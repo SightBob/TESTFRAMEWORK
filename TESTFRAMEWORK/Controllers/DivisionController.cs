@@ -9,7 +9,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class DivisionController : Controller
     {
-        private Research_DBEntities db = new Research_DBEntities();
+        private Research_DBEntities1 db = new Research_DBEntities1();
 
         // 1) หน้า Index: แสดงข้อมูลแผนก พร้อมชื่อฝ่าย
         public ActionResult Index()

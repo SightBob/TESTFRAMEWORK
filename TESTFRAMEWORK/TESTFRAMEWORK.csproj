@@ -137,63 +137,63 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\department.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DepartmentViewModel.cs" />
     <Compile Include="Models\division.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DivisionViewModel.cs" />
     <Compile Include="Models\ResearchAssistant_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchDB.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ResearchDB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchDB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ResearchDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ResearchDB.edmx</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ResearcherViewModel.cs" />
     <Compile Include="Models\Researcher_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ResearchFile_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResearchModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResearchModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResearchModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResearchModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResearchModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\ResearchProjectViewModel.cs" />
     <Compile Include="Models\ResearchProject_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\StatusProject_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Status_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagram.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TypeEC_tbl.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TypeResearch.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\WorkGroupViewModel.cs" />
     <Compile Include="Models\work_groups.cs">
-      <DependentUpon>ResearchDB.tt</DependentUpon>
+      <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -2726,15 +2726,15 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\ResearchDB.Context.tt">
+    <Content Include="Models\ResearchModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ResearchDB.edmx</DependentUpon>
-      <LastGenOutput>ResearchDB.Context.cs</LastGenOutput>
+      <DependentUpon>ResearchModel.edmx</DependentUpon>
+      <LastGenOutput>ResearchModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\ResearchDB.tt">
+    <Content Include="Models\ResearchModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ResearchDB.edmx</DependentUpon>
-      <LastGenOutput>ResearchDB.cs</LastGenOutput>
+      <DependentUpon>ResearchModel.edmx</DependentUpon>
+      <LastGenOutput>ResearchModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -2892,12 +2892,12 @@
     <Content Include="Content\dist\libs\quill\fonts\KaTeX_Typewriter-Regular.ttf" />
     <Content Include="Content\dist\libs\quill\fonts\KaTeX_Typewriter-Regular.woff" />
     <Content Include="Content\dist\libs\quill\fonts\KaTeX_Typewriter-Regular.woff2" />
-    <EntityDeploy Include="Models\ResearchDB.edmx">
+    <EntityDeploy Include="Models\ResearchModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ResearchDB.Designer.cs</LastGenOutput>
+      <LastGenOutput>ResearchModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\ResearchDB.edmx.diagram">
-      <DependentUpon>ResearchDB.edmx</DependentUpon>
+    <Content Include="Models\ResearchModel.edmx.diagram">
+      <DependentUpon>ResearchModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

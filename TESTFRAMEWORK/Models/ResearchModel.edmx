@@ -118,13 +118,6 @@
           <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LoginId" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="FullName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="UserType" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="IsActive" Type="char" MaxLength="1" />
-          <Property Name="IsLocked" Type="char" MaxLength="1" />
-          <Property Name="FirstLogin" Type="char" MaxLength="1" />
-          <Property Name="DeleteFlag" Type="char" MaxLength="1" />
-          <Property Name="CreatedAt" Type="datetime" />
         </EntityType>
         <EntityType Name="work_groups">
           <Key>
@@ -527,13 +520,6 @@
           <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="LoginId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="IsLocked" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="FirstLogin" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DeleteFlag" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="work_groups">
           <Key>
@@ -723,7 +709,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Research_DBEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Research_DBEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="departments" EntityType="Self.department" />
           <EntitySet Name="divisions" EntityType="Self.division" />
           <EntitySet Name="ResearchAssistant_tbl" EntityType="Self.ResearchAssistant_tbl" />
@@ -799,7 +785,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Research_DBModelStoreContainer" CdmEntityContainer="Research_DBEntities">
+        <EntityContainerMapping StorageEntityContainer="Research_DBModelStoreContainer" CdmEntityContainer="Research_DBEntities1">
           <EntitySetMapping Name="departments">
             <EntityTypeMapping TypeName="Research_DBModel.department">
               <MappingFragment StoreEntitySet="departments">
@@ -923,13 +909,6 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="LoginId" ColumnName="LoginId" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="UserType" ColumnName="UserType" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
-                <ScalarProperty Name="FirstLogin" ColumnName="FirstLogin" />
-                <ScalarProperty Name="DeleteFlag" ColumnName="DeleteFlag" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
