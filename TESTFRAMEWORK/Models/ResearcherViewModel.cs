@@ -11,12 +11,10 @@ namespace TESTFRAMEWORK.Models
         //[Required(ErrorMessage = "กรุณากรอกรหัสนักวิจัย")]
         public string ResearcherNumber { get; set; }
 
-        [Required(ErrorMessage = "กรุณากรอกชื่อนำหน้า")]
         public string Title { get; set; }
 
         public string TitleCustom { get; set; }
 
-        [Required(ErrorMessage = "กรุณากรอกชื่อนักวิจัย")]
         public string Name { get; set; }
 
         public int? WorkGroupId { get; set; }

@@ -2728,8 +2728,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\ResearchDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ResearchDB.Context.cs</LastGenOutput>
       <DependentUpon>ResearchDB.edmx</DependentUpon>
+      <LastGenOutput>ResearchDB.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\ResearchDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

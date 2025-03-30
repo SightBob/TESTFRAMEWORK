@@ -53,255 +53,271 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ResearchProject.ProjectID)
 
-<div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h4 class="mb-3">รายละเอียดโครงการ</h4>
-        <button id="editButton" type="button" class="btn btn-warning mb-3" onclick="enableEditing()">แก้ไข</button>
-    </div>
-
-    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ResearchProject.FiscalYear, "ปีงบประมาณ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled" })
-                @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
-            </div>
+    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 class="mb-3">รายละเอียดโครงการ</h4>
+            <button id="editButton" type="button" class="btn btn-warning mb-3" onclick="enableEditing()">แก้ไข</button>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                @Html.LabelFor(m => m.ResearchProject.ProjectCode, "รหัสโครงการ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.ResearchProject.ProjectCode, new { @class = "form-control", @disabled = "disabled" })
-            </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group mb-3">
-                @Html.LabelFor(m => m.ResearchProject.ProjectName, "ชื่อโครงการ", new { @class = "font-weight-bold" })
-                @Html.EditorFor(model => model.ResearchProject.ProjectName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- ประเภท EC -->
-        <div class="col-md-12">
-            <div class="form-group mb-3">
-                @Html.Label("ประเภท EC", new { @class = "font-weight-bold" })
-                @Html.DropDownListFor(m => m.ResearchProject.TypeECID, ViewBag.TypeECList as SelectList, "-- เลือกประเภท EC --", new { @class = "form-control type_ec", @disabled = "disabled" } )
-            </div>
-        </div>
-
-        <!-- หัวหน้าโครงการ (Select2) -->
-        <div class="col-md-3">
-            @Html.Label("หัวหน้าโครงการ", new { @class = "font-weight-bold" })
-            @Html.DropDownListFor(m => m.ResearchProject.HeadResearcherId,
-                       ViewBag.HeadResearcherList as SelectList,
-                       "-- เลือกหัวหน้าโครงการ --",
-                       new { @class = "js-example-basic-single form-control headResearcher", @disabled = "disabled" })
-
-        </div>
-
-        <!-- สำนักวิชา/หน่วยงาน -->
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
-                <input type="text" id="headWorkGroup" class="form-control" disabled>
-            </div>
-        </div>
-
-        <!-- สำนักวิชา/หน่วยงาน -->
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.Label("สำนักวิชา / หน่วยงาน", new { @class = "font-weight-bold" })
-                <input type="text" id="headDepartment" class="form-control" disabled>
-            </div>
-        </div>
-
-        <!-- สำนักวิชา/หน่วยงาน -->
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.Label("ฝ่าย / แผนก", new { @class = "font-weight-bold" })
-                <input type="text" id="headDivition" class="form-control" disabled>
-            </div>
-        </div>
-    </div>
-
-    <hr class="my-4" />
-    <h4 class="mb-3">👥 ผู้วิจัยร่วม</h4>
-
-    <div class="table-responsive">
-        <table class="table table-bordered" id="assistantTable">
-            <thead class="table-primary text-center">
-                <tr>
-                    <th style="width: 400px;">รหัสและชื่อผู้วิจัยร่วม</th>
-                    <th>
-                        กลุ่มงาน
-                    </th>
-                    <th>
-                        สำนักวิชา /หน่วยงาน
-                    </th>
-                    <th>ฝ่าย / แผนก</th>
-                    <th>ประเภท</th>
-                    <th>ลบ</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.ResearchAssistants != null && Model.ResearchAssistants.Any())
-                {
-                    for (int i = 0; i < Model.ResearchAssistants.Count; i++)
+        <!-- แสดงข้อความข้อผิดพลาดถ้ามี -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                     {
-                        <tr id="assistant_@i">
-                            <td>
-                                <select class="form-control researcherSelect"
-                                        name="ResearchAssistants[@i].ResearcherNumber"
-                                        style="width: 100%;" disabled>
-                                    <option value="">-- เลือกนักวิจัย --</option>
-                                    @foreach (var item in Model.HeadResearcherList)
-                                    {
-                                        <option value="@item.Value" @(item.Value == Model.ResearchAssistants[i].ResearcherNumber ? "selected" : "")>@item.Text</option>
-                                    }
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control assistantWorkgroup" disabled /></td>
-                            <td><input type="text" class="form-control assistantFaculty" disabled /></td>
-                            <td><input type="text" class="form-control assistantDivisions" disabled /></td>
-                            <td><input type="text" class="form-control assistantType" disabled /></td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(@i)" disabled>ลบ</button>
-                            </td>
-                        </tr>
+                        <li>@error.ErrorMessage</li>
                     }
-                }
-            </tbody>
-        </table>
-    </div>
-    <button type="button" class="btn btn-primary mt-2" onclick="addAssistant()" disabled>+ เพิ่มผู้วิจัยร่วม</button>
+                </ul>
+            </div>
+        }
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ResearchProject.ECApprovalCode, "รหัส EC", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.ECApprovalCode, new { @class = "form-control", @disabled = "disabled" })
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "ปีงบประมาณ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate", })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.ProjectCode, "รหัสโครงการ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(m => m.ResearchProject.ProjectCode, new { @class = "form-control", @disabled = "disabled" })
+                </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ResearchProject.ECApprovalDate, "วันที่อนุมัติ EC", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled" })
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.ProjectName, "ชื่อโครงการ", new { @class = "font-weight-bold" })
+                    @Html.EditorFor(model => model.ResearchProject.ProjectName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(model => model.ResearchProject.ECExpirationDate, "วันหมดอายุ EC", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.ECExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", id = "date_ec", type = "date", @disabled = "disabled" })
-                @Html.ValidationMessageFor(model => model.ResearchProject.ECExpirationDate, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- ประเภท EC -->
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.Label("ประเภท EC", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.ResearchProject.TypeECID, ViewBag.TypeECList as SelectList, "-- เลือกประเภท EC --", new { @class = "form-control type_ec", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <!-- หัวหน้าโครงการ (Select2) -->
+            <div class="col-md-3">
+                @Html.Label("หัวหน้าโครงการ", new { @class = "font-weight-bold" })
+                @Html.DropDownListFor(m => m.ResearchProject.HeadResearcherId,
+                           ViewBag.HeadResearcherList as SelectList,
+                           "-- เลือกหัวหน้าโครงการ --",
+                           new { @class = "js-example-basic-single form-control headResearcher", @disabled = "disabled" })
+
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
+                    <input type="text" id="headWorkGroup" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("สำนักวิชา / หน่วยงาน", new { @class = "font-weight-bold" })
+                    <input type="text" id="headDepartment" class="form-control" disabled>
+                </div>
+            </div>
+
+            <!-- สำนักวิชา/หน่วยงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("ฝ่าย / แผนก", new { @class = "font-weight-bold" })
+                    <input type="text" id="headDivition" class="form-control" disabled>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled" })
-                @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <hr class="my-4" />
+        <h4 class="mb-3">👥 ผู้วิจัยร่วม</h4>
 
-        <div class="col-md-6">
-            <div class="form-group">
-                @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled" })
-                @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="form-group">
-                @Html.LabelFor(model => model.ResearchProject.Note, "หมายเหตุ", new { @class = "font-weight-bold" })
-                @Html.TextAreaFor(model => model.ResearchProject.Note, new { @class = "form-control", rows = 4, @disabled = "disabled" })
-                @Html.ValidationMessageFor(model => model.ResearchProject.Note, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-    </div>
-
-    <hr class="my-4">
-    <h4 class="mb-3">📎 ไฟล์แนบ</h4>
-
-    @if (Model.ResearchProject.ResearchFile_tbl != null && Model.ResearchProject.ResearchFile_tbl.Any())
-    {
-        <div class="card shadow-sm p-3">
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead class="table-light text-center">
-                        <tr>
-                            <th>📄 ชื่อไฟล์</th>
-                            <th class="text-center">ดาวน์โหลด</th>
-                            <th class="text-center">🗑️ ลบไฟล์</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var file in Model.ResearchProject.ResearchFile_tbl)
+        <div class="table-responsive">
+            <table class="table table-bordered" id="assistantTable">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th style="width: 400px;">รหัสและชื่อผู้วิจัยร่วม</th>
+                        <th>
+                            กลุ่มงาน
+                        </th>
+                        <th>
+                            สำนักวิชา /หน่วยงาน
+                        </th>
+                        <th>ฝ่าย / แผนก</th>
+                        <th>ประเภท</th>
+                        <th>ลบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ResearchAssistants != null && Model.ResearchAssistants.Any())
+                    {
+                        for (int i = 0; i < Model.ResearchAssistants.Count; i++)
                         {
-                            <tr>
+                            <tr id="assistant_@i">
                                 <td>
-                                    <i class="bi bi-file-earmark-text text-primary"></i>
-                                    @file.FileName
+                                    <select class="form-control researcherSelect js-example-basic-single"
+                                            name="ResearchAssistants[@i].ResearcherNumber"
+                                            style="width: 100%;" disabled>
+                                        <option value="">-- เลือกนักวิจัย --</option>
+                                        @foreach (var item in Model.HeadResearcherList)
+                                        {
+                                            <option value="@item.Value" @(item.Value == Model.ResearchAssistants[i].ResearcherNumber ? "selected" : "")>@item.Text</option>
+                                        }
+                                    </select>
                                 </td>
-                                <td class="text-center">
-                                    <a href="@Url.Action("DownloadFile", "Research", new { fileId = file.FileID })" class="btn btn-outline-primary btn-sm">
-                                        <i class="bi bi-download"></i> ดาวน์โหลด
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    <input type="hidden" name="fileId" value="@file.FileID" />
-                                    <button type="button" onclick="confirmDelete(@file.FileID)" class="btn btn-outline-primary btn-sm" disabled >
-                                        <i class="bi bi-download"></i> ลบ
-                                    </button>
+                                <td><input type="text" class="form-control assistantWorkgroup" disabled /></td>
+                                <td><input type="text" class="form-control assistantFaculty" disabled /></td>
+                                <td><input type="text" class="form-control assistantDivisions" disabled /></td>
+                                <td><input type="text" class="form-control assistantType" disabled /></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(@i)" disabled>ลบ</button>
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-primary mt-2" onclick="addAssistant()" disabled>+ เพิ่มผู้วิจัยร่วม</button>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.ECApprovalCode, "รหัส EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalCode, new { @class = "form-control", @disabled = "disabled" })
+                </div>
             </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.ECApprovalDate, "วันที่อนุมัติ EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ECExpirationDate, "วันหมดอายุ EC", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control date_ec", type = "date", @disabled = "disabled", id = "RequestDate" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ECExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ResearchProject.Note, "หมายเหตุ", new { @class = "font-weight-bold" })
+                    @Html.TextAreaFor(model => model.ResearchProject.Note, new { @class = "form-control", rows = 4, @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.Note, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
         </div>
-    }
-    else
-    {
-        <div class="alert alert-warning d-flex align-items-center">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <span>ไม่มีไฟล์แนบ</span>
+
+        <hr class="my-4">
+        <h4 class="mb-3">📎 ไฟล์แนบ</h4>
+
+        @if (Model.ResearchProject.ResearchFile_tbl != null && Model.ResearchProject.ResearchFile_tbl.Any())
+        {
+            <div class="card shadow-sm p-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>📄 ชื่อไฟล์</th>
+                                <th class="text-center">ดาวน์โหลด</th>
+                                <th class="text-center">🗑️ ลบไฟล์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var file in Model.ResearchProject.ResearchFile_tbl)
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-file-earmark-text text-primary"></i>
+                                        @file.FileName
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("DownloadFile", "Research", new { fileId = file.FileID })" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-download"></i> ดาวน์โหลด
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="fileId" value="@file.FileID" />
+                                        <button type="button" onclick="confirmDelete(@file.FileID)" class="btn btn-outline-primary btn-sm" disabled>
+                                            <i class="bi bi-download"></i> ลบ
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span>ไม่มีไฟล์แนบ</span>
+            </div>
+        }
+
+        <div class="form-group mt-4">
+            <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
+            <input type="file" name="files" multiple class="form-control" disabled />
         </div>
-    }
 
-    <div class="form-group mt-4">
-        <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
-        <input type="file" name="files" multiple class="form-control" disabled />
-    </div>
+        <div class="form-group mt-4">
+            @Html.LabelFor(m => m.ResearchProject.StatusProjectID, "สถานะโครงการ", new { @class = "font-weight-bold" })
+            @Html.DropDownListFor(m => m.ResearchProject.StatusProjectID, ViewBag.StatusProjectList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control", @disabled = "disabled" })
+        </div>
 
-    <div class="form-group mt-4">
-        @Html.LabelFor(m => m.ResearchProject.StatusProjectID, "สถานะโครงการ", new { @class = "font-weight-bold" })
-        @Html.DropDownListFor(m => m.ResearchProject.StatusProjectID, ViewBag.StatusProjectList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control", @disabled = "disabled" })
+        <div class="d-flex align-items-center justify-content-center mt-4">
+            <button type="submit" id="saveBtn" class="btn btn-success px-4 me-3" disabled>
+                <i class="fas fa-save"></i> บันทึกข้อมูล
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
+        </div>
     </div>
-
-    <div class="d-flex align-items-center justify-content-center mt-4">
-        <button type="submit" id="saveBtn" class="btn btn-success px-4 me-3" disabled>
-            <i class="fas fa-save"></i> บันทึกข้อมูล
-        </button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
-    </div>
-</div>
 }
 
 @section scripts {
     <!-- โหลด JS ของ jQuery และ Select2 จาก _Layout.cshtml (หรือที่อื่น) ให้เรียบร้อยก่อนโค้ดนี้ -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
     <script>
         function confirmDelete(fileId) {
@@ -331,10 +347,11 @@
             let selectedValue = $(this).val(); // ดึงค่าจาก dropdown
 
             if (selectedValue == "1") {
-                $("#date_ec").prop("disabled", true);
+                $(".date_ec").prop("disabled", true).val(''); // disabled และ clear ข้อมูล
             } else {
-                $("#date_ec").prop("disabled", false);
+                $(".date_ec").prop("disabled", false);
             }
+
         });
 
         // ตัวนับ index ของผู้วิจัยร่วม
@@ -484,6 +501,189 @@
         function removeAssistant(index) {
             document.getElementById(`assistant_${index}`).remove();
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr("#RequestDate", {
+                locale: "th", // ใช้ภาษาไทย
+                dateFormat: "d/m/Y",
+                altInput: true,
+                altFormat: "d/m/Y",
+                allowInput: true,
+
+                // แปลงวันที่ใน input เป็น พ.ศ.
+                formatDate: function (date, format, locale) {
+                    const day = ("0" + date.getDate()).slice(-2);
+                    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+                    const thaiYear = date.getFullYear() + 543;
+                    return `${day}/${month}/${thaiYear}`;
+                },
+
+                // แปลงค่ากลับเป็น ค.ศ. ก่อนบันทึก
+                parseDate: function (dateStr, format) {
+                    const parts = dateStr.split("/");
+                    if (parts.length === 3) {
+                        let day = parseInt(parts[0], 10);
+                        let month = parseInt(parts[1], 10) - 1;
+                        let year = parseInt(parts[2], 10) - 543;
+                        return new Date(year, month, day);
+                    }
+                    return new Date();
+                },
+
+                onOpen: function (selectedDates, dateStr, instance) {
+                    // ให้แน่ใจว่าปฏิทินแสดงเดือนปี พ.ศ. เสมอเมื่อเปิด
+                    setTimeout(() => {
+                        updateThaiYear(instance);
+
+                        // กำหนดให้ปฏิทินแสดงเดือนปีปัจจุบัน ถ้าไม่มีวันที่ถูกเลือก
+                        if (!instance.selectedDates || instance.selectedDates.length === 0) {
+                            const today = new Date();
+                            instance.currentYear = today.getFullYear();
+                            instance.currentMonth = today.getMonth();
+                            instance.redraw();
+                            updateThaiYear(instance);
+                        }
+                    }, 10);
+                },
+
+                onYearChange: function (selectedDates, dateStr, instance) {
+                    setTimeout(() => {
+                        updateThaiYear(instance);
+                        syncCalendarWithInput(instance);
+                    }, 10);
+                },
+
+                onMonthChange: function (selectedDates, dateStr, instance) {
+                    setTimeout(() => updateThaiYear(instance), 10);
+                },
+
+                onReady: function (selectedDates, dateStr, instance) {
+                    setTimeout(() => {
+                        updateThaiYear(instance);
+
+                        // ให้สามารถพิมพ์ปี พ.ศ.
+                        const yearInput = instance.calendarContainer.querySelector(".numInput.cur-year");
+                        if (yearInput) {
+                            yearInput.removeAttribute("readonly");
+                            yearInput.addEventListener("input", function () {
+                                let inputYear = parseInt(yearInput.value);
+                                if (!isNaN(inputYear) && inputYear >= 2500) {
+                                    let westernYear = inputYear - 543; // แปลงเป็น ค.ศ.
+                                    instance.setDate(new Date(westernYear, instance.currentMonth, 1), false);
+                                    instance.redraw();
+                                    setTimeout(() => updateThaiYear(instance), 10);
+                                }
+                            });
+                        }
+                    }, 10);
+
+                    if (selectedDates[0]) {
+                        instance.altInput.value = instance.formatDate(selectedDates[0], "d/m/Y");
+                    }
+                },
+
+                onChange: function (selectedDates, dateStr, instance) {
+                    setTimeout(() => updateThaiYear(instance), 10);
+                    if (selectedDates[0]) {
+                        instance.altInput.value = instance.formatDate(selectedDates[0], "d/m/Y");
+                    }
+                },
+
+                // เพิ่ม event handler สำหรับเมื่อปฏิทินถูกวาด/อัปเดตใหม่
+                onDraw: function (selectedDates, dateStr, instance) {
+                    setTimeout(() => updateThaiYear(instance), 10);
+                }
+            });
+
+            // ฟังก์ชันอัปเดตปีเป็น พ.ศ. ในปฏิทิน
+            function updateThaiYear(instance) {
+                setTimeout(() => {
+                    const yearInput = instance.calendarContainer.querySelector(".numInput.cur-year");
+                    if (yearInput) {
+                        let currentYear = parseInt(yearInput.value);
+                        if (!isNaN(currentYear) && currentYear < 2500) {
+                            yearInput.value = currentYear + 543;
+                        }
+                    }
+
+                    // ตรวจจับปุ่ม `+` และ `-`
+                    const upButton = instance.calendarContainer.querySelector(".arrowUp");
+                    const downButton = instance.calendarContainer.querySelector(".arrowDown");
+
+                    if (upButton && downButton) {
+                        upButton.onclick = function () {
+                            // เพิ่มปี ค.ศ.
+                            let gregorianYear = parseInt(yearInput.value) - 543 + 1;
+                            let thaiYear = gregorianYear + 543;
+                            yearInput.value = thaiYear;
+
+                            // อัปเดตวันที่ทั้งในปฏิทินและ input
+                            let currentDate = instance.selectedDates[0] || new Date();
+                            let newDate = new Date(gregorianYear, currentDate.getMonth(), 1);
+                            instance.setDate(newDate, true);
+
+                            setTimeout(() => {
+                                updateThaiYear(instance);
+                                syncInputWithCalendar(instance);
+                            }, 10);
+                        };
+
+                        downButton.onclick = function () {
+                            // ลดปี ค.ศ.
+                            let gregorianYear = parseInt(yearInput.value) - 543 - 1;
+                            let thaiYear = gregorianYear + 543;
+                            yearInput.value = thaiYear;
+
+                            // อัปเดตวันที่ทั้งในปฏิทินและ input
+                            let currentDate = instance.selectedDates[0] || new Date();
+                            let newDate = new Date(gregorianYear, currentDate.getMonth(), 1);
+                            instance.setDate(newDate, true);
+
+                            setTimeout(() => {
+                                updateThaiYear(instance);
+                                syncInputWithCalendar(instance);
+                            }, 10);
+                        };
+                    }
+
+                    // อัปเดต dropdown ปีให้เป็น พ.ศ.
+                    const yearDropdown = instance.calendarContainer.querySelectorAll(".flatpickr-current-year");
+                    yearDropdown.forEach(el => {
+                        let yearNum = parseInt(el.innerText);
+                        if (!isNaN(yearNum) && yearNum < 2500) {
+                            el.innerText = (yearNum + 543).toString();
+                        }
+                    });
+                }, 10);
+            }
+
+            // ฟังก์ชันทำให้ input อัปเดตปีตรงกับปฏิทิน
+            function syncInputWithCalendar(instance) {
+                let selectedDate = instance.selectedDates[0];
+                if (selectedDate) {
+                    // อัปเดต input ให้ตรงกับปฏิทิน
+                    instance.altInput.value = instance.formatDate(selectedDate, "d/m/Y");
+                }
+            }
+
+            // ฟังก์ชันทำให้ปฏิทินอัปเดตปีตรงกับ input
+            function syncCalendarWithInput(instance) {
+                let selectedDate = instance.selectedDates[0];
+                if (selectedDate) {
+                    // อัปเดตปฏิทินให้ตรงกับ input
+                    instance.jumpToDate(selectedDate, true);
+                    setTimeout(() => updateThaiYear(instance), 10);
+                }
+            }
+
+            // ถ้ามีการคลิกที่ input โดยตรง (แม้ว่าจะไม่เลือกวัน)
+            document.querySelector("#RequestDate").addEventListener("click", function () {
+                const fpInstance = document.querySelector("#RequestDate")._flatpickr;
+                if (fpInstance) {
+                    setTimeout(() => updateThaiYear(fpInstance), 50);
+                }
+            });
+        });
 
     </script>
 }

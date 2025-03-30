@@ -207,10 +207,11 @@
             let selectedValue = $(this).val(); // ดึงค่าจาก dropdown
 
             if (selectedValue == "1") {
-                $(".date_ec").prop("disabled", true);
+                $(".date_ec").prop("disabled", true).val(''); // disabled และ clear ข้อมูล
             } else {
                 $(".date_ec").prop("disabled", false);
             }
+
         });
 
 

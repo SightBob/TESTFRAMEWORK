@@ -372,6 +372,9 @@ namespace TESTFRAMEWORK.Controllers
                     db.SaveChanges();
                 }
 
+                // กำหนดขนาดสูงสุด (ตัวอย่าง: 5MB)
+                int maxFileSize = 5 * 1024 * 1024; // 5MB
+
                 // 3) บันทึกไฟล์แนบเพิ่มเติม (ถ้ามี)
                 if (files != null)
                 {
@@ -379,6 +382,24 @@ namespace TESTFRAMEWORK.Controllers
                     {
                         if (file != null && file.ContentLength > 0)
                         {
+                            // ตรวจสอบชนิดของไฟล์
+                            var validFileTypes = new[] { ".pdf" };
+                            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+                            if (!validFileTypes.Contains(fileExtension))
+                            {
+                                ModelState.AddModelError("", "ไฟล์ที่อัปโหลดต้องเป็นไฟล์ PDF หรือ Word (.docx) เท่านั้น");
+                                continue;
+                            }
+
+                            // ตรวจสอบขนาดไฟล์
+                            if (file.ContentLength > maxFileSize)
+                            {
+                                ModelState.AddModelError("", $"ไฟล์ {file.FileName} ขนาดเกิน 5MB");
+                                continue;
+                            }
+
+                            // บันทึกไฟล์
                             byte[] fileData;
                             using (var binaryReader = new BinaryReader(file.InputStream))
                             {
@@ -397,7 +418,15 @@ namespace TESTFRAMEWORK.Controllers
                             db.ResearchFile_tbl.Add(researchFile);
                         }
                     }
-                    db.SaveChanges();
+                    if (ModelState.IsValid)
+                    {
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        // ถ้ามีข้อผิดพลาด เช่นไฟล์ผิดประเภทหรือขนาดเกิน
+                        return View(model); // ส่งกลับไปที่หน้าเดิมเพื่อแสดง error
+                    }
                 }
 
                 return RedirectToAction("Index");

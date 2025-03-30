@@ -97,7 +97,6 @@
                                     <table id="example" class="table table-striped table-hover align-middle">
                                         <thead>
                                             <tr>
-                                                <th>รหัสนักวิจัย</th>
                                                 <th>ชื่อ</th>
                                                 <th>กลุ่มงาน / มหาวิทยาลัย</th>
                                                 <th>ฝ่ายงาน / สำนัก</th>
@@ -112,7 +111,6 @@
                                                 foreach (var researcher in Model)
                                                 {
                                                     <tr>
-                                                        <td>@(researcher?.ResearcherNumber)</td>
                                                         <td>@(researcher?.Title ?? "") @(researcher?.Name ?? "-")</td>
                                                         <td>@(researcher?.WorkGroupName ?? "-")</td>
                                                         <td>@(researcher?.DepartmentName ?? "-")</td>

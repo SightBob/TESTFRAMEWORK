@@ -11,13 +11,11 @@
     }
 </style>
 
-<h2 class="mb-4">เพิ่มนักวิจัย</h2>
-
 @using (Html.BeginForm("CreateInternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-<div class="container-xxl mt-xl-5"  style="max-width: 95%; ">
+<div class="container-xxl"  style="max-width: 95%; margin-top: 5.5rem;">
         <div class="" style="background-color: #F26522; padding: 1rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
             <h4 class="text-white">เพิ่มข้อมูลนักวิจัย (บุคคลภายใน)</h4>
         </div>
@@ -38,13 +36,13 @@
 
         <!-- ✅ ข้อมูลพื้นฐาน -->
         <div class="row">
-            <div class="col-md-4">
+         @*   <div class="col-md-4">
                 <div class="form-group mb-3">
                     @Html.Label("รหัสผู้วิจัย", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(m => m.ResearcherNumber, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.ResearcherNumber, "", new { @class = "text-danger" })
                 </div>
-            </div>
+            </div>*@
 
             <div class="col-md-3">
                 <div class="form-group mb-3">

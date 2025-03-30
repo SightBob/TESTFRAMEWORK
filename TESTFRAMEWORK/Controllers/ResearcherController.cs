@@ -16,7 +16,7 @@ namespace TESTFRAMEWORK.Controllers
         public ActionResult Index()
         {
             var internalResearchers = db.Researcher_tbl
-                 .Where(r => r.work_group_id != null)
+                 .Where(r => r.TypeResearch != 4)
                 .Select(r => new ResearcherViewModel
                 {
                     ResearcherNumber = r.ResearcherNumber ?? "-",
@@ -47,7 +47,7 @@ namespace TESTFRAMEWORK.Controllers
         public ActionResult ExternalResearchers()
         {
             var externalResearchers = db.Researcher_tbl
-                .Where(r => r.work_group_id == null)
+                .Where(r => r.TypeResearch == 4)
                 .Select(r => new ResearcherViewModel
                 {
                     ResearcherNumber = r.ResearcherNumber ?? "-",
@@ -92,7 +92,7 @@ namespace TESTFRAMEWORK.Controllers
 
                 var researcher = new Researcher_tbl
                 {
-                    ResearcherNumber = model.ResearcherNumber,
+                    ResearcherNumber = GenerateInternalResearcherNumber(),
                     title = model.Title,
                     Name = model.Name,
                     work_group_id = work_group_Id != 0 ? (int?)work_group_Id : null,
@@ -277,15 +277,6 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name");
         }
 
-        // ✅ โหลด Dropdown ตาม WorkGroup และ Department
-        private void LoadDropdowns(int workGroupId, int departmentId)
-        {
-            ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name", workGroupId);
-            ViewBag.DepartmentList = new SelectList(db.departments.Where(d => d.work_group_id == workGroupId), "id", "name", departmentId);
-            ViewBag.DivisionList = new SelectList(db.divisions.Where(d => d.department_id == departmentId), "id", "name");
-            ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name");
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Delete(string id)
@@ -339,8 +330,28 @@ namespace TESTFRAMEWORK.Controllers
             }
         }
 
+        private string GenerateInternalResearcherNumber()
+        {
+            string prefix = "I";
+            var lastExternalResearcher = db.Researcher_tbl
+                .Where(r => r.ResearcherNumber.StartsWith(prefix))
+                .OrderByDescending(r => r.ResearcherNumber)
+                .FirstOrDefault();
+
+            if (lastExternalResearcher != null)
+            {
+                int lastNumber = int.Parse(lastExternalResearcher.ResearcherNumber.Substring(1));
+                return $"{prefix}{lastNumber + 1:D4}";
+            }
+            else
+            {
+                return $"{prefix}0001";
+            }
+        }
+
         public ActionResult EditInternal(string id)
         {
+            LoadDropdowns();
             if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -386,9 +397,81 @@ namespace TESTFRAMEWORK.Controllers
 
             return View(researcher);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditInternal(ResearcherViewModel researcher)
+        {
+            if (researcher == null || string.IsNullOrEmpty(researcher.ResearcherNumber))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "ข้อมูลไม่ถูกต้อง");
+            }
 
-   // GET: EditExternal
-public ActionResult EditExternal(string id)
+            try
+            {
+                // ตรวจสอบว่ามีการ valid ข้อมูลหรือไม่
+                if (ModelState.IsValid)
+                {
+                    // ค้นหาข้อมูลนักวิจัยจากฐานข้อมูล
+                    var existingResearcher = db.Researcher_tbl
+                                               .Where(r => r.ResearcherNumber == researcher.ResearcherNumber)
+                                               .FirstOrDefault();
+
+                    if (existingResearcher == null)
+                    {
+                        return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
+                    }
+
+                    // อัปเดตข้อมูลนักวิจัยในฐานข้อมูล
+                    existingResearcher.title = researcher.Title;
+                    existingResearcher.Name = researcher.Name;
+                    existingResearcher.work_group_id = researcher.WorkGroupId;
+                    existingResearcher.department_id = researcher.DepartmentId;
+                    existingResearcher.division_id = researcher.DivisionId;
+                    existingResearcher.TypeResearch = researcher.TypeResearchId;
+
+                    // บันทึกข้อมูลที่อัปเดต
+                    db.SaveChanges();
+
+                    // ส่งข้อความสำเร็จและกลับไปยังหน้าที่เหมาะสม
+                    TempData["SuccessMessage"] = "ข้อมูลนักวิจัยถูกอัปเดตสำเร็จ!";
+                    return RedirectToAction("Index"); // หรือชื่อของ action ที่คุณต้องการ redirect ไป
+                }
+                else
+                {
+                    // หากข้อมูลไม่ valid ให้โหลด dropdown lists อีกครั้งและแสดงฟอร์มใหม่
+
+                    // โหลด Dropdown List สำหรับ Title
+                    ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }, researcher.Title);
+
+                    // โหลด Dropdown Lists สำหรับ WorkGroup, Department, Division, TypeResearch
+                    ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name", researcher.WorkGroupId);
+
+                    ViewBag.DepartmentList = researcher.WorkGroupId.HasValue
+                        ? new SelectList(db.departments.Where(d => d.work_group_id == researcher.WorkGroupId), "id", "name", researcher.DepartmentId)
+                        : new SelectList(Enumerable.Empty<SelectListItem>());
+
+                    ViewBag.DivisionList = researcher.DepartmentId.HasValue
+                        ? new SelectList(db.divisions.Where(di => di.department_id == researcher.DepartmentId), "id", "name", researcher.DivisionId)
+                        : new SelectList(Enumerable.Empty<SelectListItem>());
+
+                    ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
+
+                    // แสดงฟอร์มใหม่พร้อมกับค่าที่โหลดจากฐานข้อมูล
+                    return View(researcher);
+                }
+            }
+            catch (Exception ex)
+            {
+                // บันทึกข้อผิดพลาดและแสดงหน้าข้อผิดพลาด
+                return View("Error", new HandleErrorInfo(ex, "Researchers", "EditInternal"));
+            }
+        }
+
+
+
+
+        // GET: EditExternal
+        public ActionResult EditExternal(string id)
 {
     if (string.IsNullOrEmpty(id))
     {
@@ -491,6 +574,15 @@ public ActionResult EditExternal(string id)
             ViewBag.TitleList = new SelectList(titleOptions, model.Title);
 
             return View(model);
+        }
+
+        // ✅ โหลด Dropdown ตาม WorkGroup และ Department
+        private void LoadDropdowns(int workGroupId, int departmentId)
+        {
+            ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name", workGroupId);
+            ViewBag.DepartmentList = new SelectList(db.departments.Where(d => d.work_group_id == workGroupId), "id", "name", departmentId);
+            ViewBag.DivisionList = new SelectList(db.divisions.Where(d => d.department_id == departmentId), "id", "name");
+            ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name");
         }
 
     }

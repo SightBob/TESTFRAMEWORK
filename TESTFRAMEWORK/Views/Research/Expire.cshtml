@@ -119,103 +119,98 @@
                                                 <th>ปีงบประมาณ</th>
                                                 <th>รหัสโครงการ</th>
                                                 <th class="project-name-column">ชื่อโครงการ</th>
+                                                <th>ชื่อหัวหน้าโครงการ</th>
                                                 <th>ประเภท EC</th>
+                                                <th>รหัส EC</th>
                                                 <th>วันหมดอายุ</th>
                                                 <th>สถานะ</th>
-                                                <th>วันคงเหลือ (วัน)</th>
                                                 <th>จัดการ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach (var item in Model)
                                             {
-                                                <tr>
-                                                    <!-- ปีงบประมาณ -->
-                                                    <td>
+                                            <tr>
+                                                <!-- ปีงบประมาณ -->
+                                                <td>
+                                                    <div style="display: flex; justify-content: center; align-items: center;">
                                                         @(item.FiscalYear.HasValue
                                                             ? item.FiscalYear.Value.ToString("yyyy")
                                                             : "-")
-                                                    </td>
-                                                    <!-- รหัสโครงการ -->
-                                                    <td>@item.ProjectCode</td>
-                                                    <!-- ชื่อโครงการ -->
-                                                    <td>@item.ProjectName</td>
-                                                    <!-- ประเภท EC -->
-                                                    <td>
-                                                        @if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 1)
-                                                        {
-                                                            // Full Board => bg-danger
-                                                            <span class="badge bg-danger">@item.TypeEC_tbl.ECTypeName</span>
-                                                        }
-                                                        else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 2)
-                                                        {
-                                                            // Expedited => bg-warning
-                                                            <span class="badge bg-warning">@item.TypeEC_tbl.ECTypeName</span>
-                                                        }
-                                                        else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 3)
-                                                        {
-                                                            // Exemption => bg-success
-                                                            <span class="badge bg-success">@item.TypeEC_tbl.ECTypeName</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            // กรณี TypeEC_tbl เป็น null หรือค่าไม่ตรงกับ 1/2/3
-                                                            <span class="badge bg-secondary">-</span>
-                                                        }
 
-                                                    </td>
-                                                    <!-- วันหมดอายุ -->
-                                                    <td>
-                                                        @(item.ResearchExpirationDate.HasValue
+
+                                                    </div>
+                                                </td>
+                                                <!-- รหัสโครงการ -->
+                                                <td>@item.ProjectCode</td>
+                                                <!-- ชื่อโครงการ -->
+                                                <td>@item.ProjectName</td>
+                                                <td class="noWrapTable">
+                                                    @if (item.Researcher_tbl != null)
+                                                    {
+                                                        @item.Researcher_tbl.title @item.Researcher_tbl.Name
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>ไม่พบผู้วิจัย</span>
+                                                    }
+                                                </td>
+                                                <!-- ประเภท EC -->
+                                                <td>
+                                                    @if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 1)
+                                                    {
+                                                        // Full Board => bg-danger
+                                                        <span class="badge bg-danger">@item.TypeEC_tbl.ECTypeName</span>
+                                                    }
+                                                    else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 2)
+                                                    {
+                                                        // Expedited => bg-warning
+                                                        <span class="badge bg-warning">@item.TypeEC_tbl.ECTypeName</span>
+                                                    }
+                                                    else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 3)
+                                                    {
+                                                        // Exemption => bg-success
+                                                        <span class="badge bg-success">@item.TypeEC_tbl.ECTypeName</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        // กรณี TypeEC_tbl เป็น null หรือค่าไม่ตรงกับ 1/2/3
+                                                        <span class="badge bg-secondary">-</span>
+                                                    }
+
+                                                </td>
+
+                                                <td class="noWrapTable">@item.ECApprovalCode</td>
+                                                <!-- วันหมดอายุ -->
+                                                <td>
+                                                    @(item.ResearchExpirationDate.HasValue
                                                             ? item.ResearchExpirationDate.Value.ToString("dd/MM/yyyy")
                                                             : "-")
-                                                    </td>
-                                                    <!-- สถานะ -->
-                                                    <td>
-                                                        @if (item.StatusProject_tbl != null)
-                                                        {
-                                                            <span style="color: black;">
-                                                                @item.StatusProject_tbl.TypeStatus
-                                                            </span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span class="badge bg-secondary">-</span>
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        @{
-                                                            if (item.ResearchExpirationDate.HasValue)
-                                                            {
-                                                                var expirationDate = item.ResearchExpirationDate.Value; // เพิ่มปี 54
-                                                                var remainingDays = (expirationDate - DateTime.Now).Days;
-
-                                                                if (remainingDays < 0)
-                                                                {
-                                                                    <span class="text-danger">หมดอายุแล้ว</span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <span>@remainingDays วัน</span>
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>-</span> <!-- กรณีไม่มีวันหมดอายุ -->
-                                                            }
-                                                        }
-                                                    </td>
-                                                    <!-- จัดการ -->
-                                                    <td style="min-width: 180px;">
-                                                        <a href="@Url.Action("Edit", "Research", new { id = item.ProjectID })"
-                                                           class="btn btn-warning btn-sm">✏️ แก้ไข</a>
-                                                        <button type="button"
-                                                                class="btn btn-danger btn-sm"
-                                                                onclick="confirmDelete(@item.ProjectID)">
-                                                            🗑️ ลบ
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                </td>
+                                                <!-- สถานะ -->
+                                                <td class="noWrapTable">
+                                                    @if (item.StatusProject_tbl != null)
+                                                    {
+                                                        <span style="color: black;">
+                                                            @item.StatusProject_tbl.TypeStatus
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">-</span>
+                                                    }
+                                                </td>
+                                                <!-- จัดการ -->
+                                                <td style="min-width: 180px;">
+                                                    <a href="@Url.Action("Edit", "Research", new { id = item.ProjectID })"
+                                                       class="btn btn-warning btn-sm">✏️ แก้ไข</a>
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="confirmDelete(@item.ProjectID)">
+                                                        🗑️ ลบ
+                                                    </button>
+                                                </td>
+                                            </tr>
                                             }
                                         </tbody>
                                     </table>
