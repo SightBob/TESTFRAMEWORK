@@ -214,7 +214,6 @@
 
         });
 
-
         // ตัวนับ index ของผู้วิจัยร่วม
         let assistantIndex = 0;
 
@@ -273,8 +272,8 @@
     $(document).on("change", ".headResearcher", function () {
         let researcherId = $(this).val();
         $.get("@Url.Action("GetResearcherDetails", "Research")", { researcherNumber: researcherId }, function (data) {
-            $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups);;
-            $("#headDepartment").val(data ? data.Faculty : "ไม่พบข้อมูล");
+            $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + " " + (data.StatusWork_groups == 2 ? "(ยกเลิก)" : ""));
+            $("#headDepartment").val(data ? data.Divisions + " " + (data.StatusDivisions == 2 ? "(ยกเลิก)" : "") : "ไม่พบข้อมูล");
             $("#headDivition").val(data ? data.TypeResearch : "ไม่พบข้อมูล");
             console.log("data :", data);
         });

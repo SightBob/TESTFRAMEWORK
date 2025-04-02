@@ -24,6 +24,7 @@ namespace TESTFRAMEWORK.Controllers
                             DepartmentName = dept.name,
                             WorkGroupId = dept.work_group_id,
                             WorkGroupName = wg.name,
+                            StatusWorkGroup = wg.Status,
                             StatusId = dept.Status,
                             StatusName = s.StatusName
                         }).ToList();

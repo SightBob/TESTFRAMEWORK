@@ -11,105 +11,108 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card p-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("รหัสผู้วิจัย", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(m => m.ResearcherNumber, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.ResearcherNumber, "", new { @class = "text-danger" })
-                </div>
+<div class="container-xxl flex-grow-1 container-p-y card" style="margin-top: 5rem">
+    <div class="d-flex justify-content-between align-items-center" style="padding-bottom: 0px !important;">
+        <h3 class="fw-bold"> แก้ไขข้อมูลนักวิจัย (ภายใน)</h3>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="form-group mb-3">
+                @Html.Label("รหัสผู้วิจัย", new { @class = "font-weight-bold" })
+                @Html.TextBoxFor(m => m.ResearcherNumber, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ResearcherNumber, "", new { @class = "text-danger" })
             </div>
+        </div>
 
-            <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <div class="form-group">
-                        @Html.Label("คำนำหน้าชื่อ", new { @class = "form-label fw-bold" })
-                        <input type="text" value="@Model.Title" class="form-control" disabled />
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("คำนำหน้า", new { @class = "font-weight-bold" })
-                    <div class="d-flex">
-                        @Html.DropDownListFor(m => m.Title, new SelectList(new[]
-                        {
-                            "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                            "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
-                        }), "-- กรุณาเลือก --", new { @class = "form-control", id = "titleDropdown" })
-                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control ms-lg-2", style = "display:none;", placeholder = "ระบุคำนำหน้า", id = "otherTitle" })
-                    </div>
-                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group mb-3">
-                    @Html.Label("ชื่อ", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+        <div class="col-md-2">
+            <div class="form-group mb-3">
+                <div class="form-group">
+                    @Html.Label("คำนำหน้าชื่อ", new { @class = "form-label fw-bold" })
+                    <input type="text" value="@Model.Title" class="form-control" disabled />
                 </div>
             </div>
         </div>
 
-        <!-- ✅ บุคคลภายใน: กลุ่มงาน / ฝ่ายงาน / แผนก -->
-        <div id="internal-fields">
-            <div class="row">
-                <!-- ✅ กลุ่มงาน -->
-                <div class="col-md-3">
-                    <div class="form-group mb-3">
-                        @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
-                        @Html.DropDownListFor(m => m.WorkGroupId,
-                            ViewBag.WorkGroupList as SelectList,
-                            "-- เลือกกลุ่มงาน --",
-                            new { @class = "form-control", id = "workGroupDropdown" })
-                    </div>
+        <div class="col-md-3">
+            <div class="form-group mb-3">
+                @Html.Label("คำนำหน้า", new { @class = "font-weight-bold" })
+                <div class="d-flex">
+                    @Html.DropDownListFor(m => m.Title, new SelectList(new[]
+                    {
+                        "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+                        "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+                    }), "-- กรุณาเลือก --", new { @class = "form-control", id = "titleDropdown" })
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control ms-lg-2", style = "display:none;", placeholder = "ระบุคำนำหน้า", id = "otherTitle" })
                 </div>
-
-                <!-- ✅ ฝ่ายงาน -->
-                <div class="col-md-3">
-                    <div class="form-group mb-3">
-                        @Html.Label("ฝ่ายงาน", new { @class = "font-weight-bold" })
-                        @Html.DropDownListFor(m => m.DepartmentId,
-                            ViewBag.DepartmentList as SelectList,
-                            "-- เลือกฝ่ายงาน --",
-                            new { @class = "form-control", id = "departmentDropdown" })
-                    </div>
-                </div>
-
-                <!-- ✅ แผนก -->
-                <div class="col-md-3">
-                    <div class="form-group mb-3">
-                        @Html.Label("แผนก", new { @class = "font-weight-bold" })
-                        @Html.DropDownListFor(m => m.DivisionId,
-                            ViewBag.DivisionList as SelectList,
-                            "-- เลือกแผนก --",
-                            new { @class = "form-control", id = "divisionDropdown" })
-                    </div>
-                </div>
-
-                <!-- ✅ ประเภทวิจัย -->
-                <div class="col-md-3">
-                    <div class="form-group mb-3">
-                        @Html.Label("ประเภทวิจัย", new { @class = "font-weight-bold" })
-                        @Html.DropDownListFor(m => m.TypeResearchId,
-                            ViewBag.TypeResearchList as SelectList,
-                            "-- เลือกประเภทวิจัย --",
-                            new { @class = "form-control", id = "typeResearchDropdown" })
-                    </div>
-                </div>
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="d-flex align-items-center justify-content-center mt-4">
-            <button type="submit" class="btn btn-success px-4 me-3">
-                <i class="fas fa-save"></i> บันทึกข้อมูล
-            </button>
-            <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
+        <div class="col-md-4">
+            <div class="form-group mb-3">
+                @Html.Label("ชื่อ", new { @class = "font-weight-bold" })
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+            </div>
         </div>
     </div>
+
+    <!-- ✅ บุคคลภายใน: กลุ่มงาน / ฝ่ายงาน / แผนก -->
+    <div id="internal-fields">
+        <div class="row">
+            <!-- ✅ กลุ่มงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.WorkGroupId,
+                        ViewBag.WorkGroupList as SelectList,
+                        "-- เลือกกลุ่มงาน --",
+                        new { @class = "form-control", id = "workGroupDropdown" })
+                </div>
+            </div>
+
+            <!-- ✅ ฝ่ายงาน -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("ฝ่ายงาน", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.DepartmentId,
+                        ViewBag.DepartmentList as SelectList,
+                        "-- เลือกฝ่ายงาน --",
+                        new { @class = "form-control", id = "departmentDropdown" })
+                </div>
+            </div>
+
+            <!-- ✅ แผนก -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("แผนก", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.DivisionId,
+                        ViewBag.DivisionList as SelectList,
+                        "-- เลือกแผนก --",
+                        new { @class = "form-control", id = "divisionDropdown" })
+                </div>
+            </div>
+
+            <!-- ✅ ประเภทวิจัย -->
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    @Html.Label("ประเภทวิจัย", new { @class = "font-weight-bold" })
+                    @Html.DropDownListFor(m => m.TypeResearchId,
+                        ViewBag.TypeResearchList as SelectList,
+                        "-- เลือกประเภทวิจัย --",
+                        new { @class = "form-control", id = "typeResearchDropdown" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center mt-4">
+        <button type="submit" class="btn btn-success px-4 me-3">
+            <i class="fas fa-save"></i> บันทึกข้อมูล
+        </button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
+    </div>
+</div>
 }
 
 @section scripts {

@@ -23,6 +23,7 @@ namespace TESTFRAMEWORK.Controllers
                             DivisionName = di.name,
                             DepartmentName = dept.name,
                             StatusId = di.Status,  // ดึงค่า Status
+                            StatusDepartment = dept.Status,
                             StatusName = status.StatusName  // ชื่อสถานะ
                         })
                         .ToList();

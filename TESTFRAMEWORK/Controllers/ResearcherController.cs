@@ -26,14 +26,26 @@ namespace TESTFRAMEWORK.Controllers
                         .Where(w => w.id == r.work_group_id)
                         .Select(w => w.name)
                         .FirstOrDefault() ?? "-",
+                    StatusWorkGroup = db.work_groups
+                        .Where(w => w.id == r.work_group_id)
+                        .Select(w => (int?)w.Status)  // แปลงเป็น Nullable<int>
+                        .FirstOrDefault() ?? 0,  // ถ้าไม่มีค่า ให้ใส่ 0
                     DepartmentName = db.departments
                         .Where(d => d.id == r.department_id)
                         .Select(d => d.name)
                         .FirstOrDefault() ?? "-",
+                    StatusDepartment = db.departments
+                        .Where(w => w.id == r.department_id)
+                        .Select(w => (int?)w.Status)  // แปลงเป็น Nullable<int>
+                        .FirstOrDefault() ?? 0,  // ถ้าไม่มีค่า ให้ใส่ 0
                     DivisionName = db.divisions
                         .Where(di => di.id == r.division_id)
                         .Select(di => di.name)
                         .FirstOrDefault() ?? "-",
+                    StatusDivision = db.divisions
+                        .Where(w => w.id == r.division_id)
+                        .Select(w => (int?)w.Status)  // แปลงเป็น Nullable<int>
+                        .FirstOrDefault() ?? 0,  // ถ้าไม่มีค่า ให้ใส่ 0
                     TypeResearchName = db.TypeResearches
                         .Where(t => t.id == r.TypeResearch)
                         .Select(t => t.type_name)

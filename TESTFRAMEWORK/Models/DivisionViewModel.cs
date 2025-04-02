@@ -16,7 +16,10 @@ namespace TESTFRAMEWORK.Models
     public string WorkGroupName { get; set; } // ✅ ชื่อกลุ่มงาน
 
     public int StatusId { get; set; }
-    public string StatusName { get; set; }
+    public int StatusDepartment { get; set; }
+
+    public int DivisionId { get; set; }
+   public string StatusName { get; set; }
 }
 
 }

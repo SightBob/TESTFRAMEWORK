@@ -49,12 +49,19 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>@(item.WorkGroupName ?? "ไม่มีข้อมูล")</td>
+                                        <td>
+                                            @(item.WorkGroupName ?? "ไม่มีข้อมูล")
+                                            @if (item.StatusWorkGroup == 2) // ถ้าเป็น Inactive ให้ขึ้น "ยกเลิก"
+                                            {
+                                                <span class="badge rounded-pill bg-danger">(ยกเลิก)</span>
+                                            }
+                                   
+                                        </td>
                                         <td>
                                             @item.DepartmentName
                                             @if (item.StatusId == 2) // ถ้าเป็น Inactive ให้ขึ้น "ยกเลิก"
                                             {
-                                                <span class="text-danger">(ยกเลิก)</span>
+                                                <span class="badge rounded-pill bg-danger">(ยกเลิก)</span>
                                             }
                                         </td>
                                         <td>
@@ -89,7 +96,8 @@
                 lengthMenu: [
                     [15, 25, 50, -1],
                     [15, 25, 50, 'All']
-                ]
+                ],
+                order: false,
             });
 
             // ✅ ให้ Filter Row ทำงานได้

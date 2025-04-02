@@ -416,69 +416,112 @@
             }
         }
 
-        $(document).ready(function () {
-            // โหลดข้อมูลคณะของหัวหน้าโครงการจากเริ่มต้น
+      $(document).ready(function () {
+    // โหลดข้อมูลคณะของหัวหน้าโครงการจากเริ่มต้น
+    var headResearcherId = $(".headResearcher").val();
+    if (headResearcherId) {
+        $.get("@Url.Action("GetResearcherDetails", "Research")", {
+            researcherNumber: headResearcherId
+        }, function (data) {
+            if (data && !data.error) {
+                $("#headFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
+                $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                $("#headDepartment").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
+                $("#headDivition").val(data.Divisions);
+            } else {
+                $("#headFaculty").val("ไม่พบข้อมูล");
+                $("#headWorkGroup").val("ไม่พบข้อมูล");
+                $("#headDepartment").val("ไม่พบข้อมูล");
+                $("#headDivition").val("ไม่พบข้อมูล");
+            }
+        });
+    }
+
+    // โหลดข้อมูลคณะและประเภทของผู้วิจัยร่วมตอนเริ่มต้น
+    $(".researcherSelect").each(function() {
+        let selectedResearcher = $(this).val();
+        let row = $(this).closest("tr");
+        if (selectedResearcher) {
             $.get("@Url.Action("GetResearcherDetails", "Research")", {
-                researcherNumber: $(".headResearcher").val()
+                researcherNumber: selectedResearcher
             }, function (data) {
-                $("#headFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
-            });
-
-            // โหลดข้อมูลคณะและประเภทของผู้วิจัยร่วมตอนเริ่มต้น
-            $(".researcherSelect").each(function() {
-                let selectedResearcher = $(this).val();
-                let row = $(this).closest("tr");
-
-                if (selectedResearcher) {
-                    $.get("@Url.Action("GetResearcherDetails", "Research")", {
-                        researcherNumber: selectedResearcher
-                    }, function (data) {
-                        row.find(".assistantWorkgroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
-                        row.find(".assistantFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
-                        row.find(".assistantDivisions").val(data ? data.Divisions : "ไม่พบข้อมูล");
-                        row.find(".assistantType").val(data ? data.TypeResearch : "ไม่พบข้อมูล");
-
-                        $("#headWorkGroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
-                        $("#headDepartment").val(data ? data.Faculty : "ไม่พบข้อมูล");
-                        $("#headDivition").val(data ? data.Divisions : "ไม่พบข้อมูล");
-                    });
+                if (data && !data.error) {
+                    row.find(".assistantWorkgroup").val(data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantDivisions").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantType").val(data.TypeResearch);
+                } else {
+                    row.find(".assistantWorkgroup").val("ไม่พบข้อมูล");
+                    row.find(".assistantFaculty").val("ไม่พบข้อมูล");
+                    row.find(".assistantDivisions").val("ไม่พบข้อมูล");
+                    row.find(".assistantType").val("ไม่พบข้อมูล");
                 }
             });
+        }
+    });
 
-            // Select2 กับ select หัวหน้าโครงการ
-            $('.js-example-basic-single').select2({
-                placeholder: "-- เลือกหัวหน้าโครงการ --",
-                allowClear: true,
-                width: '100%'
+    // Select2 กับ select หัวหน้าโครงการ
+    $('.js-example-basic-single').select2({
+        placeholder: "-- เลือกหัวหน้าโครงการ --",
+        allowClear: true,
+        width: '100%'
+    });
+
+    // เมื่อเลือกหัวหน้าโครงการ ให้เรียก AJAX ไปเอาข้อมูลคณะมาแสดง
+    $(document).on("change", ".headResearcher", function () {
+        let researcherId = $(this).val();
+        if (researcherId) {
+            $.get("@Url.Action("GetResearcherDetails", "Research")", {
+                researcherNumber: researcherId
+            }, function (data) {
+                if (data && !data.error) {
+                    $("#headFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
+                    $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                    $("#headDepartment").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
+                    $("#headDivition").val(data.Divisions);
+                } else {
+                    $("#headFaculty").val("ไม่พบข้อมูล");
+                    $("#headWorkGroup").val("ไม่พบข้อมูล");
+                    $("#headDepartment").val("ไม่พบข้อมูล");
+                    $("#headDivition").val("ไม่พบข้อมูล");
+                }
             });
+        } else {
+            $("#headFaculty").val("");
+            $("#headWorkGroup").val("");
+            $("#headDepartment").val("");
+            $("#headDivition").val("");
+        }
+    });
 
-            // เมื่อเลือกหัวหน้าโครงการ ให้เรียก AJAX ไปเอาข้อมูลคณะมาแสดง
-            $(document).on("change", ".headResearcher", function () {
-                let researcherId = $(this).val();
-
-                $.get("@Url.Action("GetResearcherDetails", "Research")", { researcherNumber: researcherId }, function (data) {
-                    $("#headFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
-                    $("#headWorkGroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
-                    $("#headDepartment").val(data ? data.Faculty : "ไม่พบข้อมูล");
-                    $("#headDivition").val(data ? data.Divisions : "ไม่พบข้อมูล");
-                });
+    // เมื่อเลือกผู้วิจัยร่วม ให้เรียก AJAX ไปเอาข้อมูลคณะและประเภทวิจัย
+    $(document).on("change", ".researcherSelect", function () {
+        let selectedResearcher = $(this).val();
+        let row = $(this).closest("tr");
+        if (selectedResearcher) {
+            $.get("@Url.Action("GetResearcherDetails", "Research")", {
+                researcherNumber: selectedResearcher
+            }, function (data) {
+                if (data && !data.error) {
+                    row.find(".assistantWorkgroup").val(data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantDivisions").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantType").val(data.TypeResearch);
+                } else {
+                    row.find(".assistantWorkgroup").val("ไม่พบข้อมูล");
+                    row.find(".assistantFaculty").val("ไม่พบข้อมูล");
+                    row.find(".assistantDivisions").val("ไม่พบข้อมูล");
+                    row.find(".assistantType").val("ไม่พบข้อมูล");
+                }
             });
-
-            // เมื่อเลือกผู้วิจัยร่วม ให้เรียก AJAX ไปเอาข้อมูลคณะและประเภทวิจัย
-            $(document).on("change", ".researcherSelect", function () {
-                let selectedResearcher = $(this).val();
-                let row = $(this).closest("tr");
-
-                $.get("@Url.Action("GetResearcherDetails", "Research")", { researcherNumber: selectedResearcher }, function (data) {
-                    row.find(".assistantWorkgroup").val(data ? data.Work_groups : "ไม่พบข้อมูล");
-                    row.find(".assistantFaculty").val(data ? data.Faculty : "ไม่พบข้อมูล");
-                    row.find(".assistantDivisions").val(data ? data.Divisions : "ไม่พบข้อมูล");
-                    row.find(".assistantType").val(data ? data.TypeResearch : "ไม่พบข้อมูล");
-
-                });
-            });
-        });
-
+        } else {
+            row.find(".assistantWorkgroup").val("");
+            row.find(".assistantFaculty").val("");
+            row.find(".assistantDivisions").val("");
+            row.find(".assistantType").val("");
+        }
+    });
+});
 
         // Enable editing when the "Edit" button is clicked
         function enableEditing() {

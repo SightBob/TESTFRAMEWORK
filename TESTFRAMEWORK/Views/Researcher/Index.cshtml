@@ -67,6 +67,7 @@
         background: none !important;
         border: none !important;
     }
+
 </style>
 <!-- ปุ่มเพิ่มนักวิจัย -->
 
@@ -112,9 +113,46 @@
                                                 {
                                                     <tr>
                                                         <td>@(researcher?.Title ?? "") @(researcher?.Name ?? "-")</td>
-                                                        <td>@(researcher?.WorkGroupName ?? "-")</td>
-                                                        <td>@(researcher?.DepartmentName ?? "-")</td>
-                                                        <td>@(researcher?.DivisionName ?? "-")</td>
+                                                        <td>
+                                                            @(researcher?.WorkGroupName ?? "-")
+                                                       
+                                                                @if (researcher.StatusWorkGroup == 2)
+                                                                {
+                                                                    <!-- หาก StatusWorkGroup = 1 จะทำอะไรบางอย่าง -->
+                                                                    <span class="badge rounded-pill bg-danger">(ยกเลิก)</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <!-- หาก StatusWorkGroup ไม่ใช่ 1 -->
+                                                                }
+                                                        </td>
+                                                        <td>
+                                                            @(researcher?.DepartmentName ?? "-")
+
+                                                            @if (researcher.StatusDepartment == 2)
+                                                            {
+                                                                <!-- หาก StatusWorkGroup = 1 จะทำอะไรบางอย่าง -->
+                                                                <span class="badge rounded-pill bg-danger"> (ยกเลิก)</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class=""></span>
+                                                                <!-- หาก StatusWorkGroup ไม่ใช่ 1 -->
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @(researcher?.DivisionName ?? "-")
+                                                            @if (researcher.StatusDivision == 2)
+                                                            {
+                                                                <span class="badge rounded-pill bg-danger"> (ยกเลิก)</span>
+                                                                <!-- หาก StatusWorkGroup = 1 จะทำอะไรบางอย่าง -->
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class=""></span>
+                                                                <!-- หาก StatusWorkGroup ไม่ใช่ 1 -->
+                                                            }
+                                                        </td>
                                                         <td>@(researcher?.TypeResearchName ?? "-")</td>
                                                         <td style="min-width: 180px;">
                                                             <a href="@Url.Action("EditInternal", "Researcher", new { id = researcher?.ResearcherNumber ?? string.Empty })"

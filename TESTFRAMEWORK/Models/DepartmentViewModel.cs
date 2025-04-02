@@ -12,6 +12,7 @@ namespace TESTFRAMEWORK.Models
         public int WorkGroupId { get; set; }
         public string WorkGroupName { get; set; }
 
+        public int StatusWorkGroup { get; set; }
         public int StatusId { get; set; }
         public string StatusName { get; set; }
     }

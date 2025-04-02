@@ -238,8 +238,11 @@ namespace TESTFRAMEWORK.Controllers
                                   select new
                                   {
                                       Faculty = d != null ? d.name : "-",
+                                      StatusFaculty = d != null ? d.Status : 0,
                                       Divisions = div != null ? div.name : "-",
+                                      StatusDivisions = div != null ? div.Status : 0,
                                       Work_groups = wg != null ? wg.name : "-",
+                                      StatusWork_groups = wg != null ? wg.Status : 0,
                                       TypeResearch = tr != null ? tr.type_name : "-",
                                       OtherInfo = !string.IsNullOrEmpty(r.OtherInfo) ? r.OtherInfo : "-"
                                   }).FirstOrDefault();
@@ -348,8 +351,6 @@ namespace TESTFRAMEWORK.Controllers
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
 
-                // 2) อัพเดทข้อมูลผู้ช่วยวิจัย (ลบเก่าและเพิ่มใหม่)
-                // 2.1) ลบข้อมูลผู้ช่วยวิจัยเดิมทั้งหมด
                 var existingAssistants = db.ResearchAssistant_tbl.Where(a => a.ProjectID == project.ProjectID);
                 db.ResearchAssistant_tbl.RemoveRange(existingAssistants);
                 db.SaveChanges();
