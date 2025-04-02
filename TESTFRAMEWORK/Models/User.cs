@@ -15,7 +15,7 @@ namespace TESTFRAMEWORK.Models
     public partial class User
     {
         public int UserId { get; set; }
-        public string LoginId { get; set; }
         public string PasswordHash { get; set; }
+        public string Username { get; set; }
     }
 }
