@@ -72,6 +72,16 @@
     .nav-tabs .tab-slider {
         background-color: #F26522 !important;
     }
+
+    .noWrapTable {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .container-xxl {
+        max-width: 1850px;
+    }
 </style>
 
 
@@ -115,16 +125,16 @@
                                     <table id="example" class="table table-striped table-hover align-middle">
                                         <thead>
                                             <tr>
-                                                <th>ปีงบประมาณ</th>
-                                                <th>รหัสโครงการ</th>
-                                                <th class="project-name-column">ชื่อโครงการ</th>
-                                                <th>ชื่อหัวหน้าโครงการ</th>
-                                                <th>ประเภท EC</th>
-                                                <th>รหัส EC</th>
-                                                <th>วันหมดอายุ</th>
-                                                <th>สถานะ</th>
-                                                <th>จัดการ</th>
-                                            </tr>
+                                                <th class="noWrapTable">ปีงบประมาณ</th>
+                                                <th class="noWrapTable">รหัสโครงการ</th>
+                                                <th class="noWrapTable" class="project-name-column">ชื่อโครงการ</th>
+                                                <th class="noWrapTable">ชื่อหัวหน้าโครงการ</th>
+                                                <th class="noWrapTable">ประเภท EC</th>
+                                                <th class="noWrapTable">รหัส EC</th>
+                                                <th class="noWrapTable">วันหมดอายุ</th>
+                                                <th class="noWrapTable">สถานะ</th>
+                                                <th class="noWrapTable">จัดการ</th>
+                                            </tr>  
                                         </thead>
                                         <tbody>
                                             @foreach (var item in Model)

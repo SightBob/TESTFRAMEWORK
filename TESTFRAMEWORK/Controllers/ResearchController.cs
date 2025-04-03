@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TESTFRAMEWORK.Filters;
 using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
@@ -16,6 +17,7 @@ namespace TESTFRAMEWORK.Controllers
         private Research_DBEntities1 db = new Research_DBEntities1();
 
         // GET: Research/Index
+        [AuthorizeUser]
         public ActionResult Index()
         {
      
@@ -30,6 +32,7 @@ namespace TESTFRAMEWORK.Controllers
             return View(projects);
         }
 
+        [AuthorizeUser]
         public ActionResult Success()
         {
             var projects = db.ResearchProject_tbl
@@ -43,6 +46,7 @@ namespace TESTFRAMEWORK.Controllers
             return View(projects);
         }
 
+        [AuthorizeUser]
         public ActionResult Expire()
         {
 
@@ -57,6 +61,7 @@ namespace TESTFRAMEWORK.Controllers
             return View(projects);
         }
 
+        [AuthorizeUser]
         // GET: Research/Create
         public ActionResult Create()
         {
@@ -261,6 +266,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // GET: Research/Edit/5
+        [AuthorizeUser]
         public ActionResult Edit(int id)
         {
             // ดึงข้อมูลโครงการวิจัยตาม ID

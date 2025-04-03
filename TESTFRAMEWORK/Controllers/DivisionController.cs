@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TESTFRAMEWORK.Filters;
 using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
@@ -12,6 +13,7 @@ namespace TESTFRAMEWORK.Controllers
         private Research_DBEntities1 db = new Research_DBEntities1();
 
         // 1) หน้า Index: แสดงข้อมูลแผนก พร้อมชื่อฝ่าย
+        [AuthorizeUser]
         public ActionResult Index()
         {
             var list = (from di in db.divisions

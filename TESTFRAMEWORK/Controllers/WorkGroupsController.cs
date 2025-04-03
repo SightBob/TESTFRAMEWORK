@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TESTFRAMEWORK.Filters;
 using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
@@ -13,6 +14,7 @@ namespace TESTFRAMEWORK.Controllers
         private Research_DBEntities1 db = new Research_DBEntities1();
 
         // ✅ GET: แสดงตาราง Work Groups
+        [AuthorizeUser]
         public ActionResult Index()
         {
             var list = (from wg in db.work_groups

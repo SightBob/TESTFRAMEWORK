@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TESTFRAMEWORK.Filters;
 using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
@@ -13,6 +14,7 @@ namespace TESTFRAMEWORK.Controllers
         private Research_DBEntities1 db = new Research_DBEntities1();
 
         // ✅ GET: Researcher/Index (หน้าแสดงรายชื่อนักวิจัย)
+        [AuthorizeUser]
         public ActionResult Index()
         {
             var internalResearchers = db.Researcher_tbl
@@ -56,6 +58,7 @@ namespace TESTFRAMEWORK.Controllers
             return View(internalResearchers);
         }
 
+        [AuthorizeUser]
         public ActionResult ExternalResearchers()
         {
             var externalResearchers = db.Researcher_tbl
@@ -76,6 +79,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // ✅ GET: Researcher/Create (แสดงฟอร์มเพิ่มนักวิจัย)
+        [AuthorizeUser]
         public ActionResult CreateInternal()
         {
             LoadDropdowns();
@@ -166,6 +170,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // ✅ GET: Researcher/Create (แสดงฟอร์มเพิ่มนักวิจัย)
+        [AuthorizeUser]
         public ActionResult CreateExternal()
         {
             LoadDropdowns();
@@ -361,6 +366,7 @@ namespace TESTFRAMEWORK.Controllers
             }
         }
 
+        [AuthorizeUser]
         public ActionResult EditInternal(string id)
         {
             LoadDropdowns();
@@ -409,6 +415,8 @@ namespace TESTFRAMEWORK.Controllers
 
             return View(researcher);
         }
+
+        [AuthorizeUser]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditInternal(ResearcherViewModel researcher)
@@ -479,61 +487,58 @@ namespace TESTFRAMEWORK.Controllers
             }
         }
 
-
-
-
         // GET: EditExternal
         public ActionResult EditExternal(string id)
-{
-    if (string.IsNullOrEmpty(id))
-    {
-        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "รหัสนักวิจัยไม่ถูกต้อง");
-    }
-
-    try
-    {
-        // ดึงข้อมูลนักวิจัยและแมปไปยัง ResearcherViewModel
-        var researcher = db.Researcher_tbl
-                           .Where(r => r.ResearcherNumber == id)
-                           .Select(r => new ResearcherViewModel
-                           {
-                               ResearcherNumber = r.ResearcherNumber,
-                               Title = r.title,
-                               Name = r.Name,
-                               OtherInfo = r.OtherInfo,
-                               TypeResearchId = r.TypeResearch
-                           })
-                           .FirstOrDefault();
-
-        if (researcher == null)
         {
-            return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
-        }
+            if (string.IsNullOrEmpty(id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "รหัสนักวิจัยไม่ถูกต้อง");
+            }
 
-        // จัดการ dropdown list สำหรับคำนำหน้า
-        var titleOptions = new[] {
+            try
+            {
+                // ดึงข้อมูลนักวิจัยและแมปไปยัง ResearcherViewModel
+                var researcher = db.Researcher_tbl
+                                   .Where(r => r.ResearcherNumber == id)
+                                   .Select(r => new ResearcherViewModel
+                                   {
+                                       ResearcherNumber = r.ResearcherNumber,
+                                       Title = r.title,
+                                       Name = r.Name,
+                                       OtherInfo = r.OtherInfo,
+                                       TypeResearchId = r.TypeResearch
+                                   })
+                                   .FirstOrDefault();
+
+                if (researcher == null)
+                {
+                    return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
+                }
+
+                // จัดการ dropdown list สำหรับคำนำหน้า
+                var titleOptions = new[] {
             "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
             "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
         };
-        ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
+                ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
 
-        // ดึงรายการประเภทการวิจัย
-        ViewBag.TypeResearchList = new SelectList(
-            db.TypeResearches,
-            "id",
-            "type_name",
-            researcher.TypeResearchId
-        );
+                // ดึงรายการประเภทการวิจัย
+                ViewBag.TypeResearchList = new SelectList(
+                    db.TypeResearches,
+                    "id",
+                    "type_name",
+                    researcher.TypeResearchId
+                );
 
-        return View(researcher);
-    }
-    catch (Exception ex)
-    {
-        // บันทึกข้อผิดพลาด (เช่น log error) และแสดงหน้าข้อผิดพลาดทั่วไป
-        // Logger.LogError(ex, "เกิดข้อผิดพลาดในการดึงข้อมูลนักวิจัย");
-        return View("Error", new HandleErrorInfo(ex, "Researchers", "EditExternal"));
-    }
-}
+                return View(researcher);
+            }
+            catch (Exception ex)
+            {
+                // บันทึกข้อผิดพลาด (เช่น log error) และแสดงหน้าข้อผิดพลาดทั่วไป
+                // Logger.LogError(ex, "เกิดข้อผิดพลาดในการดึงข้อมูลนักวิจัย");
+                return View("Error", new HandleErrorInfo(ex, "Researchers", "EditExternal"));
+            }
+        }
 
 
         [HttpPost]

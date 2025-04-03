@@ -129,11 +129,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\DivisionController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\ResearcherController.cs" />
     <Compile Include="Controllers\WorkGroupsController.cs" />
+    <Compile Include="Filters\AuthorizeUserAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -192,6 +194,7 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\WorkGroupViewModel.cs" />
     <Compile Include="Models\work_groups.cs">
       <DependentUpon>ResearchModel.tt</DependentUpon>
@@ -2945,10 +2948,12 @@
     <Content Include="Views\Researcher\CreateExternal.cshtml" />
     <Content Include="Views\Researcher\EditInternal.cshtml" />
     <Content Include="Views\Researcher\EditExternal.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Auth\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Auth\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

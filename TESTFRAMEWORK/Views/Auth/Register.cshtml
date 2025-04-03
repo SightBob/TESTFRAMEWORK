@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color: red;">@ViewBag.Error</div>
+}
+
+@if (ViewBag.Success != null)
+{
+    <div style="color: green;">@ViewBag.Success</div>
+}
+
+@using (Html.BeginForm("Register", "Auth", FormMethod.Post))
+{
+    <div>
+        @Html.Label("Username")
+        @Html.TextBox("username", "", new { required = "required" })
+    </div>
+    <div>
+        @Html.Label("Password")
+        @Html.Password("password", "", new { required = "required" })
+    </div>
+    <div>
+        @Html.Label("Confirm Password")
+        @Html.Password("confirmPassword", "", new { required = "required" })
+    </div>
+    <button type="submit">Register</button>
+}
+
+<p>มีบัญชีอยู่แล้ว? <a href="@Url.Action("Login", "Auth")">เข้าสู่ระบบ</a></p>
