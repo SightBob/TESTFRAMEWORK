@@ -7,7 +7,7 @@ using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : BaseController
     {
         // GET: Auth
         private Research_DBEntities1 db = new Research_DBEntities1();

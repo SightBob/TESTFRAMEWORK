@@ -10,11 +10,17 @@ namespace TESTFRAMEWORK.Controllers
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            // ถ้าไม่ได้ Login ให้ Redirect ไปที่หน้า Login
-            if (Session["UserId"] == null)
+            // ยกเว้นการตรวจสอบสำหรับ Auth Controller ในหน้า Login และ Register
+            bool isAuthController = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName == "Auth";
+            bool isAuthAction = filterContext.ActionDescriptor.ActionName == "Login" || 
+                                filterContext.ActionDescriptor.ActionName == "Register";
+
+            // ตรวจสอบการ Login เฉพาะหน้าที่ไม่ได้อยู่ในข้อยกเว้น
+            if (Session["UserId"] == null && !(isAuthController && isAuthAction))
             {
                 filterContext.Result = RedirectToAction("Login", "Auth");
             }
+            
             base.OnActionExecuting(filterContext);
         }
     }
