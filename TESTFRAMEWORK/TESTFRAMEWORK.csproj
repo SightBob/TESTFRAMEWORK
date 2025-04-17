@@ -131,6 +131,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
+    <Compile Include="Controllers\DashBoardController.cs" />
     <Compile Include="Controllers\DivisionController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\ResearcherController.cs" />
@@ -2950,6 +2951,7 @@
     <Content Include="Views\Researcher\EditExternal.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\DashBoard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

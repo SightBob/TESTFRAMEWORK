@@ -76,7 +76,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-3">
-                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "ปีงบประมาณ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "วันตอบรับเข้าเก็บข้อมูล", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate", })
                     @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
                 </div>
@@ -219,7 +219,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
                 </div>
@@ -227,7 +227,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
                 </div>
@@ -320,109 +320,97 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
     <script>
-        function confirmDelete(fileId) {
-            if (confirm('คุณต้องการลบไฟล์นี้หรือไม่?')) {
-                $.ajax({
-                    url: '/Research/DeleteFile',
-                    type: 'POST',
-                    data: { fileId: fileId },
-                    success: function (response) {
-                        if (response.success) {
-                            // Optional: Remove the deleted file row from the UI
-                            alert('ลบไฟล์สำเร็จ');
-                            location.reload(); // Reload the page or update UI as needed
-                        } else {
-                            alert('ลบไฟล์ไม่สำเร็จ: ' + response.message);
-                        }
-                    },
-                    error: function () {
-                        alert('เกิดข้อผิดพลาดในการลบไฟล์');
+       // Fix for enabling all form elements when Edit button is clicked
+function enableEditing() {
+    // Enable all form elements
+    document.querySelectorAll('input, textarea, select').forEach(function(element) {
+        element.removeAttribute('disabled');
+    });
+
+    // Enable all buttons except the Edit button itself
+    document.querySelectorAll('button:not(#editButton)').forEach(function(button) {
+        button.removeAttribute('disabled');
+    });
+
+    // Enable the submit button
+    document.getElementById('saveBtn').removeAttribute('disabled');
+
+    // Enable file delete buttons
+    document.querySelectorAll('button[onclick^="confirmDelete"]').forEach(function(button) {
+        button.removeAttribute('disabled');
+    });
+
+    // Re-initialize Select2 on all selects to ensure they're editable
+    $('.js-example-basic-single').select2('destroy').select2();
+    $('.type_ec').select2('destroy').select2();
+
+}
+
+// Remove the empty addAssistant function declaration and keep only the complete one
+// Remove the line: function addAssistant() { ... }
+
+// Fix for assistantIndex to ensure it's counted correctly
+let assistantIndex = @(Model.ResearchAssistants != null ? Model.ResearchAssistants.Count : 0);
+
+// Improved addAssistant function to correctly enable elements
+function addAssistant() {
+    let html = `
+        <tr id="assistant_${assistantIndex}">
+            <td>
+                <select class="form-control researcherSelect js-example-basic-single"
+                         name="ResearchAssistants[${assistantIndex}].ResearcherNumber"
+                        style="width: 100%;">
+                    <option value="">-- เลือกนักวิจัย --</option>
+                    @foreach (var item in Model.HeadResearcherList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
                     }
-                });
-            }
-        }
+                </select>
+            </td>
+            <td><input type="text" class="form-control assistantWorkgroup" readonly /></td>
+            <td><input type="text" class="form-control assistantFaculty" readonly /></td>
+            <td><input type="text" class="form-control assistantDivisions" readonly /></td>
+            <td><input type="text" class="form-control assistantType" readonly /></td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(${assistantIndex})">ลบ</button>
+            </td>
+        </tr>
+    `;
 
+    // Add row to table
+    $("#assistantTable tbody").append(html);
 
-        $(document).on("change", ".type_ec", function () {
-            let selectedValue = $(this).val(); // ดึงค่าจาก dropdown
+    // Initialize Select2 for the new select
+    $(`#assistant_${assistantIndex} .js-example-basic-single`).select2({
+        placeholder: "-- เลือกนักวิจัย --",
+        allowClear: true,
+        width: '100%'
+    });
 
-            if (selectedValue == "1") {
-                $(".date_ec").prop("disabled", true).val(''); // disabled และ clear ข้อมูล
-            } else {
-                $(".date_ec").prop("disabled", false);
-            }
+    assistantIndex++;
+}
 
-        });
+// Fixed document ready function with proper handlers
+$(document).ready(function() {
+    // Initialize Select2
+    $('.js-example-basic-single').select2({
+        placeholder: "-- เลือกนักวิจัย --",
+        allowClear: true,
+        width: '100%'
+    });
 
-        // ตัวนับ index ของผู้วิจัยร่วม
-        let assistantIndex = @(Model.ResearchAssistants != null ? Model.ResearchAssistants.Count : 0);
+    $('.type_ec').select2({
+        placeholder: "-- เลือกประเภท EC --",
+        allowClear: true,
+        width: '100%'
+    });
 
-        // ฟังก์ชัน เพิ่มผู้วิจัยร่วม (Append แถวใหม่)
-        function addAssistant() {
-            let html = `
-                <tr id="assistant_${assistantIndex}">
-                    <td>
-                        <select class="form-control researcherSelect js-example-basic-single"
-                                 name="ResearchAssistants[${assistantIndex}].ResearcherNumber"
-                                style="width: 100%;" disabled>
-                            <option value="">-- เลือกนักวิจัย --</option>
-                            @foreach (var item in Model.HeadResearcherList)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                    </td>
-                    <td><input type="text" class="form-control assistantWorkgroup" disabled /></td>
-                    <td><input type="text" class="form-control assistantFaculty" disabled /></td>
-                    <td><input type="text" class="form-control assistantDivisions" disabled /></td>
-                    <td><input type="text" class="form-control assistantType" disabled /></td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeAssistant(${assistantIndex})">ลบ</button>
-                    </td>
-                </tr>
-            `;
-
-            // ใส่แถวลงใน table
-            $("#assistantTable tbody").append(html);
-
-            // re-initialize Select2 กับ select ตัวใหม่
-            $(`#assistant_${assistantIndex} .js-example-basic-single`).select2({
-                placeholder: "-- เลือกนักวิจัย --",
-                allowClear: true,
-                width: '100%'
-            });
-
-            assistantIndex++;
-        }
-
-        // ลบผู้วิจัยร่วม
-        function removeAssistant(index) {
-            $("#assistant_" + index).remove();
-        }
-
-        // ลบไฟล์แนบ
-        function deleteFile(fileId) {
-            if (confirm('คุณแน่ใจหรือไม่ที่จะลบไฟล์นี้?')) {
-                $.post('@Url.Action("DeleteFile", "Research")', { fileId: fileId }, function (data) {
-                    if (data.success) {
-                        // ลบ element ออกจาก DOM
-                        $("#file_" + fileId).fadeOut('fast', function() {
-                            $(this).remove();
-                        });
-                    } else {
-                        alert('ไม่สามารถลบไฟล์ได้: ' + data.message);
-                    }
-                });
-            }
-        }
-
-      $(document).ready(function () {
-    // โหลดข้อมูลคณะของหัวหน้าโครงการจากเริ่มต้น
+    // Load head researcher details on page load
     var headResearcherId = $(".headResearcher").val();
     if (headResearcherId) {
         $.get("@Url.Action("GetResearcherDetails", "Research")", {
             researcherNumber: headResearcherId
-        }, function (data) {
+        }, function(data) {
             if (data && !data.error) {
                 $("#headFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
                 $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
@@ -437,16 +425,16 @@
         });
     }
 
-    // โหลดข้อมูลคณะและประเภทของผู้วิจัยร่วมตอนเริ่มต้น
+    // Load assistant researcher details on page load
     $(".researcherSelect").each(function() {
         let selectedResearcher = $(this).val();
         let row = $(this).closest("tr");
         if (selectedResearcher) {
             $.get("@Url.Action("GetResearcherDetails", "Research")", {
                 researcherNumber: selectedResearcher
-            }, function (data) {
+            }, function(data) {
                 if (data && !data.error) {
-                    row.find(".assistantWorkgroup").val(data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantWorkgroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantDivisions").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantType").val(data.TypeResearch);
@@ -460,20 +448,13 @@
         }
     });
 
-    // Select2 กับ select หัวหน้าโครงการ
-    $('.js-example-basic-single').select2({
-        placeholder: "-- เลือกหัวหน้าโครงการ --",
-        allowClear: true,
-        width: '100%'
-    });
-
-    // เมื่อเลือกหัวหน้าโครงการ ให้เรียก AJAX ไปเอาข้อมูลคณะมาแสดง
-    $(document).on("change", ".headResearcher", function () {
+    // Head researcher change event
+    $(document).on("change", ".headResearcher", function() {
         let researcherId = $(this).val();
         if (researcherId) {
             $.get("@Url.Action("GetResearcherDetails", "Research")", {
                 researcherNumber: researcherId
-            }, function (data) {
+            }, function(data) {
                 if (data && !data.error) {
                     $("#headFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
                     $("#headWorkGroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
@@ -494,16 +475,16 @@
         }
     });
 
-    // เมื่อเลือกผู้วิจัยร่วม ให้เรียก AJAX ไปเอาข้อมูลคณะและประเภทวิจัย
-    $(document).on("change", ".researcherSelect", function () {
+    // Assistant researcher change event
+    $(document).on("change", ".researcherSelect", function() {
         let selectedResearcher = $(this).val();
         let row = $(this).closest("tr");
         if (selectedResearcher) {
             $.get("@Url.Action("GetResearcherDetails", "Research")", {
                 researcherNumber: selectedResearcher
-            }, function (data) {
+            }, function(data) {
                 if (data && !data.error) {
-                    row.find(".assistantWorkgroup").val(data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
+                    row.find(".assistantWorkgroup").val(data.Work_groups == "-" ? data.OtherInfo : data.Work_groups + (data.StatusWork_groups == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantFaculty").val(data.Faculty + (data.StatusFaculty == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantDivisions").val(data.Divisions + (data.StatusDivisions == 2 ? " (ยกเลิก)" : ""));
                     row.find(".assistantType").val(data.TypeResearch);
@@ -521,212 +502,17 @@
             row.find(".assistantType").val("");
         }
     });
+
+    // EC Type change event
+    $(document).on("change", ".type_ec", function() {
+        let selectedValue = $(this).val();
+        if (selectedValue == "1") {
+            $(".date_ec").prop("disabled", true).val('');
+        } else {
+            $(".date_ec").prop("disabled", false);
+        }
+    });
 });
-
-        // Enable editing when the "Edit" button is clicked
-        function enableEditing() {
-            document.querySelectorAll('input, textarea, select, button').forEach(function (element) {
-                element.removeAttribute('disabled');
-            });
-        }
-
-        // Initialize Select2
-        $(document).ready(function () {
-            $('.js-example-basic-single').select2();
-            $('.type_ec').select2();  // If you want to apply Select2 to EC Type dropdown as well
-        });
-
-        // Adding dynamic behavior for assistant workgroup, faculty, and division
-        function addAssistant() {
-            // Implement logic for adding new assistant dynamically
-        }
-
-        function removeAssistant(index) {
-            document.getElementById(`assistant_${index}`).remove();
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#RequestDate", {
-                locale: "th", // ใช้ภาษาไทย
-                dateFormat: "d/m/Y",
-                altInput: true,
-                altFormat: "d/m/Y",
-                allowInput: true,
-
-                // แปลงวันที่ใน input เป็น พ.ศ.
-                formatDate: function (date, format, locale) {
-                    const day = ("0" + date.getDate()).slice(-2);
-                    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-                    const thaiYear = date.getFullYear() + 543;
-                    return `${day}/${month}/${thaiYear}`;
-                },
-
-                // แปลงค่ากลับเป็น ค.ศ. ก่อนบันทึก
-                parseDate: function (dateStr, format) {
-                    const parts = dateStr.split("/");
-                    if (parts.length === 3) {
-                        let day = parseInt(parts[0], 10);
-                        let month = parseInt(parts[1], 10) - 1;
-                        let year = parseInt(parts[2], 10) - 543;
-                        return new Date(year, month, day);
-                    }
-                    return new Date();
-                },
-
-                onOpen: function (selectedDates, dateStr, instance) {
-                    // ให้แน่ใจว่าปฏิทินแสดงเดือนปี พ.ศ. เสมอเมื่อเปิด
-                    setTimeout(() => {
-                        updateThaiYear(instance);
-
-                        // กำหนดให้ปฏิทินแสดงเดือนปีปัจจุบัน ถ้าไม่มีวันที่ถูกเลือก
-                        if (!instance.selectedDates || instance.selectedDates.length === 0) {
-                            const today = new Date();
-                            instance.currentYear = today.getFullYear();
-                            instance.currentMonth = today.getMonth();
-                            instance.redraw();
-                            updateThaiYear(instance);
-                        }
-                    }, 10);
-                },
-
-                onYearChange: function (selectedDates, dateStr, instance) {
-                    setTimeout(() => {
-                        updateThaiYear(instance);
-                        syncCalendarWithInput(instance);
-                    }, 10);
-                },
-
-                onMonthChange: function (selectedDates, dateStr, instance) {
-                    setTimeout(() => updateThaiYear(instance), 10);
-                },
-
-                onReady: function (selectedDates, dateStr, instance) {
-                    setTimeout(() => {
-                        updateThaiYear(instance);
-
-                        // ให้สามารถพิมพ์ปี พ.ศ.
-                        const yearInput = instance.calendarContainer.querySelector(".numInput.cur-year");
-                        if (yearInput) {
-                            yearInput.removeAttribute("readonly");
-                            yearInput.addEventListener("input", function () {
-                                let inputYear = parseInt(yearInput.value);
-                                if (!isNaN(inputYear) && inputYear >= 2500) {
-                                    let westernYear = inputYear - 543; // แปลงเป็น ค.ศ.
-                                    instance.setDate(new Date(westernYear, instance.currentMonth, 1), false);
-                                    instance.redraw();
-                                    setTimeout(() => updateThaiYear(instance), 10);
-                                }
-                            });
-                        }
-                    }, 10);
-
-                    if (selectedDates[0]) {
-                        instance.altInput.value = instance.formatDate(selectedDates[0], "d/m/Y");
-                    }
-                },
-
-                onChange: function (selectedDates, dateStr, instance) {
-                    setTimeout(() => updateThaiYear(instance), 10);
-                    if (selectedDates[0]) {
-                        instance.altInput.value = instance.formatDate(selectedDates[0], "d/m/Y");
-                    }
-                },
-
-                // เพิ่ม event handler สำหรับเมื่อปฏิทินถูกวาด/อัปเดตใหม่
-                onDraw: function (selectedDates, dateStr, instance) {
-                    setTimeout(() => updateThaiYear(instance), 10);
-                }
-            });
-
-            // ฟังก์ชันอัปเดตปีเป็น พ.ศ. ในปฏิทิน
-            function updateThaiYear(instance) {
-                setTimeout(() => {
-                    const yearInput = instance.calendarContainer.querySelector(".numInput.cur-year");
-                    if (yearInput) {
-                        let currentYear = parseInt(yearInput.value);
-                        if (!isNaN(currentYear) && currentYear < 2500) {
-                            yearInput.value = currentYear + 543;
-                        }
-                    }
-
-                    // ตรวจจับปุ่ม `+` และ `-`
-                    const upButton = instance.calendarContainer.querySelector(".arrowUp");
-                    const downButton = instance.calendarContainer.querySelector(".arrowDown");
-
-                    if (upButton && downButton) {
-                        upButton.onclick = function () {
-                            // เพิ่มปี ค.ศ.
-                            let gregorianYear = parseInt(yearInput.value) - 543 + 1;
-                            let thaiYear = gregorianYear + 543;
-                            yearInput.value = thaiYear;
-
-                            // อัปเดตวันที่ทั้งในปฏิทินและ input
-                            let currentDate = instance.selectedDates[0] || new Date();
-                            let newDate = new Date(gregorianYear, currentDate.getMonth(), 1);
-                            instance.setDate(newDate, true);
-
-                            setTimeout(() => {
-                                updateThaiYear(instance);
-                                syncInputWithCalendar(instance);
-                            }, 10);
-                        };
-
-                        downButton.onclick = function () {
-                            // ลดปี ค.ศ.
-                            let gregorianYear = parseInt(yearInput.value) - 543 - 1;
-                            let thaiYear = gregorianYear + 543;
-                            yearInput.value = thaiYear;
-
-                            // อัปเดตวันที่ทั้งในปฏิทินและ input
-                            let currentDate = instance.selectedDates[0] || new Date();
-                            let newDate = new Date(gregorianYear, currentDate.getMonth(), 1);
-                            instance.setDate(newDate, true);
-
-                            setTimeout(() => {
-                                updateThaiYear(instance);
-                                syncInputWithCalendar(instance);
-                            }, 10);
-                        };
-                    }
-
-                    // อัปเดต dropdown ปีให้เป็น พ.ศ.
-                    const yearDropdown = instance.calendarContainer.querySelectorAll(".flatpickr-current-year");
-                    yearDropdown.forEach(el => {
-                        let yearNum = parseInt(el.innerText);
-                        if (!isNaN(yearNum) && yearNum < 2500) {
-                            el.innerText = (yearNum + 543).toString();
-                        }
-                    });
-                }, 10);
-            }
-
-            // ฟังก์ชันทำให้ input อัปเดตปีตรงกับปฏิทิน
-            function syncInputWithCalendar(instance) {
-                let selectedDate = instance.selectedDates[0];
-                if (selectedDate) {
-                    // อัปเดต input ให้ตรงกับปฏิทิน
-                    instance.altInput.value = instance.formatDate(selectedDate, "d/m/Y");
-                }
-            }
-
-            // ฟังก์ชันทำให้ปฏิทินอัปเดตปีตรงกับ input
-            function syncCalendarWithInput(instance) {
-                let selectedDate = instance.selectedDates[0];
-                if (selectedDate) {
-                    // อัปเดตปฏิทินให้ตรงกับ input
-                    instance.jumpToDate(selectedDate, true);
-                    setTimeout(() => updateThaiYear(instance), 10);
-                }
-            }
-
-            // ถ้ามีการคลิกที่ input โดยตรง (แม้ว่าจะไม่เลือกวัน)
-            document.querySelector("#RequestDate").addEventListener("click", function () {
-                const fpInstance = document.querySelector("#RequestDate")._flatpickr;
-                if (fpInstance) {
-                    setTimeout(() => updateThaiYear(fpInstance), 50);
-                }
-            });
-        });
 
     </script>
 }

@@ -291,8 +291,21 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name");
             ViewBag.DepartmentList = new SelectList(new List<SelectListItem>());
             ViewBag.DivisionList = new SelectList(new List<SelectListItem>());
-            ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name");
+
+            var listItems = db.TypeResearches
+                .ToList()
+                .Where(tr => tr.type_name != "บุคคลภายนอก")
+                .Select(tr => new SelectListItem
+                {
+                    Value = tr.id.ToString(),
+                    Text = tr.type_name
+                })
+                .ToList();
+
+            ViewBag.TypeResearchList = new SelectList(listItems, "Value", "Text");
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

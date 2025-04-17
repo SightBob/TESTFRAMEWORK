@@ -39,7 +39,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-3">
-                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "ปีงบประมาณ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "วันตอบรับเข้าเก็บข้อมูล", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate", })
                     @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
                 </div>
@@ -152,7 +152,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
                 </div>
@@ -160,7 +160,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ", new { @class = "font-weight-bold" })
+                    @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
                     @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
                 </div>

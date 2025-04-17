@@ -26,7 +26,7 @@ namespace TESTFRAMEWORK.Controllers
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)
                              .Where(p => p.StatusProject_tbl.StatusProjectID == 1)
-                             .OrderByDescending(p => p.ProjectID)
+                             .OrderBy(p => p.ResearchExpirationDate)
                              .ToList();
 
             return View(projects);
@@ -72,7 +72,7 @@ namespace TESTFRAMEWORK.Controllers
                                     .Select(r => new SelectListItem
                                     {
                                         Value = r.ResearcherNumber,
-                                        Text = r.ResearcherNumber + " | " + r.title + " " + r.Name
+                                        Text = r.title + " " + r.Name
                                     })
                                     .ToList();
 
@@ -214,7 +214,7 @@ namespace TESTFRAMEWORK.Controllers
                                 .Select(r => new SelectListItem
                                 {
                                     Value = r.ResearcherNumber,
-                                    Text = r.ResearcherNumber + " | " + r.Name
+                                    Text = r.title + " " + r.Name
                                 })
                                 .ToList();
 
@@ -285,13 +285,13 @@ namespace TESTFRAMEWORK.Controllers
                                 .Select(r => new
                                 {
                                     ResNo = r.ResearcherNumber,
-                                    ResName = r.Name
+                                    ResName = r.title + " " + r.Name
                                 })
                                 .ToList()
                                 .Select(r => new SelectListItem
                                 {
                                     Value = r.ResNo,
-                                    Text = r.ResNo + " | " + r.ResName
+                                    Text = r.ResName
                                 })
                                 .ToList();
 
@@ -347,10 +347,18 @@ namespace TESTFRAMEWORK.Controllers
                 project.TypeECID = model.ResearchProject.TypeECID;
                 project.HeadResearcherId = model.ResearchProject.HeadResearcherId;
                 project.ECApprovalCode = model.ResearchProject.ECApprovalCode ?? "";
-                project.ECApprovalDate = model.ResearchProject.ECApprovalDate ?? DateTime.Now;
-                project.ECExpirationDate = model.ResearchProject.ECExpirationDate ?? DateTime.Now.AddYears(1);
-                project.ResearchApprovalDate = model.ResearchProject.ResearchApprovalDate ?? DateTime.Now;
-                project.ResearchExpirationDate = model.ResearchProject.ResearchExpirationDate ?? DateTime.Now.AddYears(1);
+                project.ECApprovalDate = model.ResearchProject.ECApprovalDate?.Year > 2500 ?
+                            model.ResearchProject.ECApprovalDate.Value.AddYears(-543) :
+                            model.ResearchProject.ECApprovalDate ?? DateTime.Now;
+                project.ECExpirationDate = model.ResearchProject.ECExpirationDate?.Year > 2500 ?
+                                          model.ResearchProject.ECExpirationDate.Value.AddYears(-543) :
+                                          model.ResearchProject.ECExpirationDate ?? DateTime.Now.AddYears(1);
+                project.ResearchApprovalDate = model.ResearchProject.ResearchApprovalDate?.Year > 2500 ?
+                                               model.ResearchProject.ResearchApprovalDate.Value.AddYears(-543) :
+                                               model.ResearchProject.ResearchApprovalDate ?? DateTime.Now;
+                project.ResearchExpirationDate = model.ResearchProject.ResearchExpirationDate?.Year > 2500 ?
+                                                 model.ResearchProject.ResearchExpirationDate.Value.AddYears(-543) :
+                                                 model.ResearchProject.ResearchExpirationDate ?? DateTime.Now.AddYears(1);
                 project.Note = model.ResearchProject.Note ?? "";
                 project.StatusProjectID = model.ResearchProject.StatusProjectID;
 
