@@ -20,8 +20,6 @@ namespace TESTFRAMEWORK.Controllers
         [AuthorizeUser]
         public ActionResult Index()
         {
-     
-
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)

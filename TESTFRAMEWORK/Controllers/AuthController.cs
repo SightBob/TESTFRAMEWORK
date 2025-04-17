@@ -4,10 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TESTFRAMEWORK.Models;
+using BCrypt.Net;
+using System.Web.Security;
 
 namespace TESTFRAMEWORK.Controllers
 {
-    public class AuthController : BaseController
+    public class AuthController : Controller
     {
         // GET: Auth
         private Research_DBEntities1 db = new Research_DBEntities1();
@@ -24,6 +26,7 @@ namespace TESTFRAMEWORK.Controllers
 
         // POST: Auth/Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
@@ -32,21 +35,18 @@ namespace TESTFRAMEWORK.Controllers
                 return View();
             }
 
-            // ตรวจสอบ Username และ PasswordHash จากฐานข้อมูล
-            var user = db.Users.FirstOrDefault(u => u.Username == username && u.PasswordHash == password);
-
-            if (user != null)
+            var user = db.Users.FirstOrDefault(u => u.Username == username);
+            
+            // ตรวจสอบรหัสผ่านด้วย BCrypt
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
-                // เก็บ Session
+                FormsAuthentication.SetAuthCookie(user.Username, false);
                 Session["UserId"] = user.UserId;
-                Session["Username"] = user.Username;
                 return RedirectToAction("Index", "Research");
             }
-            else
-            {
-                ViewBag.Error = "Username หรือ Password ไม่ถูกต้อง";
-                return View();
-            }
+            
+            ViewBag.Error = "Username หรือ Password ไม่ถูกต้อง";
+            return View();
         }
 
         // Logout
@@ -63,6 +63,7 @@ namespace TESTFRAMEWORK.Controllers
 
         // POST: Auth/Register
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(string username, string password, string confirmPassword)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
@@ -84,11 +85,13 @@ namespace TESTFRAMEWORK.Controllers
                 return View();
             }
 
-            // สร้าง User ใหม่
+            // เข้ารหัสรหัสผ่านก่อนบันทึก
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(12));
+
             var newUser = new User
             {
                 Username = username,
-                PasswordHash = password // **ควรเข้ารหัสรหัสผ่านในระบบจริง**
+                PasswordHash = hashedPassword
             };
 
             db.Users.Add(newUser);
