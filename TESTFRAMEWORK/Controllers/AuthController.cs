@@ -86,7 +86,7 @@ namespace TESTFRAMEWORK.Controllers
             }
 
             // เข้ารหัสรหัสผ่านก่อนบันทึก
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(12));
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, 12);
 
             var newUser = new User
             {

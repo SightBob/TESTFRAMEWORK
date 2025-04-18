@@ -2,35 +2,44 @@
     ViewBag.Title = "Register";
 }
 
-<h2>Register</h2>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 rounded" style="width: 400px;">
+        <h2 class="text-center mb-4">สมัครสมาชิก</h2>
 
-@if (ViewBag.Error != null)
-{
-    <div style="color: red;">@ViewBag.Error</div>
-}
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center">@ViewBag.Error</div>
+        }
 
-@if (ViewBag.Success != null)
-{
-    <div style="color: green;">@ViewBag.Success</div>
-}
+        @if (ViewBag.Success != null)
+        {
+            <div class="alert alert-success text-center">@ViewBag.Success</div>
+        }
 
-@using (Html.BeginForm("Register", "Auth", FormMethod.Post))
-{
-    @Html.AntiForgeryToken() <!-- เพิ่มบรรทัดนี้ -->
-    
-    <div>
-        @Html.Label("Username")
-        @Html.TextBox("username", "", new { required = "required" })
+        @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+            
+            <div class="mb-3">
+                @Html.Label("Username", "ชื่อผู้ใช้", new { @class = "form-label" })
+                @Html.TextBox("username", "", new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                @Html.Label("Password", "รหัสผ่าน", new { @class = "form-label" })
+                @Html.Password("password", "", new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="mb-3">
+                @Html.Label("Confirm Password", "ยืนยันรหัสผ่าน", new { @class = "form-label" })
+                @Html.Password("confirmPassword", "", new { @class = "form-control", required = "required" })
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">สมัครสมาชิก</button>
+        }
+
+        <p class="text-center mt-3">
+            มีบัญชีอยู่แล้ว? <a href="@Url.Action("Login", "Auth")">เข้าสู่ระบบ</a>
+        </p>
     </div>
-    <div>
-        @Html.Label("Password")
-        @Html.Password("password", "", new { required = "required" })
-    </div>
-    <div>
-        @Html.Label("Confirm Password")
-        @Html.Password("confirmPassword", "", new { required = "required" })
-    </div>
-    <button type="submit">Register</button>
-}
-
-<p>มีบัญชีอยู่แล้ว? <a href="@Url.Action("Login", "Auth")">เข้าสู่ระบบ</a></p>
+</div>

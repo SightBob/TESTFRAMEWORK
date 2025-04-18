@@ -25,6 +25,10 @@ namespace TESTFRAMEWORK
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+                      bundles.UseCdn = true;
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"));
+
         }
     }
 }

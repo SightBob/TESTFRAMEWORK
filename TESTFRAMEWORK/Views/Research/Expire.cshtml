@@ -120,7 +120,7 @@
                                     <table id="example" class="table table-striped table-hover align-middle">
                                         <thead>
                                             <tr>
-                                                <th>ปีงบประมาณ</th>
+                                                <th scope="col" role="columnheader" class="noWrapTable">วันรับเข้าเก็บข้อมูล</th>
                                                 <th>รหัสโครงการ</th>
                                                 <th class="project-name-column">ชื่อโครงการ</th>
                                                 <th>ชื่อหัวหน้าโครงการ</th>
@@ -138,11 +138,7 @@
                                                 <!-- ปีงบประมาณ -->
                                                 <td>
                                                     <div style="display: flex; justify-content: center; align-items: center;">
-                                                        @(item.FiscalYear.HasValue
-                                                            ? item.FiscalYear.Value.ToString("yyyy")
-                                                            : "-")
-
-
+                                                        @(item.FiscalYear.Value.ToString("dd/MM/yyyy"))
                                                     </div>
                                                 </td>
                                                 <!-- รหัสโครงการ -->
