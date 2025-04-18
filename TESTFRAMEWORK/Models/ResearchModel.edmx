@@ -72,6 +72,7 @@
           <Property Name="ResearchExpirationDate" Type="date" />
           <Property Name="Note" Type="nvarchar(max)" />
           <Property Name="StatusProjectID" Type="int" Nullable="false" />
+          <Property Name="sut_hospital_grant_code" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Status_tbl">
           <Key>
@@ -468,6 +469,7 @@
           <NavigationProperty Name="ResearchFile_tbl" Relationship="Self.FK__ResearchF__Proje__4222D4EF" FromRole="ResearchProject_tbl" ToRole="ResearchFile_tbl" />
           <NavigationProperty Name="StatusProject_tbl" Relationship="Self.FK__ResearchP__Statu__403A8C7D" FromRole="ResearchProject_tbl" ToRole="StatusProject_tbl" />
           <NavigationProperty Name="TypeEC_tbl" Relationship="Self.FK__ResearchP__TypeE__3F466844" FromRole="ResearchProject_tbl" ToRole="TypeEC_tbl" />
+          <Property Name="sut_hospital_grant_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Status_tbl">
           <Key>
@@ -843,6 +845,7 @@
           <EntitySetMapping Name="ResearchProject_tbl">
             <EntityTypeMapping TypeName="Research_DBModel.ResearchProject_tbl">
               <MappingFragment StoreEntitySet="ResearchProject_tbl">
+                <ScalarProperty Name="sut_hospital_grant_code" ColumnName="sut_hospital_grant_code" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="FiscalYear" ColumnName="FiscalYear" />
                 <ScalarProperty Name="ProjectCode" ColumnName="ProjectCode" />

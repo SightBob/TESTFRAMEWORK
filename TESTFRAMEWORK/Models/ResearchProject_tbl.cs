@@ -34,6 +34,7 @@ namespace TESTFRAMEWORK.Models
         public Nullable<System.DateTime> ResearchExpirationDate { get; set; }
         public string Note { get; set; }
         public int StatusProjectID { get; set; }
+        public string sut_hospital_grant_code { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResearchAssistant_tbl> ResearchAssistant_tbl { get; set; }

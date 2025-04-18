@@ -120,7 +120,8 @@ namespace TESTFRAMEWORK.Controllers
                     var project = new ResearchProject_tbl
                     {
                         FiscalYear = fiscalYear,
-                        ProjectCode = researchProject.ProjectCode ?? "DefaultCode",
+                        ProjectCode = researchProject.ProjectCode ?? "",
+                        sut_hospital_grant_code = researchProject.sut_hospital_grant_code ?? "",
                         ProjectName = researchProject.ProjectName ?? "Untitled",
                         TypeECID = researchProject.TypeECID,
                         HeadResearcherId = researchProject.HeadResearcherId,
