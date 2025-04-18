@@ -203,12 +203,126 @@
 @section scripts {
     <!-- โหลด JS ของ jQuery และ Select2 จาก _Layout.cshtml (หรือที่อื่น) ให้เรียบร้อยก่อนโค้ดนี้ -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
     <script>
+        // Form validation
+        $(document).ready(function () {
+            $.validator.addMethod("requiredSelect2", function (value, element) {
+                return value !== "" && value !== null;
+            }, "กรุณาเลือกข้อมูลในฟิลด์นี้");
+
+            $.validator.addMethod("dateCheck", function (value, element, param) {
+                if (!value || !$(param).val()) return true;
+                return new Date(value) >= new Date($(param).val());
+            }, "วันที่หมดอายุต้องมากกว่าหรือเท่ากับวันที่อนุมัติ");
+
+            // Add validation rules
+            $("form").validate({
+                errorElement: "div",
+                errorClass: "text-danger",
+                highlight: function (element) {
+                    $(element).addClass("is-invalid").removeClass("is-valid");
+                },
+                unhighlight: function (element) {
+                    $(element).addClass("is-valid").removeClass("is-invalid");
+                },
+                rules: {
+                    "ResearchProject.ProjectName": {
+                        required: true,
+                        minlength: 5
+                    },
+                    "ResearchProject.ProjectCode": {
+                        required: true
+                    },
+                    "ResearchProject.TypeECID": {
+                        required: true
+                    },
+                    "ResearchProject.HeadResearcherId": {
+                        requiredSelect2: true
+                    },
+                    "ResearchProject.FiscalYear": {
+                        required: true
+                    },
+                    "ResearchProject.ECApprovalCode": {
+                        required: true
+                    },
+                    "ResearchProject.ECApprovalDate": {
+                        required: true
+                    },
+                    "ResearchProject.ECExpirationDate": {
+                        required: function() {
+                            return $("#ResearchProject_TypeECID").val() != "1";
+                        },
+                        dateCheck: "#ResearchProject_ECApprovalDate"
+                    },
+                    "ResearchProject.ResearchApprovalDate": {
+                        required: true
+                    },
+                    "ResearchProject.ResearchExpirationDate": {
+                        required: true,
+                        dateCheck: "#ResearchProject_ResearchApprovalDate"
+                    }
+                },
+                messages: {
+                    "ResearchProject.ProjectName": {
+                        required: "กรุณาระบุชื่อโครงการ",
+                        minlength: "ชื่อโครงการต้องมีความยาวอย่างน้อย 5 ตัวอักษร"
+                    },
+                    "ResearchProject.ProjectCode": {
+                        required: "กรุณาระบุรหัสโครงการ"
+                    },
+                    "ResearchProject.TypeECID": {
+                        required: "กรุณาเลือกประเภท EC"
+                    },
+                    "ResearchProject.HeadResearcherId": {
+                        requiredSelect2: "กรุณาเลือกหัวหน้าโครงการ"
+                    },
+                    "ResearchProject.FiscalYear": {
+                        required: "กรุณาระบุวันตอบรับเข้าเก็บข้อมูล"
+                    },
+                    "ResearchProject.ECApprovalCode": {
+                        required: "กรุณาระบุรหัส EC"
+                    },
+                    "ResearchProject.ECApprovalDate": {
+                        required: "กรุณาระบุวันที่อนุมัติ EC"
+                    },
+                    "ResearchProject.ECExpirationDate": {
+                        required: "กรุณาระบุวันหมดอายุ EC",
+                        dateCheck: "วันหมดอายุ EC ต้องมากกว่าหรือเท่ากับวันที่อนุมัติ EC"
+                    },
+                    "ResearchProject.ResearchApprovalDate": {
+                        required: "กรุณาระบุวันที่อนุมัติ (ขอเข้าเก็บข้อมูล)"
+                    },
+                    "ResearchProject.ResearchExpirationDate": {
+                        required: "กรุณาระบุวันหมดอายุ (ขอเข้าเก็บข้อมูล)",
+                        dateCheck: "วันหมดอายุต้องมากกว่าหรือเท่ากับวันที่อนุมัติ"
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    if (element.hasClass("js-example-basic-single")) {
+                        error.insertAfter(element.next(".select2-container"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function(form) {
+                    // ตรวจสอบว่ามีอย่างน้อยหนึ่งไฟล์ถูกอัปโหลด
+                    $("#saveBtn").prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...');
+                    form.submit();
+                }
+            });
+
+            // เชื่อมต่อ Select2 กับ Validation
+            $(".js-example-basic-single").on("change", function() {
+                $(this).valid();
+            });
+        });
 
         $(document).on("change", ".type_ec", function () {
             let selectedValue = $(this).val(); // ดึงค่าจาก dropdown
