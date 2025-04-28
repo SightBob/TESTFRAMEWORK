@@ -5,115 +5,120 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .form-group {
-        margin-bottom: 0px !important;
-    }
+<style type="text/css">
+     .form-group {
+       margin-bottom: 0px !important;
+   }
 
-    h4 {
-        margin-bottom: 0px !important;
+   h4 {
+       margin-bottom: 0px !important;
+   }
+
+   @@media (max-width: 1200px) {
+    .mt_box {
+        margin-top: 1rem !important;
     }
+   }
 </style>
 
-<h2 class="mb-4 text-primary">เพิ่มนักวิจัย</h2>
 
 @using (Html.BeginForm("CreateExternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-<div class="container-xxl mt-xl-5" style="margin-top: 5.5rem; ">
-    <div class="" style="background-color: #F26522; padding: 1rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
-        <h4 class="text-white">เพิ่มข้อมูลนักวิจัย (บุคคลภายนอก)</h4>
-    </div>
+    <div class="container-xxl mt_box" style="margin-top: 5.5rem;">
+        <div class="" style="background-color: #F26522; padding: 1rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+            <h4 class="text-white">เพิ่มข้อมูลนักวิจัย (บุคคลภายนอก)</h4>
+        </div>
 
-    <div class="flex-grow-1 container-p-y card px-3" style="border-top-left-radius: 0px; border-top-right-radius: 0px;">
+        <div class="flex-grow-1 container-p-y card px-3" style="border-top-left-radius: 0px; border-top-right-radius: 0px;">
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
-            </div>
-        }
-
-        <!-- Title and Name fields -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-12">
-                <div class="form-group">
-                    @Html.Label("คำนำหน้า", new { @class = "form-label fw-bold" })
-                    <div class="input-group">
-                        @Html.DropDownListFor(m => m.Title, new SelectList(new[] {
-                            "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                            "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
-                        }), "-- กรุณาเลือก --", new { @class = "form-select", id = "titleDropdown" })
-
-                        @Html.TextBoxFor(m => m.TitleCustom, new
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                         {
-                            @class = "form-control ms-lg-2",
-                            style = "display:none;",  // Initially hide TitleCustom
-                            placeholder = "ระบุคำนำหน้า",
-                            id = "otherTitle"
-                        })
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Title and Name fields -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.Label("คำนำหน้า", new { @class = "form-label fw-bold" })
+                        <div class="input-group">
+                            @Html.DropDownListFor(m => m.Title, new SelectList(new[] {
+                                "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+                                "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+                            }), "-- กรุณาเลือก --", new { @class = "form-select", id = "titleDropdown" })
+
+                            @Html.TextBoxFor(m => m.TitleCustom, new
+                            {
+                                @class = "form-control ms-lg-2",
+                                style = "display:none;",  // Initially hide TitleCustom
+                                placeholder = "ระบุคำนำหน้า",
+                                id = "otherTitle"
+                            })
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
+                        @Html.ValidationMessageFor(m => m.TitleCustom, "", new { @class = "text-danger small" })
                     </div>
-                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
-                    @Html.ValidationMessageFor(m => m.TitleCustom, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.Label("ชื่อ", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "กรุณากรอกชื่อ" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                    </div>
                 </div>
             </div>
 
-            <div class="col-md-12">
-                <div class="form-group">
-                    @Html.Label("ชื่อ", new { @class = "form-label fw-bold" })
-                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "กรุณากรอกชื่อ" })
-                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+            <!-- Organization/Company information -->
+            <div id="internal-fields" class="row g-3 mb-4">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.Label("หน่วยงาน / บริษัท", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control", placeholder = "กรุณากรอกชื่อหน่วยงานหรือบริษัท" })
+                        @Html.ValidationMessageFor(m => m.OtherInfo, "", new { @class = "text-danger small" })
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Organization/Company information -->
-        <div id="internal-fields" class="row g-3 mb-4">
-            <div class="col-md-12">
-                <div class="form-group">
-                    @Html.Label("หน่วยงาน / บริษัท", new { @class = "form-label fw-bold" })
-                    @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control", placeholder = "กรุณากรอกชื่อหน่วยงานหรือบริษัท" })
-                    @Html.ValidationMessageFor(m => m.OtherInfo, "", new { @class = "text-danger small" })
-                </div>
+            <!-- Action buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn px-4 text-white" style="background-color: #F26522;">
+                    <i class="fas fa-save me-2"></i>บันทึกข้อมูล
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">ยกเลิก</a>
             </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="d-flex justify-content-between mt-4">
-            <button type="submit" class="btn px-4 text-white" style="background-color: #F26522;">
-                <i class="fas fa-save me-2"></i>บันทึกข้อมูล
-            </button>
-            <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">ยกเลิก</a>
         </div>
     </div>
-</div>
-    }
+}
 
-    @section scripts {
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // Toggle input field when "อื่นๆ" is selected
-                $('#titleDropdown').change(function () {
-                    if ($(this).val() === "อื่นๆ") {
-                        $('#otherTitle').fadeIn();
-                    } else {
-                        $('#otherTitle').fadeOut();
-                    }
-                });
-
-                // Handle form submission to capture custom title
-                $('form').submit(function () {
-                    if ($('#titleDropdown').val() === "อื่นๆ") {
-                        $('#titleDropdown').val($('#otherTitle').val());
-                    }
-                });
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle input field when "อื่นๆ" is selected
+            $('#titleDropdown').change(function () {
+                if ($(this).val() === "อื่นๆ") {
+                    $('#otherTitle').fadeIn();
+                } else {
+                    $('#otherTitle').fadeOut();
+                }
             });
-        </script>
-    }
+
+            // Handle form submission to capture custom title
+            $('form').submit(function () {
+                if ($('#titleDropdown').val() === "อื่นๆ") {
+                    $('#titleDropdown').val($('#otherTitle').val());
+                }
+            });
+        });
+    </script>
+}

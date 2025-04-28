@@ -11,7 +11,6 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class AuthController : Controller
     {
-        // GET: Auth
         private Research_DBEntities1 db = new Research_DBEntities1();
 
         // GET: Auth/Login
@@ -19,7 +18,7 @@ namespace TESTFRAMEWORK.Controllers
         {
             if (Session["UserId"] != null)
             {
-                return RedirectToAction("Index", "Research"); // ✅ ถ้าล็อกอินอยู่แล้ว ให้ไปที่หน้า Research
+                return RedirectToAction("Index", "Research");
             }
             return View();
         }
@@ -36,15 +35,23 @@ namespace TESTFRAMEWORK.Controllers
             }
 
             var user = db.Users.FirstOrDefault(u => u.Username == username);
-            
-            // ตรวจสอบรหัสผ่านด้วย BCrypt
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+
+            try
             {
-                FormsAuthentication.SetAuthCookie(user.Username, false);
-                Session["UserId"] = user.UserId;
-                return RedirectToAction("Index", "Research");
+                // ตรวจสอบรหัสผ่านด้วย BCrypt
+                if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                {
+                    FormsAuthentication.SetAuthCookie(user.Username, false);
+                    Session["UserId"] = user.UserId;
+                    return RedirectToAction("Index", "Research");
+                }
             }
-            
+            catch (BCrypt.Net.SaltParseException)
+            {
+                ViewBag.Error = "รูปแบบรหัสผ่านของบัญชีนี้ไม่สามารถตรวจสอบได้ กรุณารีเซ็ตรหัสผ่าน";
+                return View();
+            }
+
             ViewBag.Error = "Username หรือ Password ไม่ถูกต้อง";
             return View();
         }
@@ -56,6 +63,7 @@ namespace TESTFRAMEWORK.Controllers
             return RedirectToAction("Login");
         }
 
+        // GET: Auth/Register
         public ActionResult Register()
         {
             return View();
@@ -78,15 +86,14 @@ namespace TESTFRAMEWORK.Controllers
                 return View();
             }
 
-            // ตรวจสอบว่ามี username นี้อยู่ในระบบแล้วหรือยัง
             if (db.Users.Any(u => u.Username == username))
             {
                 ViewBag.Error = "Username นี้ถูกใช้ไปแล้ว";
                 return View();
             }
 
-            // เข้ารหัสรหัสผ่านก่อนบันทึก
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, 12);
+            // เข้ารหัสรหัสผ่านด้วย BCrypt (ใช้เวอร์ชันที่ปลอดภัยและไม่กำหนด salt เอง)
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); // ใช้ work factor 12 โดย default
 
             var newUser = new User
             {
@@ -100,6 +107,5 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.Success = "สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ";
             return RedirectToAction("Login");
         }
-
     }
 }

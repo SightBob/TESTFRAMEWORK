@@ -327,7 +327,26 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
     <script>
-       // Fix for enabling all form elements when Edit button is clicked
+        // Fix for enabling all form elements when Edit button is clicked
+
+        function confirmDelete(fileId) {
+            if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบไฟล์นี้?")) {
+                // สร้าง form และ submit เพื่อเรียก action ลบ
+                const form = document.createElement("form");
+                form.method = "post";
+                form.action = "/Research/DeleteFile"; // แก้ชื่อ controller ให้ตรง
+
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "fileId";
+                input.value = fileId;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
 function enableEditing() {
     // Enable all form elements
     document.querySelectorAll('input, textarea, select').forEach(function(element) {

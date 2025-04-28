@@ -8,6 +8,7 @@ namespace TESTFRAMEWORK.Models
     public class ResearchProjectViewModel
     {
         public ResearchProject_tbl ResearchProject { get; set; }
+
         public List<ResearchAssistantViewModel> ResearchAssistants { get; set; }
         public List<SelectListItem> HeadResearcherList { get; set; }
         public List<ResearchFile_tbl> AttachedFiles { get; set; }

@@ -9,13 +9,19 @@
     h4 {
         margin-bottom: 0px;
     }
+
+    @@media (max-width: 1200px) {
+        .mt_box {
+            margin-top: 1rem !important;
+        }
+    }
 </style>
 
 @using (Html.BeginForm("CreateInternal", "Researcher", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-<div class="container-xxl"  style="margin-top: 5.25rem;">
+<div class="container-xxl mt_box"  style="margin-top: 5.25rem;">
         <div class="" style="background-color: #F26522; padding: 1rem; border-top-left-radius: 5px; border-top-right-radius: 5px;">
             <h4 class="text-white">เพิ่มข้อมูลนักวิจัย (บุคคลภายใน)</h4>
         </div>
