@@ -184,6 +184,12 @@ namespace TESTFRAMEWORK.Controllers
                         // หมายเหตุ EC
                         worksheet.Cells[$"N{start_row}"].Value = d.Note ?? "-";
 
+                        // ปรับความสูงแถวตามจำนวนผู้วิจัยร่วม (ถ้ามี)
+                        if (assistants.Any())
+                        {
+                            worksheet.Row(start_row).Height = 15 * assistants.Count; // ปรับความสูงแถวตามจำนวนผู้วิจัยร่วม
+                        }
+
                         start_row++;
                     }
 

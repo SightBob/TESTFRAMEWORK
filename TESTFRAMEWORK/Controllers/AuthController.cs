@@ -43,6 +43,8 @@ namespace TESTFRAMEWORK.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(user.Username, false);
                     Session["UserId"] = user.UserId;
+                    Session["Role"] = user.Role;
+                    Session["Username"] = user.Username;
                     return RedirectToAction("Index", "Research");
                 }
             }
@@ -98,7 +100,8 @@ namespace TESTFRAMEWORK.Controllers
             var newUser = new User
             {
                 Username = username,
-                PasswordHash = hashedPassword
+                PasswordHash = hashedPassword,
+                Role = "User"
             };
 
             db.Users.Add(newUser);

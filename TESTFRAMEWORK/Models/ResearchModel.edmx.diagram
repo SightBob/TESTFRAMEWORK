@@ -32,6 +32,7 @@
         <AssociationConnector Association="Research_DBModel.FK__ResearchF__Proje__4222D4EF" ManuallyRouted="false" />
         <AssociationConnector Association="Research_DBModel.FK__ResearchP__Statu__403A8C7D" ManuallyRouted="false" />
         <AssociationConnector Association="Research_DBModel.FK__ResearchP__TypeE__3F466844" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Research_DBModel.view_ResearchProject" Width="1.5" PointX="5.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

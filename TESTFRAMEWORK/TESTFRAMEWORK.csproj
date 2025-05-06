@@ -258,6 +258,9 @@
       <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\view_ResearchProject.cs">
+      <DependentUpon>ResearchModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\WorkGroupViewModel.cs" />
     <Compile Include="Models\work_groups.cs">
       <DependentUpon>ResearchModel.tt</DependentUpon>

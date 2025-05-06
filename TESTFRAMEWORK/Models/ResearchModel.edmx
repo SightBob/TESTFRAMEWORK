@@ -119,6 +119,7 @@
           <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="work_groups">
           <Key>
@@ -127,6 +128,45 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Research_DB.dbo.view_ResearchProject' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="view_ResearchProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="ProjectCode" />
+            <PropertyRef Name="ProjectName" />
+            <PropertyRef Name="TypeECID" />
+            <PropertyRef Name="StatusProjectID" />
+            <PropertyRef Name="HeadResearcherFlag" />
+            <PropertyRef Name="ResearchAssistantFlag" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="FiscalYear" Type="date" />
+          <Property Name="ProjectCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProjectName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TypeECID" Type="int" Nullable="false" />
+          <Property Name="HeadResearcherId" Type="varchar" MaxLength="20" />
+          <Property Name="ECApprovalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ECApprovalDate" Type="date" />
+          <Property Name="ECExpirationDate" Type="date" />
+          <Property Name="ResearchApprovalDate" Type="date" />
+          <Property Name="ResearchExpirationDate" Type="date" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="StatusProjectID" Type="int" Nullable="false" />
+          <Property Name="sut_hospital_grant_code" Type="varchar" MaxLength="50" />
+          <Property Name="HeadResearcherFlag" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="HeadResearcherName" Type="nvarchar" MaxLength="255" />
+          <Property Name="HeadResearcherNameDivID" Type="int" />
+          <Property Name="HeadResearcherNameDivName" Type="nvarchar" MaxLength="255" />
+          <Property Name="HeadResearcherGroupName" Type="nvarchar" MaxLength="255" />
+          <Property Name="HeadResearcherTypeResearch" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResearchAssistantFlag" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="ResearchAssistantName" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResearchAssistantDvivsionName" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResearchAssistantDepartment" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResearchAssistantGroupName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AssistantResearcherTypeResearch" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <Association Name="FK__departmen__Statu__3A81B327">
           <End Role="Status_tbl" Type="Self.Status_tbl" Multiplicity="1" />
@@ -320,6 +360,36 @@
           <EntitySet Name="TypeResearch" EntityType="Self.TypeResearch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="work_groups" EntityType="Self.work_groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="view_ResearchProject" EntityType="Self.view_ResearchProject" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [view_ResearchProject].[ProjectID] AS [ProjectID], 
+    [view_ResearchProject].[FiscalYear] AS [FiscalYear], 
+    [view_ResearchProject].[ProjectCode] AS [ProjectCode], 
+    [view_ResearchProject].[ProjectName] AS [ProjectName], 
+    [view_ResearchProject].[TypeECID] AS [TypeECID], 
+    [view_ResearchProject].[HeadResearcherId] AS [HeadResearcherId], 
+    [view_ResearchProject].[ECApprovalCode] AS [ECApprovalCode], 
+    [view_ResearchProject].[ECApprovalDate] AS [ECApprovalDate], 
+    [view_ResearchProject].[ECExpirationDate] AS [ECExpirationDate], 
+    [view_ResearchProject].[ResearchApprovalDate] AS [ResearchApprovalDate], 
+    [view_ResearchProject].[ResearchExpirationDate] AS [ResearchExpirationDate], 
+    [view_ResearchProject].[Note] AS [Note], 
+    [view_ResearchProject].[StatusProjectID] AS [StatusProjectID], 
+    [view_ResearchProject].[sut_hospital_grant_code] AS [sut_hospital_grant_code], 
+    [view_ResearchProject].[HeadResearcherFlag] AS [HeadResearcherFlag], 
+    [view_ResearchProject].[HeadResearcherName] AS [HeadResearcherName], 
+    [view_ResearchProject].[HeadResearcherNameDivID] AS [HeadResearcherNameDivID], 
+    [view_ResearchProject].[HeadResearcherNameDivName] AS [HeadResearcherNameDivName], 
+    [view_ResearchProject].[HeadResearcherGroupName] AS [HeadResearcherGroupName], 
+    [view_ResearchProject].[HeadResearcherTypeResearch] AS [HeadResearcherTypeResearch], 
+    [view_ResearchProject].[ResearchAssistantFlag] AS [ResearchAssistantFlag], 
+    [view_ResearchProject].[ResearchAssistantName] AS [ResearchAssistantName], 
+    [view_ResearchProject].[ResearchAssistantDvivsionName] AS [ResearchAssistantDvivsionName], 
+    [view_ResearchProject].[ResearchAssistantDepartment] AS [ResearchAssistantDepartment], 
+    [view_ResearchProject].[ResearchAssistantGroupName] AS [ResearchAssistantGroupName], 
+    [view_ResearchProject].[AssistantResearcherTypeResearch] AS [AssistantResearcherTypeResearch]
+    FROM [dbo].[view_ResearchProject] AS [view_ResearchProject]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__departmen__Statu__3A81B327" Association="Self.FK__departmen__Statu__3A81B327">
             <End Role="Status_tbl" EntitySet="Status_tbl" />
             <End Role="departments" EntitySet="departments" />
@@ -521,6 +591,7 @@
           <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="work_groups">
           <Key>
@@ -780,7 +851,45 @@
             <End Role="TypeEC_tbl" EntitySet="TypeEC_tbl" />
             <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
           </AssociationSet>
+          <EntitySet Name="view_ResearchProject" EntityType="Research_DBModel.view_ResearchProject" />
         </EntityContainer>
+        <EntityType Name="view_ResearchProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="ProjectCode" />
+            <PropertyRef Name="ProjectName" />
+            <PropertyRef Name="TypeECID" />
+            <PropertyRef Name="StatusProjectID" />
+            <PropertyRef Name="HeadResearcherFlag" />
+            <PropertyRef Name="ResearchAssistantFlag" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="FiscalYear" Type="DateTime" Precision="0" />
+          <Property Name="ProjectCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TypeECID" Type="Int32" Nullable="false" />
+          <Property Name="HeadResearcherId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ECApprovalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ECApprovalDate" Type="DateTime" Precision="0" />
+          <Property Name="ECExpirationDate" Type="DateTime" Precision="0" />
+          <Property Name="ResearchApprovalDate" Type="DateTime" Precision="0" />
+          <Property Name="ResearchExpirationDate" Type="DateTime" Precision="0" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StatusProjectID" Type="Int32" Nullable="false" />
+          <Property Name="sut_hospital_grant_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HeadResearcherFlag" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="HeadResearcherName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HeadResearcherNameDivID" Type="Int32" />
+          <Property Name="HeadResearcherNameDivName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HeadResearcherGroupName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HeadResearcherTypeResearch" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResearchAssistantFlag" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="ResearchAssistantName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResearchAssistantDvivsionName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResearchAssistantDepartment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResearchAssistantGroupName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AssistantResearcherTypeResearch" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -908,6 +1017,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="Research_DBModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
@@ -920,6 +1030,38 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="view_ResearchProject">
+            <EntityTypeMapping TypeName="Research_DBModel.view_ResearchProject">
+              <MappingFragment StoreEntitySet="view_ResearchProject">
+                <ScalarProperty Name="AssistantResearcherTypeResearch" ColumnName="AssistantResearcherTypeResearch" />
+                <ScalarProperty Name="ResearchAssistantGroupName" ColumnName="ResearchAssistantGroupName" />
+                <ScalarProperty Name="ResearchAssistantDepartment" ColumnName="ResearchAssistantDepartment" />
+                <ScalarProperty Name="ResearchAssistantDvivsionName" ColumnName="ResearchAssistantDvivsionName" />
+                <ScalarProperty Name="ResearchAssistantName" ColumnName="ResearchAssistantName" />
+                <ScalarProperty Name="ResearchAssistantFlag" ColumnName="ResearchAssistantFlag" />
+                <ScalarProperty Name="HeadResearcherTypeResearch" ColumnName="HeadResearcherTypeResearch" />
+                <ScalarProperty Name="HeadResearcherGroupName" ColumnName="HeadResearcherGroupName" />
+                <ScalarProperty Name="HeadResearcherNameDivName" ColumnName="HeadResearcherNameDivName" />
+                <ScalarProperty Name="HeadResearcherNameDivID" ColumnName="HeadResearcherNameDivID" />
+                <ScalarProperty Name="HeadResearcherName" ColumnName="HeadResearcherName" />
+                <ScalarProperty Name="HeadResearcherFlag" ColumnName="HeadResearcherFlag" />
+                <ScalarProperty Name="sut_hospital_grant_code" ColumnName="sut_hospital_grant_code" />
+                <ScalarProperty Name="StatusProjectID" ColumnName="StatusProjectID" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="ResearchExpirationDate" ColumnName="ResearchExpirationDate" />
+                <ScalarProperty Name="ResearchApprovalDate" ColumnName="ResearchApprovalDate" />
+                <ScalarProperty Name="ECExpirationDate" ColumnName="ECExpirationDate" />
+                <ScalarProperty Name="ECApprovalDate" ColumnName="ECApprovalDate" />
+                <ScalarProperty Name="ECApprovalCode" ColumnName="ECApprovalCode" />
+                <ScalarProperty Name="HeadResearcherId" ColumnName="HeadResearcherId" />
+                <ScalarProperty Name="TypeECID" ColumnName="TypeECID" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ProjectCode" ColumnName="ProjectCode" />
+                <ScalarProperty Name="FiscalYear" ColumnName="FiscalYear" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

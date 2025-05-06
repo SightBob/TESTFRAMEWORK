@@ -38,5 +38,6 @@ namespace TESTFRAMEWORK.Models
         public virtual DbSet<TypeResearch> TypeResearches { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<work_groups> work_groups { get; set; }
+        public virtual DbSet<view_ResearchProject> view_ResearchProject { get; set; }
     }
 }
