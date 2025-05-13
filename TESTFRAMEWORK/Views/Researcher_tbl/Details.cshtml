@@ -1,0 +1,74 @@
+﻿@model TESTFRAMEWORK.Models.Researcher_tbl
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Researcher_tbl</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherInfo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OtherInfo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.department.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.department.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.division.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.division.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TypeResearch1.type_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypeResearch1.type_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.work_groups.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.work_groups.name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ResearcherNumber }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

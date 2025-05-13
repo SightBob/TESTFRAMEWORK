@@ -15,5 +15,6 @@ namespace TESTFRAMEWORK.Models
 
         [Required]
         public string PasswordHash { get; set; }
+        
     }
 }

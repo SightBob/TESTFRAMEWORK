@@ -211,32 +211,37 @@
             </div>
 
             @* แสดงผลข้อมูลที่เลือก *@
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <label class="form-label">กลุ่มงาน</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-users"></i></span>
-                        <input type="text" id="workGroupDisplay" class="form-control" readonly />
-                        @Html.HiddenFor(m => m.WorkGroupId, new { id = "workGroupId" })
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">ฝ่ายงาน</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-building"></i></span>
-                        <input type="text" id="departmentDisplay" class="form-control" readonly />
-                        @Html.HiddenFor(m => m.DepartmentId, new { id = "departmentId" })
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">แผนก/สาขา</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-sitemap"></i></span>
-                        <input type="text" id="divisionDisplay" class="form-control" readonly />
-                        @Html.HiddenFor(m => m.DivisionId, new { id = "divisionId" })
-                    </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <label class="form-label">กลุ่มงาน</label>
+                <div class="input-group">
+                    <input type="text" id="workGroupDisplay" class="form-control" readonly />
+                    @Html.HiddenFor(m => m.WorkGroupId, new { id = "workGroupId" })
                 </div>
             </div>
+            <div class="col-md-3">
+                <label class="form-label">ฝ่ายงาน</label>
+                <div class="input-group">
+                    <input type="text" id="departmentDisplay" class="form-control" readonly />
+                    @Html.HiddenFor(m => m.DepartmentId, new { id = "departmentId" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">แผนก/สาขา</label>
+                <div class="input-group">
+                    <input type="text" id="divisionDisplay" class="form-control" readonly />
+                    @Html.HiddenFor(m => m.DivisionId, new { id = "divisionId" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                @Html.Label("TypeResearch", "ประเภทผู้วิจัยร่วม", htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-12">
+                    @Html.DropDownList("TypeResearch", (SelectList)ViewBag.TypeResearch, "-- กรุณาเลือกประเภท --", new { @class = "form-control" })
+                    @Html.ValidationMessage("TypeResearch", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
 
             @* ปุ่มบันทึก/ยกเลิก *@
             <div class="d-flex justify-content-center mt-4">

@@ -1,174 +1,445 @@
-﻿@model TESTFRAMEWORK.Models.ResearcherViewModel
+﻿<!-- View: Views/Researcher/EditInternal.cshtml -->
+@model TESTFRAMEWORK.Models.ResearcherViewModel
 
 @{
-    ViewBag.Title = "แก้ไขข้อมูลนักวิจัย";
+    ViewBag.Title = "แก้ไขนักวิจัย";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<h2 class="mb-4">แก้ไขข้อมูลนักวิจัย</h2>*@
+<!-- Load Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-@using (Html.BeginForm("EditInternal", "Researcher", FormMethod.Post))
+<style>
+    .select2-container .select2-selection--single,
+    .select2-container--default .select2-selection--single .select2-selection__rendered,
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        height: 39px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        padding-top: .25rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px !important;
+    }
+
+    h4 {
+        margin-bottom: 0px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 28px;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        display: block;
+        padding-left: 8px;
+        padding-right: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 1200px) {
+        .mt_box {
+            margin-top: 1rem !important;
+        }
+    }
+
+    .select2-container--open .select2-dropdown {
+        top: 0 !important;
+        bottom: auto !important;
+    }
+
+    .select2-container--open {
+        z-index: 1050 !important;
+    }
+
+    .card {
+        overflow: visible !important;
+    }
+
+    .container-xxl {
+        position: relative;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-container--open .select2-dropdown {
+        display: block !important;
+        position: absolute !important;
+        z-index: 99999 !important;
+    }
+
+    body .select2-container--open {
+        z-index: 99999 !important;
+    }
+
+    .select2-results__options {
+        position: relative;
+        z-index: 99999 !important;
+    }
+
+    .select2-results {
+        max-height: none !important;
+    }
+
+    .mt-max-lg-3 {
+        padding: 0px !important;
+    }
+
+    @@media screen and (max-width: 1024px) {
+        .mt-max-lg-3 {
+            margin-top: 1rem !important;
+            max-width: 95%;
+        }
+    }
+
+</style>
+
+@using (Html.BeginForm("EditInternal", "Researcher", FormMethod.Post, new { @class = "needs-validation", novalidate = "" }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ResearcherNumber)
 
-<div class="container-xxl flex-grow-1 container-p-y card" style="margin-top: 5rem">
-    <div class="d-flex justify-content-between align-items-center" style="padding-bottom: 0px !important;">
-        <h3 class="fw-bold"> แก้ไขข้อมูลนักวิจัย (ภายใน)</h3>
+    <div class="card shadow-sm border-0 rounded-4 container-xxl mt-max-lg-3" style="margin-top: 5rem;">
+        <div class="card-header border-0 mb-3" style="background-color: #F26522; width: 100%;">
+            <h4 class="fw-bold mb-0 text-white"><i class="fas fa-user-edit me-2"></i> แก้ไขข้อมูลนักวิจัย (บุคคลภายใน)</h4>
+        </div>
+
+        <div class="card-body">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- ประเภทผู้ใช้ -->
+            <div class="mb-4">
+                <label class="form-label fw-bold mb-2">ประเภทผู้ใช้</label>
+                <div class="btn-group w-100" role="group" aria-label="User Type">
+                    <input type="radio" class="btn-check" name="UserType" id="hospitalStaff" value="HospitalStaff"
+                           @(Model.UserType == "HospitalStaff" ? "checked" : "") autocomplete="off" required>
+                    <label class="btn btn-outline-primary" for="hospitalStaff">คนทำงาน รพ.</label>
+
+                    <input type="radio" class="btn-check" name="UserType" id="student" value="Student"
+                           @(Model.UserType == "Student" ? "checked" : "") autocomplete="off">
+                    <label class="btn btn-outline-primary" for="student">นักศึกษา</label>
+                </div>
+                @Html.ValidationMessageFor(m => m.UserType, "", new { @class = "text-danger small mt-1 d-block" })
+            </div>
+
+            <!-- ชื่อ-นามสกุล -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">คำนำหน้า</label>
+                    <div class="d-flex">
+                        <select id="titleDropdown" name="Title" class="form-select js-example-basic-single" required>
+                            <option value="">-- กรุณาเลือก --</option>
+                            @foreach (var title in new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" })
+                            {
+                                var isSelected = false;
+                                if (title == "อื่นๆ")
+                                {
+                                    isSelected = !new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title);
+                                }
+                                else
+                                {
+                                    isSelected = (Model.Title == title);
+                                }
+                                <option value="@title" @(isSelected ? "selected" : "")>@title</option>
+                            }
+                        </select>
+                        <input type="text" name="TitleCustom" class="form-control ms-2"
+                               style="display:@(Model.Title == "อื่นๆ" || (!new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title)) ? "block" : "none");"
+                               placeholder="ระบุคำนำหน้า" id="otherTitle" value="@(Model.Title == "อื่นๆ" || (!new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title)) ? Model.Title : "")">
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label">ชื่อ-นามสกุล</label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "กรุณากรอกชื่อ-นามสกุล", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <!-- แผนก/สาขา -->
+            <div class="mb-4">
+                <label class="form-label" id="divisionLabel">เลือกแผนก/สาขา</label>
+                <div id="select-divitaionLabel" style="display:@(Model.UserType == "HospitalStaff" || string.IsNullOrEmpty(Model.UserType) ? "block" : "none");">
+                    <select id="divisionSelector" name="DivisionId" class="form-select js-example-basic-single" required="@(Model.UserType == "HospitalStaff" || string.IsNullOrEmpty(Model.UserType) ? "required" : "")">
+                        <option value="">-- เลือกแผนก --</option>
+                        @if (Model.AllDivisions != null)
+                        {
+                            foreach (var division in Model.AllDivisions.Where(d => d.DepartmentId <= 29))
+                            {
+                                <option value="@division.Id"
+                                        data-department-id="@division.DepartmentId"
+                                        data-department-name="@division.DepartmentName"
+                                        data-workgroup-id="@division.WorkGroupId"
+                                        data-workgroup-name="@division.WorkGroupName"
+                                        @(division.Id == Model.DivisionId ? "selected" : "")>
+                                    @division.DivisionName (@division.DepartmentName, @division.WorkGroupName)
+                                </option>
+                            }
+                        }
+                    </select>
+                    <div class="invalid-feedback">กรุณาเลือกแผนก</div>
+                </div>
+
+                <div id="select-departmentLabel" style="display:@(Model.UserType == "Student" ? "block" : "none");">
+                    <select id="branchSelector" name="DivisionId" class="form-select js-example-basic-single" required="@(Model.UserType == "Student" ? "required" : "")">
+                        <option value="">-- เลือกสาขา --</option>
+                        @if (Model.AllDivisions != null)
+                        {
+                            foreach (var branch in Model.AllDivisions.Where(d => d.DepartmentId >= 30))
+                            {
+                                <option value="@branch.Id"
+                                        data-department-id="@branch.DepartmentId"
+                                        data-department-name="@branch.DepartmentName"
+                                        data-workgroup-id="@branch.WorkGroupId"
+                                        data-workgroup-name="@branch.WorkGroupName"
+                                        @(branch.Id == Model.DivisionId ? "selected" : "")>
+                                    @branch.DivisionName (@branch.DepartmentName, @branch.WorkGroupName)
+                                </option>
+                            }
+                        }
+                    </select>
+                    <div class="invalid-feedback">กรุณาเลือกสาขา</div>
+                </div>
+            </div>
+
+            <!-- แสดงผลข้อมูลที่เลือก -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">กลุ่มงาน</label>
+                    <div class="input-group">
+                        <input type="text" id="workGroupDisplay" class="form-control" readonly value="@(Model.WorkGroupName ?? "")" />
+                        @Html.HiddenFor(m => m.WorkGroupId, new { id = "workGroupId" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ฝ่ายงาน</label>
+                    <div class="input-group">
+                        <input type="text" id="departmentDisplay" class="form-control" readonly value="@(Model.DepartmentName ?? "")" />
+                        @Html.HiddenFor(m => m.DepartmentId, new { id = "departmentId" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">แผนก/สาขา</label>
+                    <div class="input-group">
+                        <input type="text" id="divisionDisplay" class="form-control" readonly value="@(Model.DivisionName ?? "")" />
+                        @Html.HiddenFor(m => m.DivisionId, new { id = "divisionId" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    @Html.LabelFor(m => m.TypeResearchId, "ประเภทผู้วิจัยร่วม", htmlAttributes: new { @class = "control-label col-md-12" })
+                    <div class="col-md-12">
+                        @Html.DropDownListFor(m => m.TypeResearchId, ViewBag.TypeResearch as SelectList, "-- กรุณาเลือกประเภท --", new { @class = "form-control js-example-basic-single", required = "required" })
+                        @Html.ValidationMessageFor(m => m.TypeResearchId, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+            </div>
+
+            <!-- ปุ่มบันทึก/ยกเลิก -->
+            <div class="d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-success rounded-pill px-4 me-3">
+                    <i class="fas fa-save me-2"></i> บันทึกการแก้ไข
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary rounded-pill px-4">
+                    <i class="fas fa-times me-2"></i> ยกเลิก
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.Label("รหัสผู้วิจัย", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.ResearcherNumber, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.ResearcherNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="col-md-2">
-            <div class="form-group mb-3">
-                <div class="form-group">
-                    @Html.Label("คำนำหน้าชื่อ", new { @class = "form-label fw-bold" })
-                    <input type="text" value="@Model.Title" class="form-control" disabled />
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.Label("คำนำหน้า", new { @class = "font-weight-bold" })
-                <div class="d-flex">
-                    @Html.DropDownListFor(m => m.Title, new SelectList(new[]
-                    {
-                        "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                        "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
-                    }), "-- กรุณาเลือก --", new { @class = "form-control", id = "titleDropdown" })
-                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control ms-lg-2", style = "display:none;", placeholder = "ระบุคำนำหน้า", id = "otherTitle" })
-                </div>
-                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="form-group mb-3">
-                @Html.Label("ชื่อ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div>
-
-    <!-- ✅ บุคคลภายใน: กลุ่มงาน / ฝ่ายงาน / แผนก -->
-    <div id="internal-fields">
-        <div class="row">
-            <!-- ✅ กลุ่มงาน -->
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("กลุ่มงาน", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.WorkGroupId,
-                        ViewBag.WorkGroupList as SelectList,
-                        "-- เลือกกลุ่มงาน --",
-                        new { @class = "form-control", id = "workGroupDropdown" })
-                </div>
-            </div>
-
-            <!-- ✅ ฝ่ายงาน -->
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("ฝ่ายงาน", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.DepartmentId,
-                        ViewBag.DepartmentList as SelectList,
-                        "-- เลือกฝ่ายงาน --",
-                        new { @class = "form-control", id = "departmentDropdown" })
-                </div>
-            </div>
-
-            <!-- ✅ แผนก -->
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("แผนก", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.DivisionId,
-                        ViewBag.DivisionList as SelectList,
-                        "-- เลือกแผนก --",
-                        new { @class = "form-control", id = "divisionDropdown" })
-                </div>
-            </div>
-
-            <!-- ✅ ประเภทวิจัย -->
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    @Html.Label("ประเภทวิจัย", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.TypeResearchId,
-                        ViewBag.TypeResearchList as SelectList,
-                        "-- เลือกประเภทวิจัย --",
-                        new { @class = "form-control", id = "typeResearchDropdown" })
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-center mt-4">
-        <button type="submit" class="btn btn-success px-4 me-3">
-            <i class="fas fa-save"></i> บันทึกข้อมูล
-        </button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary px-4">ยกเลิก</a>
-    </div>
-</div>
 }
 
 @section scripts {
+    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
         $(document).ready(function () {
-            $('#titleDropdown').change(function () {
-                if ($(this).val() === "อื่นๆ") {
+            // Initialize Select2
+            $('.js-example-basic-single, #titleDropdown').select2({
+                dropdownParent: $('body'),
+                width: '100%',
+                minimumResultsForSearch: 1,
+                placeholder: function () {
+                    return $(this).data('placeholder') || '-- กรุณาเลือก --';
+                }
+            }).on('select2:open', function () {
+                $('.select2-container--open').css('z-index', '9999');
+            });
+
+            // ตั้งค่าเริ่มต้นสำหรับการแก้ไข
+            function initializeEditForm() {
+                // คำนำหน้า
+                const titleValue = $('#titleDropdown').val();
+                const standardTitles = ["น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร."];
+                if (titleValue === "อื่นๆ" || !standardTitles.includes(titleValue)) {
                     $('#otherTitle').show();
+                    if (titleValue !== "อื่นๆ" && !standardTitles.includes(titleValue)) {
+                        $('#titleDropdown').val("อื่นๆ").trigger('change');
+                        $('#otherTitle').val(titleValue);
+                    }
                 } else {
                     $('#otherTitle').hide();
                 }
-            });
 
-            $('form').submit(function () {
-                if ($('#titleDropdown').val() === "อื่นๆ") {
-                    $('#titleDropdown').val($('#otherTitle').val());
+                // ตั้งค่า UserType และ Division/Branch
+                const userType = '@Model.UserType' || 'HospitalStaff';
+                const initialDivisionId = '@Model.DivisionId';
+                if (userType === 'HospitalStaff') {
+                    $('#select-divitaionLabel').show();
+                    $('#select-departmentLabel').hide();
+                    $('#divisionLabel').text('เลือกแผนก');
+                    $('#divisionSelector').prop('required', true);
+                    $('#branchSelector').prop('required', false);
+                    if (initialDivisionId && $('#divisionSelector option[value="' + initialDivisionId + '"]').length) {
+                        $('#divisionSelector').val(initialDivisionId).trigger('change');
+                    }
+                } else if (userType === 'Student') {
+                    $('#select-divitaionLabel').hide();
+                    $('#select-departmentLabel').show();
+                    $('#divisionLabel').text('เลือกสาขา');
+                    $('#divisionSelector').prop('required', false);
+                    $('#branchSelector').prop('required', true);
+                    if (initialDivisionId && $('#branchSelector option[value="' + initialDivisionId + '"]').length) {
+                        $('#branchSelector').val(initialDivisionId).trigger('change');
+                    }
+                }
+            }
+
+            // อัปเดตข้อมูลแผนกและกลุ่มงาน
+            function updateDepartmentInfo(selectedOption) {
+                if (selectedOption && selectedOption.val()) {
+                    const departmentId = selectedOption.data('department-id');
+                    const departmentName = selectedOption.data('department-name');
+                    const workGroupId = selectedOption.data('workgroup-id');
+                    const workGroupName = selectedOption.data('workgroup-name');
+                    const divisionName = selectedOption.text().split('(')[0].trim();
+                    const divisionId = selectedOption.val();
+
+                    $('#workGroupId').val(workGroupId || '');
+                    $('#workGroupDisplay').val(workGroupName || '');
+                    $('#departmentId').val(departmentId || '');
+                    $('#departmentDisplay').val(departmentName || '');
+                    $('#divisionId').val(divisionId || '');
+                    $('#divisionDisplay').val(divisionName || '');
+                } else {
+                    $('#workGroupId, #departmentId, #divisionId').val('');
+                    $('#workGroupDisplay, #departmentDisplay, #divisionDisplay').val('');
+                }
+            }
+
+            // UserType change handler
+            $('input[name="UserType"]').change(function () {
+                const userType = $(this).val();
+                console.log('[INFO] UserType changed:', userType);
+                if (userType === 'HospitalStaff') {
+                    $('#select-divitaionLabel').show();
+                    $('#select-departmentLabel').hide();
+                    $('#divisionLabel').text('เลือกแผนก');
+                    $('#divisionSelector').prop('required', true);
+                    $('#branchSelector').prop('required', false);
+                    $('#branchSelector').val('').trigger('change');
+                } else if (userType === 'Student') {
+                    $('#select-divitaionLabel').hide();
+                    $('#select-departmentLabel').show();
+                    $('#divisionLabel').text('เลือกสาขา');
+                    $('#divisionSelector').prop('required', false);
+                    $('#branchSelector').prop('required', true);
+                    $('#divisionSelector').val('').trigger('change');
                 }
             });
-        });
 
-        $(document).ready(function () {
-            $("#workGroupDropdown").change(function () {
-                var workGroupId = $(this).val();
-                $("#departmentDropdown").html('<option value="">-- เลือกฝ่ายงาน --</option>');
-                $("#divisionDropdown").html('<option value="">-- เลือกแผนก --</option>');
-
-                if (!workGroupId) return;
-
-                $.get("@Url.Action("GetDepartmentsByWorkGroup", "Researcher")", { workGroupId: workGroupId })
-                    .done(function (data) {
-                        $.each(data, function (index, item) {
-                            $("#departmentDropdown").append($('<option></option>').val(item.Value).text(item.Text));
-                        });
-                    })
-                    .fail(function () {
-                        console.error("ไม่สามารถโหลดข้อมูลฝ่ายงานได้");
-                    });
+            // Division/Branch selector change handlers
+            $('#divisionSelector, #branchSelector').change(function () {
+                const selectedOption = $(this).find('option:selected');
+                console.log('[INFO] Division/Branch selected:', {
+                    value: $(this).val(),
+                    text: selectedOption.text()
+                });
+                updateDepartmentInfo(selectedOption);
             });
 
-            $("#departmentDropdown").change(function () {
-                var departmentId = $(this).val();
-                $("#divisionDropdown").html('<option value="">-- เลือกแผนก --</option>');
-
-                if (!departmentId) return;
-
-                $.get("@Url.Action("GetDivisionsByDepartment", "Researcher")", { departmentId: departmentId })
-                    .done(function (data) {
-                        $.each(data, function (index, item) {
-                            $("#divisionDropdown").append($('<option></option>').val(item.Value).text(item.Text));
-                        });
-                    })
-                    .fail(function () {
-                        console.error("ไม่สามารถโหลดข้อมูลแผนกได้");
-                    });
+            // Title Dropdown Logic
+            $('#titleDropdown').change(function () {
+                const selectedTitle = $(this).val();
+                console.log('[INFO] Title selected:', selectedTitle);
+                if (selectedTitle === "อื่นๆ") {
+                    $('#otherTitle').show().focus();
+                } else {
+                    $('#otherTitle').hide();
+                    $('#otherTitle').val('');
+                }
             });
+
+            // Form submission
+            $('form').submit(function (event) {
+                const titleDropdown = $('#titleDropdown').val();
+                if (titleDropdown === "อื่นๆ") {
+                    const customTitle = $('#otherTitle').val().trim();
+                    if (!customTitle) {
+                        event.preventDefault();
+                        alert('กรุณาระบุคำนำหน้า');
+                        $('#otherTitle').focus();
+                        return false;
+                    }
+                    $('#titleDropdown').val(customTitle);
+                }
+
+                const userType = $('input[name="UserType"]:checked').val();
+                if (!userType) {
+                    event.preventDefault();
+                    alert('กรุณาเลือกประเภทผู้ใช้');
+                    return false;
+                }
+
+                const divisionId = $('#divisionId').val();
+                if (!divisionId) {
+                    event.preventDefault();
+                    alert(userType === 'HospitalStaff' ? 'กรุณาเลือกแผนก' : 'กรุณาเลือกสาขา');
+                    $(userType === 'HospitalStaff' ? '#divisionSelector' : '#branchSelector').focus();
+                    return false;
+                }
+
+                console.log('[INFO] Form submitted:', $(this).serialize());
+            });
+
+            // Bootstrap Form Validation
+            (function () {
+                'use strict';
+                var forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+
+            // Initialize form
+            initializeEditForm();
         });
     </script>
 }

@@ -32,7 +32,7 @@ namespace TESTFRAMEWORK.Models
 
         public List<DivisionViewModel> AllDivisions { get; set; }
 
-        [Required(ErrorMessage = "กรุณาเลือกประเภทผู้ใช้")]
+        //[Required(ErrorMessage = "กรุณาเลือกประเภทผู้ใช้")]
         public string UserType { get; set; } // "HospitalStaff" or "Student"
     }
 

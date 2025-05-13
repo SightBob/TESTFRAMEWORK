@@ -1,10 +1,5 @@
 ﻿@model TESTFRAMEWORK.Models.ResearcherViewModel
 
-@{
-    ViewBag.Title = "เพิ่มนักวิจัย";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 <style type="text/css">
      .form-group {
        margin-bottom: 0px !important;
@@ -17,6 +12,8 @@
    @@media (max-width: 1200px) {
     .mt_box {
         margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+
     }
    }
 </style>
@@ -89,13 +86,7 @@
                 </div>
             </div>
 
-            <!-- Action buttons -->
-            <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn px-4 text-white" style="background-color: #F26522;">
-                    <i class="fas fa-save me-2"></i>บันทึกข้อมูล
-                </button>
-                <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">ยกเลิก</a>
-            </div>
+ 
         </div>
     </div>
 }

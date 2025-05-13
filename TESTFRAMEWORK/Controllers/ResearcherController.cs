@@ -82,6 +82,7 @@ namespace TESTFRAMEWORK.Controllers
         [AuthorizeUser]
         public ActionResult CreateInternal()
         {
+            ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name");
             var model = new ResearcherViewModel();
             model.AllDivisions = LoadDivisions(); // Populate all divisions and branches
             return View(model);
@@ -134,10 +135,10 @@ namespace TESTFRAMEWORK.Controllers
 
         // ✅ GET: Researcher/Create (แสดงฟอร์มเพิ่มนักวิจัย)
         [AuthorizeUser]
-        public ActionResult CreateExternal()
+        public ActionResult CreateExternalModal()
         {
             LoadDropdownsForExternal();
-            return View(new ResearcherViewModel());
+            return PartialView("CreateExternal", new ResearcherViewModel());
         }
 
         [HttpPost]
@@ -376,29 +377,66 @@ namespace TESTFRAMEWORK.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                System.Diagnostics.Debug.WriteLine("[ERROR] EditInternal GET: ResearcherNumber is null or empty");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "รหัสนักวิจัยไม่ถูกต้อง");
             }
 
-            var researcher = db.Researcher_tbl
-                               .Where(r => r.ResearcherNumber == id)
-                               .Select(r => new ResearcherViewModel
-                               {
-                                   ResearcherNumber = r.ResearcherNumber,
-                                   Title = r.title,
-                                   Name = r.Name,
-                                   WorkGroupId = r.work_group_id,
-                                   DepartmentId = r.department_id,
-                                   DivisionId = r.division_id,
-                                   TypeResearchId = r.TypeResearch
-                               })
-                               .FirstOrDefault();
+            Researcher_tbl researcher_tbl = db.Researcher_tbl.Find(id);
 
-            if (researcher == null)
+            if (researcher_tbl == null)
             {
-                return HttpNotFound();
+                System.Diagnostics.Debug.WriteLine($"[ERROR] EditInternal GET: Researcher not found for ResearcherNumber: {id}");
+                return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
             }
 
-            ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }, researcher.Title);
+            var researcher = new ResearcherViewModel
+            {
+                ResearcherNumber = researcher_tbl.ResearcherNumber,
+                Title = researcher_tbl.title,
+                TitleCustom = researcher_tbl.title == "อื่นๆ" ? researcher_tbl.title : null, // ถ้าเป็น "อื่นๆ" ให้เก็บค่าที่กำหนดเอง
+                Name = researcher_tbl.Name,
+                WorkGroupId = researcher_tbl.work_group_id,
+                DepartmentId = researcher_tbl.department_id,
+                DivisionId = researcher_tbl.division_id,
+                TypeResearchId = researcher_tbl.TypeResearch,
+                UserType = researcher_tbl.OtherInfo ?? "HospitalStaff" // ตั้งค่าเริ่มต้นเป็น HospitalStaff หากไม่มีข้อมูล
+            };
+
+            // Populate AllDivisions for dropdowns
+            researcher.AllDivisions = LoadDivisions();
+            System.Diagnostics.Debug.WriteLine($"[INFO] EditInternal GET: Researcher loaded - ResearcherNumber={researcher.ResearcherNumber}, DivisionId={researcher.DivisionId}, AllDivisions Count={(researcher.AllDivisions != null ? researcher.AllDivisions.Count : 0)}");
+
+            // Populate display names based on DivisionId
+            if (researcher.DivisionId.HasValue && researcher.AllDivisions != null)
+            {
+                var selectedDivision = researcher.AllDivisions.FirstOrDefault(d => d.Id == researcher.DivisionId);
+                if (selectedDivision != null)
+                {
+                    researcher.WorkGroupName = selectedDivision.WorkGroupName;
+                    researcher.DepartmentName = selectedDivision.DepartmentName;
+                    researcher.DivisionName = selectedDivision.DivisionName;
+                    System.Diagnostics.Debug.WriteLine($"[INFO] EditInternal GET: Selected Division - Id={selectedDivision.Id}, WorkGroup={selectedDivision.WorkGroupName}, Department={selectedDivision.DepartmentName}, Division={selectedDivision.DivisionName}");
+                }
+                else
+                {
+                    researcher.WorkGroupName = "";
+                    researcher.DepartmentName = "";
+                    researcher.DivisionName = "";
+                    System.Diagnostics.Debug.WriteLine($"[WARNING] EditInternal GET: No division found for DivisionId: {researcher.DivisionId}");
+                }
+            }
+            else
+            {
+                researcher.WorkGroupName = "";
+                researcher.DepartmentName = "";
+                researcher.DivisionName = "";
+                System.Diagnostics.Debug.WriteLine("[WARNING] EditInternal GET: DivisionId is null or AllDivisions is null");
+            }
+
+            // Populate dropdowns
+            var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
+            ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
+            ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
             LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
 
             return View(researcher);
@@ -409,21 +447,29 @@ namespace TESTFRAMEWORK.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditInternal(ResearcherViewModel researcher)
         {
-            if (researcher == null || string.IsNullOrEmpty(researcher.ResearcherNumber))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "ข้อมูลไม่ถูกต้อง");
-            }
-
             try
             {
+                // Handle custom title
+                if (researcher.Title == "อื่นๆ")
+                {
+                    if (string.IsNullOrWhiteSpace(researcher.TitleCustom))
+                    {
+                        ModelState.AddModelError("TitleCustom", "กรุณากรอกคำนำหน้าแบบกำหนดเอง");
+                    }
+                    else
+                    {
+                        researcher.Title = researcher.TitleCustom;
+                    }
+                }
+
                 if (ModelState.IsValid)
                 {
                     var existingResearcher = db.Researcher_tbl
-                                               .Where(r => r.ResearcherNumber == researcher.ResearcherNumber)
-                                               .FirstOrDefault();
+                        .FirstOrDefault(r => r.ResearcherNumber == researcher.ResearcherNumber);
 
                     if (existingResearcher == null)
                     {
+                        System.Diagnostics.Debug.WriteLine($"[ERROR] EditInternal POST: Researcher not found for ResearcherNumber: {researcher.ResearcherNumber}");
                         return HttpNotFound("ไม่พบข้อมูลนักวิจัย");
                     }
 
@@ -433,22 +479,63 @@ namespace TESTFRAMEWORK.Controllers
                     existingResearcher.department_id = researcher.DepartmentId;
                     existingResearcher.division_id = researcher.DivisionId;
                     existingResearcher.TypeResearch = researcher.TypeResearchId;
+                    existingResearcher.OtherInfo = researcher.UserType;
 
                     db.SaveChanges();
 
+                    System.Diagnostics.Debug.WriteLine($"[INFO] EditInternal POST: Researcher updated successfully - Id={researcher.ResearcherNumber}, ResearcherNumber={researcher.ResearcherNumber}");
                     TempData["SuccessMessage"] = "ข้อมูลนักวิจัยถูกอัปเดตสำเร็จ!";
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    ViewBag.TitleList = new SelectList(new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }, researcher.Title);
+                    System.Diagnostics.Debug.WriteLine("[ERROR] EditInternal POST: ModelState is invalid: " + string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                    researcher.AllDivisions = LoadDivisions();
+                    // Repopulate display names
+                    if (researcher.DivisionId.HasValue && researcher.AllDivisions != null)
+                    {
+                        var selectedDivision = researcher.AllDivisions.FirstOrDefault(d => d.Id == researcher.DivisionId);
+                        researcher.WorkGroupName = selectedDivision?.WorkGroupName ?? "";
+                        researcher.DepartmentName = selectedDivision?.DepartmentName ?? "";
+                        researcher.DivisionName = selectedDivision?.DivisionName ?? "";
+                    }
+                    else
+                    {
+                        researcher.WorkGroupName = "";
+                        researcher.DepartmentName = "";
+                        researcher.DivisionName = "";
+                    }
+
+                    var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
+                    ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
+                    ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
                     LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
                     return View(researcher);
                 }
             }
             catch (Exception ex)
             {
-                return View("Error", new HandleErrorInfo(ex, "Researchers", "EditInternal"));
+                System.Diagnostics.Debug.WriteLine($"[ERROR] EditInternal POST: {ex.Message}, StackTrace: {ex.StackTrace}, InnerException: {ex.InnerException?.Message}");
+                researcher.AllDivisions = LoadDivisions();
+                if (researcher.DivisionId.HasValue && researcher.AllDivisions != null)
+                {
+                    var selectedDivision = researcher.AllDivisions.FirstOrDefault(d => d.Id == researcher.DivisionId);
+                    researcher.WorkGroupName = selectedDivision?.WorkGroupName ?? "";
+                    researcher.DepartmentName = selectedDivision?.DepartmentName ?? "";
+                    researcher.DivisionName = selectedDivision?.DivisionName ?? "";
+                }
+                else
+                {
+                    researcher.WorkGroupName = "";
+                    researcher.DepartmentName = "";
+                    researcher.DivisionName = "";
+                }
+
+                var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
+                ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
+                ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
+                LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
+                return View(researcher);
             }
         }
 
