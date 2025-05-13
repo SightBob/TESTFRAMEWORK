@@ -82,6 +82,45 @@
     .container-xxl {
         max-width: 1850px;
     }
+
+    .dropdown-menu {
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .dropdown-header {
+        color: #495057;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 0.5rem;
+    }
+
+    #fiscalYear {
+        transition: all 0.3s ease;
+        border: 1px solid #ced4da;
+    }
+
+        #fiscalYear:focus {
+            border-color: #F26522;
+            box-shadow: 0 0 0 0.2rem rgba(242, 101, 34, 0.25);
+        }
+
+    #btnExport {
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        #btnExport:hover {
+            background-color: #e55511 !important;
+            transform: translateY(-1px);
+        }
+
+    .export-container .dropdown-toggle::after {
+        margin-left: 0.5rem;
+    }
 </style>
 
 
@@ -92,12 +131,51 @@
             <div class="card mb-4">
                 <div class="d-flex justify-content-between align-items-center p-3">
                     <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
-                    <button class="btn btn-custom text-white" style="background-color: #F26522;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-plus icon-thicker m-md-1 " viewBox="0 0 16 16">
-                            <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
-                        </svg>
-                        @Html.ActionLink(" เพิ่มข้อมูล", "Create", null, new { @class = "text-white", style = "text-decoration: none;" })
-                    </button>
+
+                    <div class="gap-3 border" style="display: flex; align-items:center;">
+
+                        <div class="export-container">
+                            <div class="dropdown">
+                                <button class="btn btn-custom dropdown-toggle d-flex align-items-center gap-2 text-white"
+                                        type="button" id="exportDropdown"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        style="background-color: #F26522;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-file-earmark-excel" viewBox="0 0 16 16">
+                                        <path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.781l2.116 2.54a.5.5 0 0 0 .768-.641L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.219l-2.116-2.54z" />
+                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+                                    </svg>
+                                    นำออกข้อมูล (Excel)
+                                </button>
+                                <div class="dropdown-menu p-3" aria-labelledby="exportDropdown" style="min-width: 250px;">
+                                    <h6 class="dropdown-header">เลือกปีงบประมาณ</h6>
+                                    <div class="mb-3">
+                                        <select id="fiscalYear" class="form-select form-select-sm rounded-pill">
+                                            <option value="">ทั้งหมด</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button onclick="exportToExcel()" class="btn btn-custom text-white d-flex align-items-center justify-content-center gap-2" style="background-color: #F26522;" id="btnExport">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                                            </svg>
+                                            นำออกข้อมูล Excel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-custom text-white" style="background-color: #F26522;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-plus icon-thicker m-md-1 " viewBox="0 0 16 16">
+                                <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
+                            </svg>
+                            @Html.ActionLink(" เพิ่มข้อมูล", "Create", null, new { @class = "text-white", style = "text-decoration: none;" })
+                        </button>
+                    </div>
+
 
                 </div>
                 <div class="card-header p-0">
@@ -301,5 +379,33 @@
     document.querySelectorAll('img[data-src]').forEach(img => {
         observer.observe(img);
     });
-});
+    });
+
+
+    function exportToExcel() {
+        var fiscalYear = $('#fiscalYear').val(); // ดึงค่าปีที่เลือก (พ.ศ.)
+        var url = "@Url.Action("ExportAssetToExcel", "Export")" + (fiscalYear ? '?fiscalYear=' + fiscalYear : '');
+
+        // ทำการ redirect ไปยัง URL เพื่อดาวน์โหลดไฟล์
+        window.location.href = url;
+    }
+
+    // โหลดรายการปีเมื่อหน้าเว็บโหลด
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("GetFiscalYears", "Export")', // แก้จาก Research เป็น Export
+            type: 'GET',
+            success: function (data) {
+                var fiscalYearSelect = $('#fiscalYear');
+                fiscalYearSelect.empty();
+                fiscalYearSelect.append('<option value="">ทั้งหมด</option>');
+                $.each(data, function (index, year) {
+                    fiscalYearSelect.append(`<option value="${year}">${year}</option>`);
+                });
+            },
+            error: function () {
+                Swal.fire('❌ เกิดข้อผิดพลาด!', 'ไม่สามารถโหลดรายการปีได้', 'error');
+            }
+        });
+    });
 </script>

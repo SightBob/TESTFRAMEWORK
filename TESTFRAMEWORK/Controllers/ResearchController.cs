@@ -534,5 +534,27 @@ namespace TESTFRAMEWORK.Controllers
             }
         }
 
+
+        // Action เพื่อดึงรายการปีงบประมาณ
+        [AuthorizeUser]
+        public JsonResult GetFiscalYears()
+        {
+            try
+            {
+                // ดึงปีงบประมาณที่ไม่ซ้ำกันจาก ResearchProject_tbl
+                var fiscalYears = db.ResearchProject_tbl
+                    .Select(p => p.FiscalYear.Value) // สมมติว่า FiscalYear เป็น DateTime และต้องการเฉพาะปี
+                    .Distinct()
+                    .OrderByDescending(year => year)
+                    .ToList();
+
+                return Json(fiscalYears, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { returnMessage = $"เกิดข้อผิดพลาด: {ex.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }
