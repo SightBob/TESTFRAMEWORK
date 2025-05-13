@@ -540,7 +540,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [AuthorizeUser]
-        public ActionResult EditExternal(string id)
+        public ActionResult EditExternalModal(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -550,16 +550,16 @@ namespace TESTFRAMEWORK.Controllers
             try
             {
                 var researcher = db.Researcher_tbl
-                                   .Where(r => r.ResearcherNumber == id)
-                                   .Select(r => new ResearcherViewModel
-                                   {
-                                       ResearcherNumber = r.ResearcherNumber,
-                                       Title = r.title,
-                                       Name = r.Name,
-                                       OtherInfo = r.OtherInfo,
-                                       TypeResearchId = r.TypeResearch
-                                   })
-                                   .FirstOrDefault();
+                    .Where(r => r.ResearcherNumber == id)
+                    .Select(r => new ResearcherViewModel
+                    {
+                        ResearcherNumber = r.ResearcherNumber,
+                        Title = r.title,
+                        Name = r.Name,
+                        OtherInfo = r.OtherInfo,
+                        TypeResearchId = r.TypeResearch
+                    })
+                    .FirstOrDefault();
 
                 if (researcher == null)
                 {
@@ -567,9 +567,9 @@ namespace TESTFRAMEWORK.Controllers
                 }
 
                 var titleOptions = new[] {
-                    "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                    "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
-                };
+            "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
+            "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
+        };
                 ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
 
                 ViewBag.TypeResearchList = new SelectList(
@@ -579,13 +579,15 @@ namespace TESTFRAMEWORK.Controllers
                     researcher.TypeResearchId
                 );
 
-                return View(researcher);
+                return PartialView("EditExternal", researcher); // ใช้ PartialView
             }
             catch (Exception ex)
             {
                 return View("Error", new HandleErrorInfo(ex, "Researchers", "EditExternal"));
             }
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

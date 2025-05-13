@@ -116,8 +116,9 @@
                                                         <td>@(researcher?.TypeResearchName ?? "-")</td>
                                                         <td>@(researcher?.OtherInfo ?? "-")</td> <!-- ✅ เพิ่มแสดง OtherInfo -->
                                                         <td style="min-width: 180px;">
-                                                            <a href="@Url.Action("EditExternal", "Researcher", new { id = researcher?.ResearcherNumber ?? string.Empty })"
-                                                               class="btn btn-warning btn-sm">✏️ แก้ไข</a>
+                                                            <!-- ปุ่มแก้ไข -->
+                                                            <button class="btn btn-warning btn-sm" onclick="loadEditModal('@researcher.ResearcherNumber')">✏️ แก้ไข</button>
+
                                                             <button type="button" class="btn btn-danger btn-sm"
                                                                     onclick="confirmDelete('@Html.Raw(researcher?.ResearcherNumber ?? string.Empty)')">
                                                                 🗑️ ลบ
@@ -146,13 +147,23 @@
     <div class="modal" id="createResearcherModal" tabindex="-1" aria-labelledby="createResearcherModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                    <button type="button" class="btn-close btn-close-black" style="position: absolute; top: 2rem; right: 2rem;" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-black" style="position: absolute; top: 2rem; right: 2rem;" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="" id="createResearcherModalBody">
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal Container -->
+    <div class="modal" id="editResearcherModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="btn-close btn-close-black" style="position: absolute; top: 2rem; right: 2rem;" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="" id="editResearcherModalContent">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @Html.AntiForgeryToken()
@@ -167,7 +178,15 @@
     $.get('@Url.Action("CreateExternalModal", "Researcher")', function (data) {
         $('#createResearcherModalBody').html(data);
     });
-});
+        });
+
+        function loadEditModal(id) {
+    $('#editResearcherModalContent').html('<div class="p-4 text-center">⏳ กำลังโหลด...</div>');
+    $.get('@Url.Action("EditExternalModal", "Researcher")', { id: id }, function (data) {
+        $('#editResearcherModalContent').html(data);
+        $('#editResearcherModal').modal('show');
+    });
+}
 
 
         console.log("ข้อมูลนักวิจัยทั้งหมด:", @Html.Raw(Json.Encode(Model)));

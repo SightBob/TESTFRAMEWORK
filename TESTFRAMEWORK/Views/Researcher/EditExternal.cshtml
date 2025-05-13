@@ -8,7 +8,7 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ResearcherNumber)
 
-<div class="container-xxl flex-grow-1 container-p-y card p-4 shadow" style="max-width: 800px; margin-top: 5rem;">
+<div class="container-xxl flex-grow-1 container-p-y card p-4 shadow">
     @if (!ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -84,8 +84,7 @@
             <button type="submit" class="btn btn-success px-4">
                 <i class="fas fa-save me-2"></i>บันทึกข้อมูล
             </button>
-            <a href="@Url.Action("ExternalResearchers")" class="btn btn-outline-secondary px-4">ยกเลิก</a>
-        </div>
+         </div>
     </div>
     }
 
