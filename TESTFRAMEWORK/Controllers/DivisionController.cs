@@ -74,7 +74,7 @@ namespace TESTFRAMEWORK.Controllers
             {
                 name = model.DivisionName,  // ✅ ชื่อแผนก
                 department_id = model.DepartmentId,  // ✅ ID ของ Department
-                Status = model.StatusId  // ✅ สถานะ
+                Status = "1"  // ✅ สถานะ
             };
 
             db.divisions.Add(newDiv);

@@ -1,49 +1,282 @@
 ﻿@{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "เข้าสู่ระบบ | ระบบจัดการงานวิจัย";
 }
+<!DOCTYPE html>
+<html lang="th">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ระบบจัดการงานวิจัย มหาวิทยาลัย XYZ">
+    <title>@ViewBag.Title</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #224abe;
+            --accent-color: #f8f9fc;
+            --text-color: #5a5c69;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text-color);
+            height: 100vh;
+        }
+
+        .login-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+    
+            display: flex;
+        }
+
+        .login-image {
+            background: linear-gradient(135deg, rgba(78, 115, 223, 0.9) 0%, rgba(34, 74, 190, 0.9) 100%), url('/api/placeholder/500/800') center/cover;
+            width: 45%;
+            padding: 40px;
+            color: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-image h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .login-image p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .login-form {
+            padding: 50px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #777;
+        }
+
+        .form-floating {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+            background-color: #fff;
+        }
+
+        .form-floating > label {
+            padding: 12px 15px;
+        }
+
+        .btn-login {
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            background-color: var(--primary-color);
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+        .help-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .help-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .help-links a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            color: #aaa;
+        }
+
+        .icon-input {
+            padding-left: 45px;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            margin-right: 10px;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 992px) {
+            .login-card {
+                width: 90%;
+                flex-direction: column;
+            }
+
+            .login-image, .login-form {
+                width: 100%;
+            }
+
+            .login-image {
+                padding: 30px;
+                text-align: center;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .login-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-form">
+                <div class="login-header">
+                    <h2>เข้าสู่ระบบ</h2>
+                    <p>กรุณาใส่ข้อมูลเพื่อเข้าสู่ระบบ</p>
+                </div>
 
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow-lg p-4 rounded" style="width: 400px;">
-        <h2 class="text-center mb-4">เข้าสู่ระบบ</h2>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        @ViewBag.Error
+                    </div>
+                }
 
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger text-center">@ViewBag.Error</div>
-        }
+                @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                {
+                    @Html.AntiForgeryToken()
 
-        @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
-        {
-            @Html.AntiForgeryToken()
-            
-                <div class="mb-3">
-            <label for="username" class="form-label">ชื่อผู้ใช้</label>
-            @Html.TextBox("username", "", new { 
-                @class = "form-control", 
-                id = "username",
-                required = "required",
-                aria_label = "กรุณากรอกชื่อผู้ใช้"
-            })
+                    <div class="input-icon-wrapper mb-3">
+                        <i class="fas fa-user input-icon"></i>
+                        @Html.TextBox("username", "", new
+                        {
+                            @class = "form-control icon-input",
+                            id = "username",
+                            placeholder = "ชื่อผู้ใช้",
+                            required = "required",
+                            aria_label = "กรุณากรอกชื่อผู้ใช้",
+                            autocomplete = "username"
+                        })
+                    </div>
+
+                    <div class="input-icon-wrapper mb-4">
+                        <i class="fas fa-lock input-icon"></i>
+                        @Html.Password("password", "", new
+                        {
+                            @class = "form-control icon-input",
+                            id = "password",
+                            placeholder = "รหัสผ่าน",
+                            required = "required",
+                            aria_label = "กรุณากรอกรหัสผ่าน",
+                            autocomplete = "current-password"
+                        })
+                    </div>
+
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember" class="form-check-input">
+                        <label for="remember" class="form-check-label">จดจำการเข้าสู่ระบบ</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-login w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i>เข้าสู่ระบบ
+                    </button>
+
+                }
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">&copy; 2025 ระบบจัดการงานวิจัย  โรงพยาบาลมหาวิทยาลัยเทคโนโลยีสุรนารี </p>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">รหัสผ่าน</label>
-            @Html.Password("password", "", new { 
-                @class = "form-control", 
-                id = "password",
-                required = "required",
-                aria_label = "กรุณากรอกรหัสผ่าน"
-            })
-        </div>
-
-            <button type="submit" class="btn btn-primary w-100">เข้าสู่ระบบ</button>
-        }
     </div>
-</div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple form validation
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('.needs-validation');
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
-} 
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            });
+        });
+    </script>
+</body>
+</html>

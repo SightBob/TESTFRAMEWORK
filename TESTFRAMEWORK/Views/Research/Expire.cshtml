@@ -116,6 +116,13 @@
     .export-container .dropdown-toggle::after {
         margin-left: 0.5rem;
     }
+
+    .noWrapTable {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
 </style>
 
 
@@ -128,7 +135,7 @@
                     <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
 
 
-                    <div class="gap-3 border" style="display: flex; align-items:center;">
+                    <div class="gap-3" style="display: flex; align-items:center;">
 
                         <div class="export-container">
                             <div class="dropdown">
@@ -201,10 +208,10 @@
                                                 <th scope="col" role="columnheader" class="noWrapTable">วันรับเข้าเก็บข้อมูล</th>
                                                 <th>รหัสโครงการ</th>
                                                 <th class="project-name-column">ชื่อโครงการ</th>
-                                                <th>ชื่อหัวหน้าโครงการ</th>
+                                                <th class="noWrapTable">ชื่อหัวหน้าโครงการ</th>
                                                 <th>ประเภท EC</th>
                                                 <th>รหัส EC</th>
-                                                <th>วันหมดอายุ</th>
+                                                <th scope="col" role="columnheader" class="noWrapTable">วันหมดอายุ (ขอเข้าเก็บข้อมูล)</th>
                                                 <th>สถานะ</th>
                                                 <th>จัดการ</th>
                                             </tr>
@@ -237,25 +244,20 @@
                                                 <td>
                                                     @if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 1)
                                                     {
-                                                        // Full Board => bg-danger
-                                                        <span class="badge bg-danger">@item.TypeEC_tbl.ECTypeName</span>
+                                                        <span class="badge bg-success">@item.TypeEC_tbl.ECTypeName</span>
                                                     }
                                                     else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 2)
                                                     {
-                                                        // Expedited => bg-warning
-                                                        <span class="badge bg-warning">@item.TypeEC_tbl.ECTypeName</span>
+                                                        <span class="badge bg-danger">@item.TypeEC_tbl.ECTypeName</span>
                                                     }
                                                     else if (item.TypeEC_tbl != null && item.TypeEC_tbl.TypeECID == 3)
                                                     {
-                                                        // Exemption => bg-success
-                                                        <span class="badge bg-success">@item.TypeEC_tbl.ECTypeName</span>
+                                                        <span class="badge bg-warning">@item.TypeEC_tbl.ECTypeName</span>
                                                     }
                                                     else
                                                     {
-                                                        // กรณี TypeEC_tbl เป็น null หรือค่าไม่ตรงกับ 1/2/3
                                                         <span class="badge bg-secondary">-</span>
                                                     }
-
                                                 </td>
 
                                                 <td class="noWrapTable">@item.ECApprovalCode</td>

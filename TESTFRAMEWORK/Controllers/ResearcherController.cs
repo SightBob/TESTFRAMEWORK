@@ -90,6 +90,7 @@ namespace TESTFRAMEWORK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public ActionResult CreateInternal(ResearcherViewModel model)
         {
             if (!ModelState.IsValid)
@@ -143,6 +144,7 @@ namespace TESTFRAMEWORK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public ActionResult CreateExternal(ResearcherViewModel model)
         {
             if (!ModelState.IsValid)
@@ -304,6 +306,7 @@ namespace TESTFRAMEWORK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public JsonResult Delete(string id)
         {
             var researcher = db.Researcher_tbl.FirstOrDefault(r => r.ResearcherNumber == id);
@@ -591,6 +594,7 @@ namespace TESTFRAMEWORK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public ActionResult EditExternal(ResearcherViewModel model)
         {
             if (model.Title == "อื่นๆ")

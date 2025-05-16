@@ -11,6 +11,14 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans+Thai:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+        * {
+        font-family: "Kanit", sans-serif;
+        }
+    </style>
+
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preload" href="@Url.Content("~/Content/bootstrap.min.css")" as="style">
 
@@ -333,12 +341,12 @@
                                     </a>
                                     <ul class="menu-sub overflow-hidden">
                                         <li class="menu-item">
-                                            <a href="@Url.Action("Index", "WorkGroups")" class="menu-link">                       
+                                            <a href="@Url.Action("Index", "WorkGroups")" class="menu-link">
                                                 <div data-i18n="กลุ่มงาน">กลุ่มงาน</div>
                                             </a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="@Url.Action("Index", "Chart")" class="menu-link">                             
+                                            <a href="@Url.Action("Index", "Chart")" class="menu-link">
                                                 <div data-i18n="ฝ่าย">ฝ่าย</div>
                                             </a>
                                         </li>
@@ -372,7 +380,7 @@
     <div class="drag-target"></div>
 
     <!--/ Layout wrapper -->
-    <!-- Core JS -->
+    <!-- _insertStylesheet JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="~/Content/assets/vendor/libs/jquery/jquery.js"></script>
     <script src="~/Content/assets/vendor/libs/popper/popper.js"></script>
@@ -396,7 +404,7 @@
 
 
     <!-- jQuery -->
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bootstrap Bundle (js) -->
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
@@ -411,63 +419,63 @@
 
     @RenderSection("scripts", required: false)
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Get current path and clean it
-        const currentPath = window.location.pathname.replace(/\/$/, "");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get current path and clean it
+            const currentPath = window.location.pathname.replace(/\/$/, "");
 
-        // Reset all menu items first
-        document.querySelectorAll(".menu-item a").forEach(link => {
-            link.classList.remove("active");
-            link.style.background = "";
-            link.style.color = "";
-        });
+            // Reset all menu items first
+            document.querySelectorAll(".menu-item a").forEach(link => {
+                link.classList.remove("active");
+                link.style.background = "";
+                link.style.color = "";
+            });
 
-        // Find matching links and activate them
-        document.querySelectorAll(".menu-item a").forEach(link => {
-            try {
-                // Skip javascript:void(0) links during comparison
-                if (link.href.includes("javascript:void(0)")) return;
+            // Find matching links and activate them
+            document.querySelectorAll(".menu-item a").forEach(link => {
+                try {
+                    // Skip javascript:void(0) links during comparison
+                    if (link.href.includes("javascript:void(0)")) return;
 
-                const linkPath = new URL(link.href).pathname.replace(/\/$/, "");
+                    const linkPath = new URL(link.href).pathname.replace(/\/$/, "");
 
-                if (linkPath === currentPath) {
-                    // Highlight the current link
-    
-                    link.style.background = "#F26522";
-                    link.style.color = "#FFFFFF";
+                    if (linkPath === currentPath) {
+                        // Highlight the current link
 
-                    // If inside a submenu, expand parent menu
-                    const parentSubMenu = link.closest(".menu-sub");
-                    if (parentSubMenu) {
-                        // Show the submenu
-                  a
+                        link.style.background = "#F26522";
+                        link.style.color = "#FFFFFF";
 
-                        // Highlight parent menu item
-                        const parentMenuItem = parentSubMenu.closest(".menu-item");
-                        if (parentMenuItem) {
-                            const parentMenuLink = parentMenuItem.querySelector("a.menu-toggle");
-                            if (parentMenuLink) {
-                                parentMenuLink.style.color = "#F26522";
+                        // If inside a submenu, expand parent menu
+                        const parentSubMenu = link.closest(".menu-sub");
+                        if (parentSubMenu) {
+                            // Show the submenu
+                            a
+
+                            // Highlight parent menu item
+                            const parentMenuItem = parentSubMenu.closest(".menu-item");
+                            if (parentMenuItem) {
+                                const parentMenuLink = parentMenuItem.querySelector("a.menu-toggle");
+                                if (parentMenuLink) {
+                                    parentMenuLink.style.color = "#F26522";
+                                }
                             }
                         }
                     }
+                } catch (e) {
+                    console.warn("Error processing menu link:", e);
                 }
-            } catch (e) {
-                console.warn("Error processing menu link:", e);
-            }
+            });
+
         });
 
-    });
-
-           // Lazy load images
-        document.addEventListener("DOMContentLoaded", function() {
+        // Lazy load images
+        document.addEventListener("DOMContentLoaded", function () {
             const images = document.querySelectorAll('img[data-src]');
             images.forEach(img => {
                 img.src = img.dataset.src;
             });
         });
-</script>
+    </script>
 
 
 
