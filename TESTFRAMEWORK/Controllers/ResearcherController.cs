@@ -82,7 +82,14 @@ namespace TESTFRAMEWORK.Controllers
         [AuthorizeUser]
         public ActionResult CreateInternal()
         {
-            ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name");
+            // Filter out TypeResearch with id = 4
+            var filteredTypeResearch = db.TypeResearches
+                .Where(t => t.id != 4)
+                .Select(t => new { t.id, t.type_name })
+                .ToList();
+
+            ViewBag.TypeResearch = new SelectList(filteredTypeResearch, "id", "type_name");
+
             var model = new ResearcherViewModel();
             model.AllDivisions = LoadDivisions(); // Populate all divisions and branches
             return View(model);

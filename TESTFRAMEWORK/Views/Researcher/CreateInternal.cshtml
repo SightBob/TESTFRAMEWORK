@@ -134,11 +134,11 @@
             <div class="mb-4">
                 <label class="form-label fw-bold mb-2">ประเภทผู้ใช้</label>
                 <div class="btn-group w-100" role="group" aria-label="User Type">
-                    <input type="radio" class="btn-check" name="UserType" id="hospitalStaff" value="HospitalStaff" autocomplete="off" required>
+                    <input type="radio" class="btn-check" name="UserType" id="hospitalStaff" value="HospitalStaff" autocomplete="off" >
                     <label class="btn btn-outline-primary" for="hospitalStaff">คนทำงาน รพ.</label>
 
                     <input type="radio" class="btn-check" name="UserType" id="student" value="Student" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="student">นักศึกษา</label>
+                    <label class="btn btn-outline-primary" for="student">คณาจารย์ / นักศึกษา</label>
                 </div>
                 @Html.ValidationMessageFor(m => m.UserType, "", new { @class = "text-danger small mt-1 d-block" })
             </div>
