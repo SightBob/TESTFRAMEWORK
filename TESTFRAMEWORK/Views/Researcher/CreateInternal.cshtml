@@ -105,6 +105,13 @@
         }
     }
 
+    .btn-check_1 {
+        border-start-start-radius: 8px !important;
+        border-end-start-radius: 8px !important;
+    }
+
+
+
 </style>
 
 @using (Html.BeginForm("CreateInternal", "Researcher", FormMethod.Post, new { @class = "needs-validation", novalidate = "" }))
@@ -134,7 +141,7 @@
             <div class="mb-4">
                 <label class="form-label fw-bold mb-2">ประเภทผู้ใช้</label>
                 <div class="btn-group w-100" role="group" aria-label="User Type">
-                    <input type="radio" class="btn-check" name="UserType" id="hospitalStaff" value="HospitalStaff" autocomplete="off" >
+                    <input type="radio" class="btn-check btn-check_1" name="UserType" id="hospitalStaff" value="HospitalStaff" autocomplete="off" >
                     <label class="btn btn-outline-primary" for="hospitalStaff">คนทำงาน รพ.</label>
 
                     <input type="radio" class="btn-check" name="UserType" id="student" value="Student" autocomplete="off">
@@ -148,22 +155,7 @@
                 <div class="col-md-4">
                     <label class="form-label">คำนำหน้า</label>
                     <div class="d-flex">
-                        <select id="titleDropdown" name="Title" class="form-select" required>
-                            <option value="">-- กรุณาเลือก --</option>
-                            <option value="น.ส.">น.ส.</option>
-                            <option value="นาย">นาย</option>
-                            <option value="นพ.">นพ.</option>
-                            <option value="พญ.">พญ.</option>
-                            <option value="อ.นพ.">อ.นพ.</option>
-                            <option value="นศ.ทพ.">นศ.ทพ.</option>
-                            <option value="ผศ.">ผศ.</option>
-                            <option value="ผศ.พญ.">ผศ.พญ.</option>
-                            <option value="ผศ.ดร.">ผศ.ดร.</option>
-                            <option value="อ.ดร.">อ.ดร.</option>
-                            <option value="อ.ทพญ.ดร.">อ.ทพญ.ดร.</option>
-                            <option value="อื่นๆ">อื่นๆ</option>
-                        </select>
-                        <input type="text" name="OtherTitle" class="form-control ms-2" style="display:none;" placeholder="ระบุคำนำหน้า" id="otherTitle">
+                        <input type="text" name="Title" class="form-control" placeholder="กรุณากรอกคำนำหน้า" required />
                     </div>
                 </div>
 
@@ -233,11 +225,12 @@
                     @Html.HiddenFor(m => m.DivisionId, new { id = "divisionId" })
                 </div>
             </div>
+
             <div class="col-md-3">
-                @Html.Label("TypeResearch", "ประเภทผู้วิจัยร่วม", htmlAttributes: new { @class = "control-label col-md-12" })
+                @Html.LabelFor(m => m.TypeResearchId, "ประเภทผู้วิจัยร่วม", new { @class = "control-label col-md-12" })
                 <div class="col-md-12">
-                    @Html.DropDownList("TypeResearch", (SelectList)ViewBag.TypeResearch, "-- กรุณาเลือกประเภท --", new { @class = "form-control" })
-                    @Html.ValidationMessage("TypeResearch", "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.TypeResearchId, (SelectList)ViewBag.TypeResearch, "-- กรุณาเลือกประเภท --", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.TypeResearchId, "", new { @class = "text-danger" })
                 </div>
             </div>
 

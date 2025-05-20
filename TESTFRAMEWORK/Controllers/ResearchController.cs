@@ -67,12 +67,17 @@ namespace TESTFRAMEWORK.Controllers
             {
                 // ดึงข้อมูลรายชื่อนักวิจัยทั้งหมด (ใช้ SelectListItem ตั้งแต่ SQL Query เพื่อลด ToList() ซ้ำซ้อน)
                 var researchers = db.Researcher_tbl
-                                    .Select(r => new SelectListItem
-                                    {
-                                        Value = r.ResearcherNumber,
-                                        Text = r.title + " " + r.Name
-                                    })
-                                    .ToList();
+              .Select(r => new SelectListItem
+              {
+                  Value = r.ResearcherNumber,
+                  Text = r.work_group_id == null
+                      ? "(บุคคลภายนอก) " + r.Name
+                      : r.work_group_id == 9
+                          ? "(นักศึกษา) " + r.Name
+                          : "(คนทำงานใน รพ.) " + r.title + " " + r.Name
+              })
+              .OrderBy(r => r.Text)
+              .ToList();
 
                 // สร้าง ViewModel เพื่อส่งไปยัง View
                 var viewModel = new ResearchProjectViewModel
@@ -281,18 +286,17 @@ namespace TESTFRAMEWORK.Controllers
 
             // ดึงข้อมูลรายชื่อนักวิจัยทั้งหมด มาใช้ทำ DropDownList
             var researchers = db.Researcher_tbl
-                                .Select(r => new
-                                {
-                                    ResNo = r.ResearcherNumber,
-                                    ResName = r.title + " " + r.Name
-                                })
-                                .ToList()
-                                .Select(r => new SelectListItem
-                                {
-                                    Value = r.ResNo,
-                                    Text = r.ResName
-                                })
-                                .ToList();
+               .Select(r => new SelectListItem
+               {
+                   Value = r.ResearcherNumber,
+                   Text = r.work_group_id == null
+                       ? "(บุคคลภายนอก) " + r.Name
+                       : r.work_group_id == 9
+                           ? "(นักศึกษา) " + r.Name
+                           : "(คนทำงานใน รพ.) " + r.title + " " + r.Name
+               })
+               .OrderBy(r => r.Text)
+               .ToList();
 
             // ดึงข้อมูลผู้วิจัยร่วมของโครงการนี้
             var assistants = db.ResearchAssistant_tbl
@@ -328,109 +332,100 @@ namespace TESTFRAMEWORK.Controllers
         // POST: Research/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ResearchProjectViewModel model, IEnumerable<HttpPostedFileBase> files)
+        public ActionResult Edit(ResearchProjectViewModel model, IEnumerable<HttpPostedFileBase> files, string[] filesToDelete)
         {
             if (ModelState.IsValid)
             {
-                // 1) อัพเดทข้อมูลโครงการวิจัย
                 var project = db.ResearchProject_tbl.Find(model.ResearchProject.ProjectID);
                 if (project == null)
                 {
                     return HttpNotFound();
                 }
 
-                // อัพเดทข้อมูลทุกฟิลด์
+                // Update project details
                 project.FiscalYear = model.ResearchProject.FiscalYear;
                 project.ProjectCode = model.ResearchProject.ProjectCode ?? "DefaultCode";
                 project.ProjectName = model.ResearchProject.ProjectName ?? "Untitled";
                 project.TypeECID = model.ResearchProject.TypeECID;
+                project.sut_hospital_grant_code = project.sut_hospital_grant_code ?? "";
                 project.HeadResearcherId = model.ResearchProject.HeadResearcherId;
                 project.ECApprovalCode = model.ResearchProject.ECApprovalCode ?? "";
                 project.ECApprovalDate = model.ResearchProject.ECApprovalDate?.Year > 2500 ?
-                            model.ResearchProject.ECApprovalDate.Value.AddYears(-543) :
-                            model.ResearchProject.ECApprovalDate ?? DateTime.Now;
+                    model.ResearchProject.ECApprovalDate.Value.AddYears(-543) : model.ResearchProject.ECApprovalDate ?? DateTime.Now;
                 project.ECExpirationDate = model.ResearchProject.ECExpirationDate?.Year > 2500 ?
-                                          model.ResearchProject.ECExpirationDate.Value.AddYears(-543) :
-                                          model.ResearchProject.ECExpirationDate ?? DateTime.Now.AddYears(1);
+                    model.ResearchProject.ECExpirationDate.Value.AddYears(-543) : model.ResearchProject.ECExpirationDate ?? DateTime.Now.AddYears(1);
                 project.ResearchApprovalDate = model.ResearchProject.ResearchApprovalDate?.Year > 2500 ?
-                                               model.ResearchProject.ResearchApprovalDate.Value.AddYears(-543) :
-                                               model.ResearchProject.ResearchApprovalDate ?? DateTime.Now;
+                    model.ResearchProject.ResearchApprovalDate.Value.AddYears(-543) : model.ResearchProject.ResearchApprovalDate ?? DateTime.Now;
                 project.ResearchExpirationDate = model.ResearchProject.ResearchExpirationDate?.Year > 2500 ?
-                                                 model.ResearchProject.ResearchExpirationDate.Value.AddYears(-543) :
-                                                 model.ResearchProject.ResearchExpirationDate ?? DateTime.Now.AddYears(1);
+                    model.ResearchProject.ResearchExpirationDate.Value.AddYears(-543) : model.ResearchProject.ResearchExpirationDate ?? DateTime.Now.AddYears(1);
                 project.Note = model.ResearchProject.Note ?? "";
                 project.StatusProjectID = model.ResearchProject.StatusProjectID;
 
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
 
+                // Handle existing assistants
                 var existingAssistants = db.ResearchAssistant_tbl.Where(a => a.ProjectID == project.ProjectID);
                 db.ResearchAssistant_tbl.RemoveRange(existingAssistants);
                 db.SaveChanges();
 
-                // 2.2) เพิ่มข้อมูลผู้ช่วยวิจัยใหม่
                 if (model.ResearchAssistants != null)
                 {
                     foreach (var assistant in model.ResearchAssistants)
                     {
                         if (!string.IsNullOrEmpty(assistant.ResearcherNumber))
                         {
-                            var researchAssistant = new ResearchAssistant_tbl
+                            db.ResearchAssistant_tbl.Add(new ResearchAssistant_tbl
                             {
                                 ProjectID = project.ProjectID,
                                 ResearcherNumber = assistant.ResearcherNumber
-                            };
-                            db.ResearchAssistant_tbl.Add(researchAssistant);
+                            });
                         }
                     }
                     db.SaveChanges();
                 }
 
-                // กำหนดขนาดสูงสุด (ตัวอย่าง: 5MB)
-                int maxFileSize = 5 * 1024 * 1024; // 5MB
+                // Handle file deletions
+                if (filesToDelete != null && filesToDelete.Length > 0)
+                {
+                    var filesToRemove = db.ResearchFile_tbl.Where(f => filesToDelete.Contains(f.FileID.ToString()));
+                    db.ResearchFile_tbl.RemoveRange(filesToRemove);
+                    db.SaveChanges();
+                }
 
-                // 3) บันทึกไฟล์แนบเพิ่มเติม (ถ้ามี)
+                // Handle new file uploads
+                var maxSize = 5 * 1024 * 1024; // 5MB
                 if (files != null)
                 {
-                    foreach (var file in files)
+                    foreach (var file in files.Where(f => f != null && f.ContentLength > 0))
                     {
-                        if (file != null && file.ContentLength > 0)
+                        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (fileExtension != ".pdf")
                         {
-                            // ตรวจสอบชนิดของไฟล์
-                            var validFileTypes = new[] { ".pdf" };
-                            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-
-                            if (!validFileTypes.Contains(fileExtension))
-                            {
-                                ModelState.AddModelError("", "ไฟล์ที่อัปโหลดต้องเป็นไฟล์ PDF หรือ Word (.docx) เท่านั้น");
-                                continue;
-                            }
-
-                            // ตรวจสอบขนาดไฟล์
-                            if (file.ContentLength > maxFileSize)
-                            {
-                                ModelState.AddModelError("", $"ไฟล์ {file.FileName} ขนาดเกิน 5MB");
-                                continue;
-                            }
-
-                            // บันทึกไฟล์
-                            byte[] fileData;
-                            using (var binaryReader = new BinaryReader(file.InputStream))
-                            {
-                                fileData = binaryReader.ReadBytes(file.ContentLength);
-                            }
-
-                            var researchFile = new ResearchFile_tbl
-                            {
-                                ProjectID = project.ProjectID,
-                                FileName = file.FileName,
-                                FileType = file.ContentType,
-                                FileData = fileData,
-                                UploadDate = DateTime.Now
-                            };
-
-                            db.ResearchFile_tbl.Add(researchFile);
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ต้องเป็นไฟล์ PDF เท่านั้น");
+                            continue;
                         }
+
+                        if (file.ContentLength > maxSize)
+                        {
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ขนาดเกิน 5MB");
+                            continue;
+                        }
+
+                        byte[] fileData;
+                        using (var binaryReader = new BinaryReader(file.InputStream))
+                        {
+                            fileData = binaryReader.ReadBytes(file.ContentLength);
+                        }
+
+                        db.ResearchFile_tbl.Add(new ResearchFile_tbl
+                        {
+                            ProjectID = project.ProjectID,
+                            FileName = file.FileName,
+                            FileType = file.ContentType,
+                            FileData = fileData,
+                            UploadDate = DateTime.Now
+                        });
                     }
                     if (ModelState.IsValid)
                     {
@@ -438,34 +433,17 @@ namespace TESTFRAMEWORK.Controllers
                     }
                     else
                     {
-                        // ถ้ามีข้อผิดพลาด เช่นไฟล์ผิดประเภทหรือขนาดเกิน
-                        return View(model); // ส่งกลับไปที่หน้าเดิมเพื่อแสดง error
+                        LoadDropdowns(model);
+                        model.AttachedFiles = db.ResearchFile_tbl.Where(f => f.ProjectID == model.ResearchProject.ProjectID).ToList();
+                        return View(model);
                     }
                 }
 
                 return RedirectToAction("Index");
             }
 
-            // โหลด DropDownList ใหม่หาก ModelState ไม่ผ่าน
-            var researchers = db.Researcher_tbl
-                                .Select(r => new SelectListItem
-                                {
-                                    Value = r.ResearcherNumber,
-                                    Text = r.Name
-                                }).ToList();
-
-            ViewBag.TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName", model.ResearchProject.TypeECID);
-            ViewBag.StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus", model.ResearchProject.StatusProjectID);
-            ViewBag.HeadResearcherList = new SelectList(researchers, "Value", "Text", model.ResearchProject.HeadResearcherId);
-
-            model.HeadResearcherList = researchers;
-
-            // ดึงข้อมูลไฟล์แนบของโครงการนี้อีกครั้ง
-            var attachedFiles = db.ResearchFile_tbl
-                                  .Where(f => f.ProjectID == model.ResearchProject.ProjectID)
-                                  .ToList();
-            model.AttachedFiles = attachedFiles;
-
+            LoadDropdowns(model);
+            model.AttachedFiles = db.ResearchFile_tbl.Where(f => f.ProjectID == model.ResearchProject.ProjectID).ToList();
             return View(model);
         }
 
@@ -555,6 +533,8 @@ namespace TESTFRAMEWORK.Controllers
                 return Json(new { returnMessage = $"เกิดข้อผิดพลาด: {ex.Message}" }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
 
     }
 }

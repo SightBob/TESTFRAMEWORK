@@ -51,7 +51,7 @@ namespace TESTFRAMEWORK.Controllers
             var wg = new work_groups
             {
                 name = model.WorkGroupName,
-                Status = '1'
+                Status = model.StatusId != 0 ? model.StatusId : 1
             };
 
             db.work_groups.Add(wg);

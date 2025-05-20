@@ -23,14 +23,34 @@
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px !important;
     }
+
+    .mt-max-lg-3 {
+        margin-top: 5rem !important;
+    }
+
+    @@media screen and (max-width: 1024px) {
+        .mt-max-lg-3 {
+            margin-top: 1rem !important;
+            max-width: 95%;
+        }
+    }
+
+    .custom-add-btn {
+        background-color: #F26522 !important;
+        color: #fff !important;
+    }
+    .btn-check:focus + .btn-primary, .btn-primary:focus, .btn-primary.focus {
+        background-color: #F26522 !important;
+        color: #fff !important;
+        
+    }
 </style>
-<h2 class="mb-4">เพิ่มโครงการวิจัย</h2>
 
 @using (Html.BeginForm("Create", "Research", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card">
+    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card mt-max-lg-3">
         <h4 class="mb-3">รายละเอียดโครงการ</h4>
 
         @*@Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })*@
@@ -134,13 +154,13 @@
                 <tbody></tbody>
             </table>
         </div>
-        <button type="button" class="btn btn-primary mt-2" onclick="addAssistant()">+ เพิ่มผู้วิจัยร่วม</button>
+        <button type="button" class="btn custom-add-btn mt-2" onclick="addAssistant()">+ เพิ่มผู้วิจัยร่วม</button>
 
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="form-group mb-3">
                     @Html.LabelFor(model => model.ResearchProject.ECApprovalCode, "รหัส EC", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalCode, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalCode, new { @class = "form-control", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ECApprovalCode, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -148,7 +168,7 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     @Html.LabelFor(model => model.ResearchProject.ECApprovalDate, "วันที่อนุมัติ EC", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ECApprovalDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -164,7 +184,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required"  })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -172,7 +192,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -599,6 +619,48 @@
                 if (fpInstance) {
                     setTimeout(() => updateThaiYear(fpInstance), 50);
                 }
+            });
+        });
+
+        $(document).ready(function () {
+            // Existing validation code...
+
+            // Custom validation for file upload
+            $.validator.addMethod("fileTypeAndSize", function (value, element) {
+                var files = $(element).get(0).files;
+                if (files.length === 0) return true; // No files selected is allowed
+
+                var maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                var validTypes = ["application/pdf"]; // Only allow PDF
+
+                for (var i = 0; i < files.length; i++) {
+                    if (!validTypes.includes(files[i].type) || files[i].size > maxSize) {
+                        return false;
+                    }
+                }
+                return true;
+            }, "กรุณาอัปโหลดไฟล์ PDF เท่านั้น และขนาดไฟล์ต้องไม่เกิน 5MB");
+
+            // Add rule to the form validation
+            $("form").validate({
+                // Existing rules...
+                rules: {
+                    "files": {
+                        fileTypeAndSize: true
+                    },
+                    // Existing rules...
+                },
+                // Existing settings...
+            });
+
+            // Prevent form submission if file validation fails
+            $("#saveBtn").on("click", function (e) {
+                if (!$("form").valid()) {
+                    e.preventDefault();
+                    return;
+                }
+                $(this).prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...');
+                $("form").submit();
             });
         });
 

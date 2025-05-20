@@ -40,44 +40,29 @@
             }
 
             <!-- Title and Name fields -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        @Html.Label("คำนำหน้า", new { @class = "form-label fw-bold" })
-                        <div class="input-group">
-                            @Html.DropDownListFor(m => m.Title, new SelectList(new[] {
-                                "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.",
-                                "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ"
-                            }), "-- กรุณาเลือก --", new { @class = "form-select", id = "titleDropdown" })
-
-                            @Html.TextBoxFor(m => m.TitleCustom, new
-                            {
-                                @class = "form-control ms-lg-2",
-                                style = "display:none;",  // Initially hide TitleCustom
-                                placeholder = "ระบุคำนำหน้า",
-                                id = "otherTitle"
-                            })
-                        </div>
-                        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
-                        @Html.ValidationMessageFor(m => m.TitleCustom, "", new { @class = "text-danger small" })
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-group">
-                        @Html.Label("ชื่อ", new { @class = "form-label fw-bold" })
-                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "กรุณากรอกชื่อ" })
-                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
-                    </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-12">
+                <label class="form-label">คำนำหน้า</label>
+                <div class="d-flex">
+                    <input type="text" name="Title" class="form-control" placeholder="กรุณากรอกคำนำหน้า" required />
                 </div>
             </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.Label("ชื่อ", new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "กรุณากรอกชื่อ", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+        </div>
 
             <!-- Organization/Company information -->
             <div id="internal-fields" class="row g-3 mb-4">
                 <div class="col-md-12">
                     <div class="form-group">
                         @Html.Label("หน่วยงาน / บริษัท", new { @class = "form-label fw-bold" })
-                        @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control", placeholder = "กรุณากรอกชื่อหน่วยงานหรือบริษัท" })
+                        @Html.TextBoxFor(m => m.OtherInfo, new { @class = "form-control", placeholder = "กรุณากรอกชื่อหน่วยงานหรือบริษัท", required = "required" })
                         @Html.ValidationMessageFor(m => m.OtherInfo, "", new { @class = "text-danger small" })
                     </div>
                 </div>

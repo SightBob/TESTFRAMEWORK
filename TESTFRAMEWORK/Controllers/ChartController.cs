@@ -124,7 +124,7 @@ namespace TESTFRAMEWORK.Controllers
             {
                 name = model.DepartmentName,  // ✅ ชื่อแผนก
                 work_group_id = model.WorkGroupId,  // ✅ ID ของกลุ่มงาน
-                Status = '1'
+                Status = model.StatusId != 0 ? model.StatusId : 1
             };
 
             db.departments.Add(newDept);

@@ -103,16 +103,27 @@ namespace TESTFRAMEWORK.Controllers
             if (!ModelState.IsValid)
             {
                 model.AllDivisions = LoadDivisions();
+                ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
                 return View(model);
             }
+
             try
             {
                 int work_group_Id = model.WorkGroupId.GetValueOrDefault(0);
                 int department_Id = model.DepartmentId.GetValueOrDefault(0);
                 int divisionId = model.DivisionId.GetValueOrDefault(0);
-                int typeResearchId = model.TypeResearchId.GetValueOrDefault(0);
+                int? typeResearchId = model.TypeResearchId; // Directly use the nullable int
 
                 System.Diagnostics.Debug.WriteLine($"[INFO] Creating Researcher: UserType={model.UserType}, ResearcherNumber={model.ResearcherNumber}, WorkGroupId={work_group_Id}, DepartmentId={department_Id}, DivisionId={divisionId}, TypeResearchId={typeResearchId}");
+
+                // Validate TypeResearchId
+                if (!typeResearchId.HasValue || typeResearchId == 0)
+                {
+                    ModelState.AddModelError("TypeResearchId", "กรุณาเลือกประเภทผู้วิจัยร่วม");
+                    model.AllDivisions = LoadDivisions();
+                    ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
+                    return View(model);
+                }
 
                 var researcher = new Researcher_tbl
                 {
@@ -122,8 +133,8 @@ namespace TESTFRAMEWORK.Controllers
                     work_group_id = work_group_Id != 0 ? (int?)work_group_Id : null,
                     department_id = department_Id != 0 ? (int?)department_Id : null,
                     division_id = divisionId != 0 ? (int?)divisionId : null,
-                    TypeResearch = typeResearchId != 0 ? (int?)typeResearchId : 4,
-                    OtherInfo = model.UserType // Store UserType in OtherInfo or add a new column
+                    TypeResearch = typeResearchId, // Use the selected value directly
+                    OtherInfo = model.UserType
                 };
 
                 db.Researcher_tbl.Add(researcher);
@@ -136,10 +147,10 @@ namespace TESTFRAMEWORK.Controllers
                 ModelState.AddModelError("", $"[ERROR] {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"[ERROR] {ex.Message}");
                 model.AllDivisions = LoadDivisions();
+                ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
                 return View(model);
             }
         }
-
 
         // ✅ GET: Researcher/Create (แสดงฟอร์มเพิ่มนักวิจัย)
         [AuthorizeUser]
@@ -403,13 +414,13 @@ namespace TESTFRAMEWORK.Controllers
             {
                 ResearcherNumber = researcher_tbl.ResearcherNumber,
                 Title = researcher_tbl.title,
-                TitleCustom = researcher_tbl.title == "อื่นๆ" ? researcher_tbl.title : null, // ถ้าเป็น "อื่นๆ" ให้เก็บค่าที่กำหนดเอง
+                TitleCustom = researcher_tbl.title == "อื่นๆ" ? researcher_tbl.title : null,
                 Name = researcher_tbl.Name,
                 WorkGroupId = researcher_tbl.work_group_id,
                 DepartmentId = researcher_tbl.department_id,
                 DivisionId = researcher_tbl.division_id,
                 TypeResearchId = researcher_tbl.TypeResearch,
-                UserType = researcher_tbl.OtherInfo ?? "HospitalStaff" // ตั้งค่าเริ่มต้นเป็น HospitalStaff หากไม่มีข้อมูล
+                UserType = researcher_tbl.OtherInfo ?? "HospitalStaff"
             };
 
             // Populate AllDivisions for dropdowns
@@ -446,7 +457,14 @@ namespace TESTFRAMEWORK.Controllers
             // Populate dropdowns
             var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
             ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
-            ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
+
+            // Filter out TypeResearch with id = 4
+            var filteredTypeResearch = db.TypeResearches
+                .Where(t => t.id != 4)
+                .Select(t => new { t.id, t.type_name })
+                .ToList();
+            ViewBag.TypeResearch = new SelectList(filteredTypeResearch, "id", "type_name", researcher.TypeResearchId);
+
             LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
 
             return View(researcher);

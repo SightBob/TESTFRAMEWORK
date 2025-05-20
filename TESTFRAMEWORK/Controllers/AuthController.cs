@@ -45,7 +45,7 @@ namespace TESTFRAMEWORK.Controllers
                     Session["UserId"] = user.UserId;
                     Session["Role"] = user.Role;
                     Session["Username"] = user.Username;
-                    return RedirectToAction("Index", "Research");
+                    return RedirectToAction("Index", "Dashboard");
                 }
             }
             catch (BCrypt.Net.SaltParseException)

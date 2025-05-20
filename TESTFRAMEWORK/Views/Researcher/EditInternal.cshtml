@@ -144,27 +144,8 @@
                 <div class="col-md-4">
                     <label class="form-label">คำนำหน้า</label>
                     <div class="d-flex">
-                        <select id="titleDropdown" name="Title" class="form-select js-example-basic-single" required>
-                            <option value="">-- กรุณาเลือก --</option>
-                            @foreach (var title in new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" })
-                            {
-                                var isSelected = false;
-                                if (title == "อื่นๆ")
-                                {
-                                    isSelected = !new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title);
-                                }
-                                else
-                                {
-                                    isSelected = (Model.Title == title);
-                                }
-                                <option value="@title" @(isSelected ? "selected" : "")>@title</option>
-                            }
-                        </select>
-                        <input type="text" name="TitleCustom" class="form-control ms-2"
-                               style="display:@(Model.Title == "อื่นๆ" || (!new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title)) ? "block" : "none");"
-                               placeholder="ระบุคำนำหน้า" id="otherTitle" value="@(Model.Title == "อื่นๆ" || (!new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร." }.Contains(Model.Title)) ? Model.Title : "")">
+                        <input type="text" name="Title" class="form-control" value="@Model.Title" placeholder="กรุณากรอกคำนำหน้า" required />
                     </div>
-                    @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger small" })
                 </div>
 
                 <div class="col-md-8">
@@ -246,7 +227,7 @@
                 <div class="col-md-3">
                     @Html.LabelFor(m => m.TypeResearchId, "ประเภทผู้วิจัยร่วม", htmlAttributes: new { @class = "control-label col-md-12" })
                     <div class="col-md-12">
-                        @Html.DropDownListFor(m => m.TypeResearchId, ViewBag.TypeResearch as SelectList, "-- กรุณาเลือกประเภท --", new { @class = "form-control js-example-basic-single", required = "required" })
+                        @Html.DropDownListFor(m => m.TypeResearchId, ViewBag.TypeResearch as SelectList, new { @class = "form-control js-example-basic-single", required = "required" })
                         @Html.ValidationMessageFor(m => m.TypeResearchId, "", new { @class = "text-danger small" })
                     </div>
                 </div>

@@ -1,5 +1,25 @@
 ﻿@model TESTFRAMEWORK.Models.DivisionViewModel
 
+
+<!-- Include jQuery (required by Select2) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style>
+    .select2-container--open {
+        z-index: 9999 !important;
+    }
+
+    .select2-dropdown {
+        z-index: 9999 !important;
+    }
+</style>
+
 @using (Html.BeginForm("CreateDivision", "Division", FormMethod.Post, new { id = "createForm" }))
 {
     @Html.AntiForgeryToken()
@@ -11,20 +31,20 @@
 
     <div class="modal-body">
         <div class="mb-3">
-            @Html.LabelFor(m => m.DepartmentId, "เลือกฝ่าย")
-            @Html.DropDownListFor(m => m.DepartmentId, ViewBag.DepartmentList as SelectList, "-- เลือกฝ่าย --", new { @class = "form-control" })
+            @Html.LabelFor(m => m.DepartmentId, "เลือกฝ่าย", new { @class = "font-weight-bold" })
+            @Html.DropDownListFor(
+                m => m.DepartmentId,
+                ViewBag.DepartmentList as SelectList,
+                "-- เลือกฝ่าย --",
+                new { @class = "js-example-basic-single form-control", required = "required" })
+            @Html.ValidationMessageFor(m => m.DepartmentId, "", new { @class = "text-danger" })
         </div>
-      
+
         <div class="mb-3">
             @Html.LabelFor(m => m.DivisionName, "ชื่อแผนก")
-            @Html.TextBoxFor(m => m.DivisionName, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.DivisionName, new { @class = "form-control", required = "required" })
+            @Html.ValidationMessageFor(m => m.DivisionName, "", new { @class = "text-danger" })
         </div>
-
-
-        @*<div class="mb-3">
-            @Html.LabelFor(m => m.StatusId, "สถานะ")
-            @Html.DropDownListFor(m => m.StatusId, ViewBag.StatusList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control" })
-        </div>*@
     </div>
 
     <div class="modal-footer">
@@ -32,3 +52,9 @@
         <button type="submit" class="btn btn-primary">บันทึก</button>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+    });
+</script>

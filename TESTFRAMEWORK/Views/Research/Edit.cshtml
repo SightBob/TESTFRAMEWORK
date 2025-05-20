@@ -44,16 +44,35 @@
         display: flex;
         gap: 10px;
     }
-</style>
 
-<h2 class="mb-4">แก้ไขโครงการวิจัย</h2>
+    .custom-add-btn {
+        background-color: #F26522 !important;
+        color: #fff !important;
+    }
+
+    .btn-check:focus + .btn-primary, .btn-primary:focus, .btn-primary.focus {
+        background-color: #F26522 !important;
+        color: #fff !important;
+    }
+
+    .mt-max-lg-3 {
+        margin-top: 5rem !important;
+    }
+
+    @@media screen and (max-width: 1024px) {
+        .mt-max-lg-3 {
+            margin-top: 1rem !important;
+            max-width: 95%;
+        }
+    }
+</style>
 
 @using (Html.BeginForm("Edit", "Research", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ResearchProject.ProjectID)
 
-    <div class="container-xxl flex-grow-1 container-p-y mt-xl-5 card">
+    <div class="container-xxl flex-grow-1 container-p-y mt-max-lg-3 card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h4 class="mb-3">รายละเอียดโครงการ</h4>
             <button id="editButton" type="button" class="btn btn-warning mb-3" onclick="enableEditing()">แก้ไข</button>
@@ -73,29 +92,29 @@
             </div>
         }
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ResearchProject.FiscalYear, "วันตอบรับเข้าเก็บข้อมูล", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate", })
-                @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ResearchProject.FiscalYear, "วันตอบรับเข้าเก็บข้อมูล", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @disabled = "disabled", id = "RequestDate", })
+                    @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.LabelFor(m => m.ResearchProject.ProjectCode, "รหัสโครงการ", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.ResearchProject.ProjectCode, new { @class = "form-control", @disabled = "disabled" })
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.ProjectCode, "รหัสโครงการ", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(m => m.ResearchProject.ProjectCode, new { @class = "form-control", @disabled = "disabled" })
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="form-group mb-3">
-                @Html.LabelFor(m => m.ResearchProject.sut_hospital_grant_code, "รหัสสัญญาทุนวิจัย รพ. มทส.", new { @class = "font-weight-bold" })
-                @Html.TextBoxFor(m => m.ResearchProject.sut_hospital_grant_code, new { @class = "form-control", @disabled = "disabled" })
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    @Html.LabelFor(m => m.ResearchProject.sut_hospital_grant_code, "รหัสสัญญาทุนวิจัย รพ. มทส.", new { @class = "font-weight-bold" })
+                    @Html.TextBoxFor(m => m.ResearchProject.sut_hospital_grant_code, new { @class = "form-control", @disabled = "disabled" })
+                </div>
             </div>
         </div>
-    </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -199,7 +218,7 @@
                 </tbody>
             </table>
         </div>
-        <button type="button" class="btn btn-primary mt-2" onclick="addAssistant()" disabled>+ เพิ่มผู้วิจัยร่วม</button>
+        <button type="button" class="btn custom-add-btn mt-2" onclick="addAssistant()">+ เพิ่มผู้วิจัยร่วม</button>
 
         <div class="row mt-4">
             <div class="col-md-12">
@@ -260,15 +279,18 @@
                     <table class="table table-bordered align-middle">
                         <thead class="table-light text-center">
                             <tr>
+                                <th><input type="checkbox" id="selectAllFiles" onchange="toggleSelectAll(this)"></th>
                                 <th>📄 ชื่อไฟล์</th>
                                 <th class="text-center">ดาวน์โหลด</th>
-                                <th class="text-center">🗑️ ลบไฟล์</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var file in Model.ResearchProject.ResearchFile_tbl)
                             {
                                 <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="filesToDelete" value="@file.FileID" />
+                                    </td>
                                     <td>
                                         <i class="bi bi-file-earmark-text text-primary"></i>
                                         @file.FileName
@@ -277,12 +299,6 @@
                                         <a href="@Url.Action("DownloadFile", "Research", new { fileId = file.FileID })" class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-download"></i> ดาวน์โหลด
                                         </a>
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="hidden" name="fileId" value="@file.FileID" />
-                                        <button type="button" onclick="confirmDelete(@file.FileID)" class="btn btn-outline-primary btn-sm" disabled>
-                                            <i class="bi bi-download"></i> ลบ
-                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -539,6 +555,56 @@ $(document).ready(function() {
         }
     });
 });
+
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('input[name="filesToDelete"]');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        // Enable editing function (updated to handle file deletion checkboxes)
+        function enableEditing() {
+            document.querySelectorAll('input, textarea, select').forEach(function (element) {
+                element.removeAttribute('disabled');
+            });
+
+            document.querySelectorAll('button:not(#editButton)').forEach(function (button) {
+                button.removeAttribute('disabled');
+            });
+
+            document.getElementById('saveBtn').removeAttribute('disabled');
+            document.getElementById('selectAllFiles').removeAttribute('disabled');
+
+            $('.js-example-basic-single').select2('destroy').select2();
+            $('.type_ec').select2('destroy').select2();
+        }
+
+        // Ensure form validation and submission handle file deletion
+        $(document).ready(function () {
+            // ... (Previous ready function code remains the same) ...
+
+            // Override submit handler to include file deletion logic
+            $('form').on('submit', function (e) {
+                if (!$(this).valid()) {
+                    e.preventDefault();
+                    return;
+                }
+                const checkedFiles = $('input[name="filesToDelete"]:checked');
+                if (checkedFiles.length > 0) {
+                    checkedFiles.each(function () {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'filesToDelete',
+                            value: $(this).val()
+                        }).appendTo($(this).closest('form'));
+                    });
+                }
+                $('#saveBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...');
+            });
+        }); 
+
+        function removeAssistant(index) {
+            $(`#assistant_${index}`).remove();
+        }
 
     </script>
 }

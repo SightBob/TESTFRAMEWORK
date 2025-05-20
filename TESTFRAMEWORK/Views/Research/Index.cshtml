@@ -164,7 +164,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-custom text-white" style="background-color: #F26522;" id="btnNew">
+                        <button class="btn btn-custom text-white" style="background-color: #F26522;" onclick="openDetail()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-plus icon-thicker m-md-1" viewBox="0 0 16 16">
                                 <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
                             </svg>
@@ -355,11 +355,6 @@
 @Html.AntiForgeryToken()
 
 <script>
-    $(function () {
-        $('#btnNew').on('click', function () {
-            openDetail();
-        });
-    });
 
     // เรียกใช้งาน DataTable
     new DataTable('#example');
