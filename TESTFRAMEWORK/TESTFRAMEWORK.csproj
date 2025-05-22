@@ -199,7 +199,6 @@
     <Compile Include="Controllers\ManageUserController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\ResearcherController.cs" />
-    <Compile Include="Controllers\Researcher_tblController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WorkGroupsController.cs" />
     <Compile Include="Filters\AuthorizeUserAttribute.cs" />
@@ -214,6 +213,9 @@
       <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DivisionViewModel.cs" />
+    <Compile Include="Models\PowerBI_Links.cs">
+      <DependentUpon>ResearchModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ResearchAssistant_tbl.cs">
       <DependentUpon>ResearchModel.tt</DependentUpon>
     </Compile>
@@ -3021,15 +3023,9 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\ManageUser\Index.cshtml" />
-    <Content Include="Views\Researcher_tbl\Create.cshtml" />
-    <Content Include="Views\Researcher_tbl\Delete.cshtml" />
-    <Content Include="Views\Researcher_tbl\Details.cshtml" />
-    <Content Include="Views\Researcher_tbl\Edit.cshtml" />
-    <Content Include="Views\Researcher_tbl\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

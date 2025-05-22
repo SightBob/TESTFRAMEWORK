@@ -23,6 +23,13 @@
           <Property Name="department_id" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="PowerBI_Links">
+          <Key>
+            <PropertyRef Name="LinkID" />
+          </Key>
+          <Property Name="LinkID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="URL" Type="nvarchar" MaxLength="2000" Nullable="false" />
+        </EntityType>
         <EntityType Name="ResearchAssistant_tbl">
           <Key>
             <PropertyRef Name="ResearchAssistantID" />
@@ -349,6 +356,7 @@ warning 6002: The table/view 'Research_DB.dbo.view_ResearchProject' does not hav
         <EntityContainer Name="Research_DBModelStoreContainer">
           <EntitySet Name="departments" EntityType="Self.departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="divisions" EntityType="Self.divisions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PowerBI_Links" EntityType="Self.PowerBI_Links" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchAssistant_tbl" EntityType="Self.ResearchAssistant_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Researcher_tbl" EntityType="Self.Researcher_tbl" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchFile_tbl" EntityType="Self.ResearchFile_tbl" Schema="dbo" store:Type="Tables" />
@@ -852,6 +860,7 @@ warning 6002: The table/view 'Research_DB.dbo.view_ResearchProject' does not hav
             <End Role="ResearchProject_tbl" EntitySet="ResearchProject_tbl" />
           </AssociationSet>
           <EntitySet Name="view_ResearchProject" EntityType="Research_DBModel.view_ResearchProject" />
+          <EntitySet Name="PowerBI_Links" EntityType="Research_DBModel.PowerBI_Links" />
         </EntityContainer>
         <EntityType Name="view_ResearchProject">
           <Key>
@@ -889,6 +898,13 @@ warning 6002: The table/view 'Research_DB.dbo.view_ResearchProject' does not hav
           <Property Name="ResearchAssistantDepartment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="ResearchAssistantGroupName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="AssistantResearcherTypeResearch" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PowerBI_Links">
+          <Key>
+            <PropertyRef Name="LinkID" />
+          </Key>
+          <Property Name="LinkID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="URL" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1062,6 +1078,14 @@ warning 6002: The table/view 'Research_DB.dbo.view_ResearchProject' does not hav
                 <ScalarProperty Name="ProjectCode" ColumnName="ProjectCode" />
                 <ScalarProperty Name="FiscalYear" ColumnName="FiscalYear" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PowerBI_Links">
+            <EntityTypeMapping TypeName="Research_DBModel.PowerBI_Links">
+              <MappingFragment StoreEntitySet="PowerBI_Links">
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="LinkID" ColumnName="LinkID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

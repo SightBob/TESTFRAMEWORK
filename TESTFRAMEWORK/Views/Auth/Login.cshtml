@@ -15,7 +15,7 @@
             --primary-color: #4e73df;
             --secondary-color: #224abe;
             --accent-color: #f8f9fc;
-            --text-color: #5a5c69;
+            --text-color: #5a5c69   ;
         }
 
         body {
@@ -219,23 +219,23 @@
                     @Html.AntiForgeryToken()
 
                     <div class="input-icon-wrapper mb-3">
-                        <i class="fas fa-user input-icon"></i>
                         @Html.TextBox("username", "", new
                         {
-                            @class = "form-control icon-input",
+                            @class = "form-control",
                             id = "username",
                             placeholder = "ชื่อผู้ใช้",
                             required = "required",
                             aria_label = "กรุณากรอกชื่อผู้ใช้",
                             autocomplete = "username"
                         })
+                   
                     </div>
 
                     <div class="input-icon-wrapper mb-4">
-                        <i class="fas fa-lock input-icon"></i>
+                
                         @Html.Password("password", "", new
                         {
-                            @class = "form-control icon-input",
+                            @class = "form-control",
                             id = "password",
                             placeholder = "รหัสผ่าน",
                             required = "required",

@@ -39,5 +39,6 @@ namespace TESTFRAMEWORK.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<work_groups> work_groups { get; set; }
         public virtual DbSet<view_ResearchProject> view_ResearchProject { get; set; }
+        public virtual DbSet<PowerBI_Links> PowerBI_Links { get; set; }
     }
 }

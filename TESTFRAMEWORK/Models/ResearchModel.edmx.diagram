@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f7bacd90b905420dbd53f55b41665788" Name="Diagram1" ZoomLevel="77">
+      <Diagram DiagramId="f7bacd90b905420dbd53f55b41665788" Name="Diagram1" ZoomLevel="42">
         <EntityTypeShape EntityType="Research_DBModel.department" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Research_DBModel.division" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="Research_DBModel.ResearchAssistant_tbl" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
@@ -33,6 +33,7 @@
         <AssociationConnector Association="Research_DBModel.FK__ResearchP__Statu__403A8C7D" ManuallyRouted="false" />
         <AssociationConnector Association="Research_DBModel.FK__ResearchP__TypeE__3F466844" ManuallyRouted="false" />
         <EntityTypeShape EntityType="Research_DBModel.view_ResearchProject" Width="1.5" PointX="5.375" PointY="7.75" />
+        <EntityTypeShape EntityType="Research_DBModel.PowerBI_Links" Width="1.5" PointX="7.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
