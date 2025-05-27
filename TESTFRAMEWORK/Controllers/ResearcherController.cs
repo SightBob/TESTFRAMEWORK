@@ -11,7 +11,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ResearcherController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // ✅ GET: Researcher/Index (หน้าแสดงรายชื่อนักวิจัย)
         [AuthorizeUser]
@@ -48,7 +48,7 @@ namespace TESTFRAMEWORK.Controllers
                         .Where(w => w.id == r.division_id)
                         .Select(w => (int?)w.Status)
                         .FirstOrDefault() ?? 0,
-                    TypeResearchName = db.TypeResearches
+                    TypeResearchName = db.TypeResearch
                         .Where(t => t.id == r.TypeResearch)
                         .Select(t => t.type_name)
                         .FirstOrDefault() ?? "-",
@@ -68,7 +68,7 @@ namespace TESTFRAMEWORK.Controllers
                     ResearcherNumber = r.ResearcherNumber ?? "-",
                     Title = r.title ?? "",
                     Name = r.Name ?? "-",
-                    TypeResearchName = db.TypeResearches
+                    TypeResearchName = db.TypeResearch
                         .Where(t => t.id == r.TypeResearch)
                         .Select(t => t.type_name)
                         .FirstOrDefault() ?? "-",
@@ -83,7 +83,7 @@ namespace TESTFRAMEWORK.Controllers
         public ActionResult CreateInternal()
         {
             // Filter out TypeResearch with id = 4
-            var filteredTypeResearch = db.TypeResearches
+            var filteredTypeResearch = db.TypeResearch
                 .Where(t => t.id != 4)
                 .Select(t => new { t.id, t.type_name })
                 .ToList();
@@ -103,7 +103,7 @@ namespace TESTFRAMEWORK.Controllers
             if (!ModelState.IsValid)
             {
                 model.AllDivisions = LoadDivisions();
-                ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
+                ViewBag.TypeResearch = new SelectList(db.TypeResearch.Where(t => t.id != 4), "id", "type_name");
                 return View(model);
             }
 
@@ -121,7 +121,7 @@ namespace TESTFRAMEWORK.Controllers
                 {
                     ModelState.AddModelError("TypeResearchId", "กรุณาเลือกประเภทผู้วิจัยร่วม");
                     model.AllDivisions = LoadDivisions();
-                    ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
+                    ViewBag.TypeResearch = new SelectList(db.TypeResearch.Where(t => t.id != 4), "id", "type_name");
                     return View(model);
                 }
 
@@ -147,7 +147,7 @@ namespace TESTFRAMEWORK.Controllers
                 ModelState.AddModelError("", $"[ERROR] {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"[ERROR] {ex.Message}");
                 model.AllDivisions = LoadDivisions();
-                ViewBag.TypeResearch = new SelectList(db.TypeResearches.Where(t => t.id != 4), "id", "type_name");
+                ViewBag.TypeResearch = new SelectList(db.TypeResearch.Where(t => t.id != 4), "id", "type_name");
                 return View(model);
             }
         }
@@ -297,7 +297,7 @@ namespace TESTFRAMEWORK.Controllers
         {
             ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name");
 
-            var listItems = db.TypeResearches
+            var listItems = db.TypeResearch
                 .Where(tr => tr.type_name != "บุคคลภายนอก")
                 .Select(tr => new SelectListItem
                 {
@@ -319,7 +319,7 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.DivisionList = departmentId.HasValue
                 ? new SelectList(db.divisions.Where(d => d.department_id == departmentId), "id", "name")
                 : new SelectList(Enumerable.Empty<SelectListItem>());
-            ViewBag.TypeResearchList = new SelectList(db.TypeResearches, "id", "type_name");
+            ViewBag.TypeResearchList = new SelectList(db.TypeResearch, "id", "type_name");
         }
 
         [HttpPost]
@@ -459,7 +459,7 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
 
             // Filter out TypeResearch with id = 4
-            var filteredTypeResearch = db.TypeResearches
+            var filteredTypeResearch = db.TypeResearch
                 .Where(t => t.id != 4)
                 .Select(t => new { t.id, t.type_name })
                 .ToList();
@@ -536,7 +536,7 @@ namespace TESTFRAMEWORK.Controllers
 
                     var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
                     ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
-                    ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
+                    ViewBag.TypeResearch = new SelectList(db.TypeResearch, "id", "type_name", researcher.TypeResearchId);
                     LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
                     return View(researcher);
                 }
@@ -561,7 +561,7 @@ namespace TESTFRAMEWORK.Controllers
 
                 var titleOptions = new[] { "น.ส.", "นาย", "นพ.", "พญ.", "อ.นพ.", "นศ.ทพ.", "ผศ.", "ผศ.พญ.", "ผศ.ดร.", "อ.ดร.", "อ.ทพญ.ดร.", "อื่นๆ" };
                 ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
-                ViewBag.TypeResearch = new SelectList(db.TypeResearches, "id", "type_name", researcher.TypeResearchId);
+                ViewBag.TypeResearch = new SelectList(db.TypeResearch, "id", "type_name", researcher.TypeResearchId);
                 LoadDropdownsForEdit(researcher.WorkGroupId, researcher.DepartmentId);
                 return View(researcher);
             }
@@ -601,7 +601,7 @@ namespace TESTFRAMEWORK.Controllers
                 ViewBag.TitleList = new SelectList(titleOptions, researcher.Title);
 
                 ViewBag.TypeResearchList = new SelectList(
-                    db.TypeResearches,
+                    db.TypeResearch,
                     "id",
                     "type_name",
                     researcher.TypeResearchId

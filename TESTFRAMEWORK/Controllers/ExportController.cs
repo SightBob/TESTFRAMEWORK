@@ -14,7 +14,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ExportController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // Action เพื่อดึงรายการปีงบประมาณ (พ.ศ.)
         [AuthorizeUser]

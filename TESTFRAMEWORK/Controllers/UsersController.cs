@@ -12,7 +12,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class UsersController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // GET: Users
         public ActionResult Index()
@@ -27,7 +27,7 @@ namespace TESTFRAMEWORK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            Users user = db.Users.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -46,7 +46,7 @@ namespace TESTFRAMEWORK.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,PasswordHash,Username,Role")] User user)
+        public ActionResult Create([Bind(Include = "UserId,PasswordHash,Username,Role")] Users user)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace TESTFRAMEWORK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            Users user = db.Users.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -78,7 +78,7 @@ namespace TESTFRAMEWORK.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,PasswordHash,Username,Role")] User user)
+        public ActionResult Edit([Bind(Include = "UserId,PasswordHash,Username,Role")] Users user)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace TESTFRAMEWORK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            Users user = db.Users.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -109,7 +109,7 @@ namespace TESTFRAMEWORK.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
+            Users user = db.Users.Find(id);
             db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");

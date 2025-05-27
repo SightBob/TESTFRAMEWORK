@@ -11,7 +11,7 @@ namespace TESTFRAMEWORK.Controllers
     public class ChartController : Controller
     {
         // GET: Chart
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // ✅ GET: แสดงตาราง Departments
         [AuthorizeUser]
@@ -120,7 +120,7 @@ namespace TESTFRAMEWORK.Controllers
                 return PartialView("CreatePartial", model);
             }
 
-            var newDept = new department
+            var newDept = new departments
             {
                 name = model.DepartmentName,  // ✅ ชื่อแผนก
                 work_group_id = model.WorkGroupId,  // ✅ ID ของกลุ่มงาน

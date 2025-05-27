@@ -17,7 +17,7 @@ namespace TESTFRAMEWORK.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public work_groups()
         {
-            this.departments = new HashSet<department>();
+            this.departments = new HashSet<departments>();
             this.Researcher_tbl = new HashSet<Researcher_tbl>();
         }
     
@@ -26,7 +26,7 @@ namespace TESTFRAMEWORK.Models
         public int Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<department> departments { get; set; }
+        public virtual ICollection<departments> departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Researcher_tbl> Researcher_tbl { get; set; }
     }

@@ -30,8 +30,8 @@ namespace TESTFRAMEWORK.Models
         public string title { get; set; }
         public string OtherInfo { get; set; }
     
-        public virtual department department { get; set; }
-        public virtual division division { get; set; }
+        public virtual departments departments { get; set; }
+        public virtual divisions divisions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResearchAssistant_tbl> ResearchAssistant_tbl { get; set; }
         public virtual TypeResearch TypeResearch1 { get; set; }

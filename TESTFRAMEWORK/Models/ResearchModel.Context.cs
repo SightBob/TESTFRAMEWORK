@@ -13,10 +13,10 @@ namespace TESTFRAMEWORK.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Research_DBEntities1 : DbContext
+    public partial class Research_DBEntities : DbContext
     {
-        public Research_DBEntities1()
-            : base("name=Research_DBEntities1")
+        public Research_DBEntities()
+            : base("name=Research_DBEntities")
         {
         }
     
@@ -25,20 +25,19 @@ namespace TESTFRAMEWORK.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<department> departments { get; set; }
-        public virtual DbSet<division> divisions { get; set; }
+        public virtual DbSet<departments> departments { get; set; }
+        public virtual DbSet<divisions> divisions { get; set; }
+        public virtual DbSet<PowerBI_Links> PowerBI_Links { get; set; }
         public virtual DbSet<ResearchAssistant_tbl> ResearchAssistant_tbl { get; set; }
         public virtual DbSet<Researcher_tbl> Researcher_tbl { get; set; }
         public virtual DbSet<ResearchFile_tbl> ResearchFile_tbl { get; set; }
         public virtual DbSet<ResearchProject_tbl> ResearchProject_tbl { get; set; }
         public virtual DbSet<Status_tbl> Status_tbl { get; set; }
         public virtual DbSet<StatusProject_tbl> StatusProject_tbl { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TypeEC_tbl> TypeEC_tbl { get; set; }
-        public virtual DbSet<TypeResearch> TypeResearches { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<TypeResearch> TypeResearch { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<work_groups> work_groups { get; set; }
-        public virtual DbSet<view_ResearchProject> view_ResearchProject { get; set; }
-        public virtual DbSet<PowerBI_Links> PowerBI_Links { get; set; }
     }
 }

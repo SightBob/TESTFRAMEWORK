@@ -12,21 +12,24 @@ namespace TESTFRAMEWORK.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class division
+    public partial class departments
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public division()
+        public departments()
         {
+            this.divisions = new HashSet<divisions>();
             this.Researcher_tbl = new HashSet<Researcher_tbl>();
         }
     
         public int id { get; set; }
         public string name { get; set; }
-        public int department_id { get; set; }
+        public int work_group_id { get; set; }
         public int Status { get; set; }
     
-        public virtual department department { get; set; }
         public virtual Status_tbl Status_tbl { get; set; }
+        public virtual work_groups work_groups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<divisions> divisions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Researcher_tbl> Researcher_tbl { get; set; }
     }

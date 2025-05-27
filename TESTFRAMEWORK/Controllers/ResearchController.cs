@@ -14,7 +14,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ResearchController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // GET: Research/Index
         [AuthorizeUser]
@@ -242,7 +242,7 @@ namespace TESTFRAMEWORK.Controllers
                                   from div in divs.DefaultIfEmpty()
                                   join wg in db.work_groups on r.work_group_id equals wg.id into wgs
                                   from wg in wgs.DefaultIfEmpty()
-                                  join tr in db.TypeResearches on r.TypeResearch equals tr.id into trs
+                                  join tr in db.TypeResearch on r.TypeResearch equals tr.id into trs
                                   from tr in trs.DefaultIfEmpty()
                                   select new
                                   {

@@ -10,7 +10,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class DivisionController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // 1) หน้า Index: แสดงข้อมูลแผนก พร้อมชื่อฝ่าย
         [AuthorizeUser]
@@ -70,7 +70,7 @@ namespace TESTFRAMEWORK.Controllers
                 return PartialView("CreatePartial", model);
             }
 
-            var newDiv = new division
+            var newDiv = new divisions
             {
                 name = model.DivisionName,  // ✅ ชื่อแผนก
                 department_id = model.DepartmentId,  // ✅ ID ของ Department

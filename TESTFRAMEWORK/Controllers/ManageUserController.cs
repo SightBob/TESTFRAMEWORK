@@ -10,7 +10,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class ManageUserController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // GET: ManageUser
         [AuthorizeUser]
@@ -54,7 +54,7 @@ namespace TESTFRAMEWORK.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            var viewModel = new User
+            var viewModel = new Users
             {
                 UserId = user.UserId,
                 Username = user.Username,
@@ -66,7 +66,7 @@ namespace TESTFRAMEWORK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(User model)
+        public ActionResult Edit(Users model)
         {
             if (ModelState.IsValid)
             {

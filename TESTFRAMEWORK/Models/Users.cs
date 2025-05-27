@@ -12,11 +12,11 @@ namespace TESTFRAMEWORK.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Users
     {
         public int UserId { get; set; }
-        public string PasswordHash { get; set; }
         public string Username { get; set; }
+        public string PasswordHash { get; set; }
         public string Role { get; set; }
     }
 }

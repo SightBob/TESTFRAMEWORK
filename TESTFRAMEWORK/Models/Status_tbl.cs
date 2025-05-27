@@ -17,16 +17,16 @@ namespace TESTFRAMEWORK.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Status_tbl()
         {
-            this.departments = new HashSet<department>();
-            this.divisions = new HashSet<division>();
+            this.departments = new HashSet<departments>();
+            this.divisions = new HashSet<divisions>();
         }
     
         public int StatusID { get; set; }
         public string StatusName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<department> departments { get; set; }
+        public virtual ICollection<departments> departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<division> divisions { get; set; }
+        public virtual ICollection<divisions> divisions { get; set; }
     }
 }

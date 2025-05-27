@@ -11,7 +11,7 @@ namespace TESTFRAMEWORK.Controllers
     public class WorkGroupsController : Controller
     {
         // GET: WorkGroups
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // ✅ GET: แสดงตาราง Work Groups
         [AuthorizeUser]

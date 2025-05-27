@@ -10,7 +10,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class DashboardController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // GET: Dashboard
         [AuthorizeUser]

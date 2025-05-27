@@ -11,7 +11,7 @@ namespace TESTFRAMEWORK.Controllers
 {
     public class AuthController : Controller
     {
-        private Research_DBEntities1 db = new Research_DBEntities1();
+        private Research_DBEntities db = new Research_DBEntities();
 
         // GET: Auth/Login
         public ActionResult Login()
@@ -97,7 +97,7 @@ namespace TESTFRAMEWORK.Controllers
             // เข้ารหัสรหัสผ่านด้วย BCrypt (ใช้เวอร์ชันที่ปลอดภัยและไม่กำหนด salt เอง)
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); // ใช้ work factor 12 โดย default
 
-            var newUser = new User
+            var newUser = new Users
             {
                 Username = username,
                 PasswordHash = hashedPassword,
