@@ -145,14 +145,14 @@
                                     นำออกข้อมูล (Excel)
                                 </button>
                                 <div class="dropdown-menu p-3" aria-labelledby="exportDropdown" style="min-width: 250px;">
-                                    <h6 class="dropdown-header">เลือกปีงบประมาณ</h6>
+                                    <h6 class="dropdown-header">เลือกปี</h6>
                                     <div class="mb-3">
                                         <select id="fiscalYear" class="form-select form-select-sm rounded-pill">
                                             <option value="">ทั้งหมด</option>
                                         </select>
                                     </div>
                                     <div class="d-grid">
-                                        <button onclick="exportToExcel()" class="btn btn-custom text-white d-flex align-items-center justify-content-center gap-2" style="background-color: #F26522;" id="btnExport">
+                                        <button onclick="exportToExcel()" class="btn btn-custom d-flex align-items-center justify-content-center gap-2 text-white" style="background-color: #F26522;" id="btnExport">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
                                                 <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
@@ -191,12 +191,12 @@
                     <div class="tab-content p-0">
                         <!-- แท็บ 1: สถานะ = 1 (กำลังดำเนินการ) -->
                         <div class="tab-pane fade show active" id="navs-top-home" role="tabpanel">
-                            <div class="card shadow-sm p-3">
+                            <div class="card p-3 shadow-sm">
                                 <div class="table-responsive">
-                                    <table id="example" class="table table-striped table-hover align-middle" aria-describedby="table-description">
+                                    <table id="example" class="table-striped table-hover table align-middle" aria-describedby="table-description">
                                         <thead>
                                             <tr>
-                                                <th scope="col" role="columnheader" class="noWrapTable">ปีงบประมาณ</th>
+                                                <th scope="col" role="columnheader" class="noWrapTable">วันตอบรับเข้าเก็บข้อมูล</th>
                                                 <th scope="col" role="columnheader">รหัสโครงการ</th>
                                                 <th scope="col" role="columnheader" class="project-name-column">ชื่อโครงการ</th>
                                                 <th scope="col" role="columnheader" class="noWrapTable">ชื่อหัวหน้าโครงการ</th>
@@ -215,12 +215,23 @@
                                                     <!-- ปีงบประมาณ (แสดงเป็นพ.ศ.) -->
                                                     <td>
                                                         <div style="display: flex; justify-content: center; align-items: center;">
-                                                            @(item.FiscalYear.HasValue ? (item.FiscalYear.Value.Year + 543).ToString() : "-")
+                                                            @(item.FiscalYear.Value.ToString("dd/MM/yyyy"))
+
                                                             @{
                                                                 if (item.ResearchExpirationDate.HasValue)
                                                                 {
-                                                                    var expirationDate = item.ResearchExpirationDate.Value;
-                                                                    var remainingDays = (expirationDate - DateTime.Now).Days;
+                                                                    var expirationDate = item.ResearchExpirationDate.Value.Date;
+
+                                                                    var cultureTh = new System.Globalization.CultureInfo("th-TH");
+                                                                    DateTime today = DateTime.ParseExact("29/05/2568", "dd/MM/yyyy", cultureTh);
+                                                                    today = today.AddYears(-543);
+                                                                    // ปรับปีหากตรวจพบว่าเป็น พ.ศ.
+                                                                    if (today.Year > 2500)
+                                                                    {
+                                                                        today = today.AddYears(-543);
+                                                                    }
+
+                                                                    var remainingDays = (expirationDate - today).Days;
 
                                                                     if (remainingDays <= 30)
                                                                     {
@@ -356,8 +367,6 @@
 
 <script>
 
-    // เรียกใช้งาน DataTable
-    new DataTable('#example');
 
     // ฟังก์ชัน Confirm ลบ
     function confirmDelete(projectId) {

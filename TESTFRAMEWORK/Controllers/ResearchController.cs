@@ -118,13 +118,9 @@ namespace TESTFRAMEWORK.Controllers
                 {
                     var researchProject = model.ResearchProject ?? new ResearchProject_tbl();
 
-                    // ✅ ตรวจสอบและแปลงปี พ.ศ. เป็น ค.ศ.
-                    var fiscalYear = researchProject.FiscalYear;
-                    //if (fiscalYear > 2500) fiscalYear -= 543;
-
                     var project = new ResearchProject_tbl
                     {
-                        FiscalYear = fiscalYear,
+                        FiscalYear = researchProject.FiscalYear,
                         ProjectCode = researchProject.ProjectCode ?? "",
                         sut_hospital_grant_code = researchProject.sut_hospital_grant_code ?? "",
                         ProjectName = researchProject.ProjectName ?? "Untitled",
@@ -150,7 +146,7 @@ namespace TESTFRAMEWORK.Controllers
                     db.ResearchProject_tbl.Add(project);
                     db.SaveChanges();
 
-                    // ✅ บันทึกข้อมูลผู้ช่วยวิจัย
+                    // Save assistants
                     if (model.ResearchAssistants?.Any() == true)
                     {
                         var assistants = model.ResearchAssistants.Select(a => new ResearchAssistant_tbl
@@ -163,9 +159,8 @@ namespace TESTFRAMEWORK.Controllers
                         db.SaveChanges();
                     }
 
-                    // ✅ บันทึกไฟล์แนบ
+                    // Save files
                     var uploadedFiles = new List<ResearchFile_tbl>();
-
                     foreach (var file in files.Where(f => f != null && f.ContentLength > 0))
                     {
                         using (var binaryReader = new BinaryReader(file.InputStream))
@@ -193,17 +188,13 @@ namespace TESTFRAMEWORK.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-
-                    // ดึงข้อผิดพลาดที่ลึกที่สุด
                     Exception deepestException = ex;
                     string allExceptionMessages = ex.Message;
-
                     while (deepestException.InnerException != null)
                     {
                         deepestException = deepestException.InnerException;
                         allExceptionMessages += " -> " + deepestException.Message;
                     }
-
                     ModelState.AddModelError("", "เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + allExceptionMessages);
                     LoadDropdowns(model);
                     return View(model);
