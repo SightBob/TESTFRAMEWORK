@@ -5,10 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .container-custom {
         max-width: 95%;
@@ -130,7 +129,7 @@
                 <div class="d-flex justify-content-between align-items-center p-3">
                     <h3 class="fw-bold">📑 ตารางเก็บข้อมูลวิจัย</h3>
                     <div class="gap-3" style="display: flex; align-items:center;">
-                        
+
                         <div class="export-container">
                             <div class="dropdown">
                                 <button class="btn btn-custom dropdown-toggle d-flex align-items-center gap-2 text-white"
@@ -254,9 +253,9 @@
                                                         </div>
                                                     </td>
                                                     <!-- รหัสโครงการ -->
-                                                    <td  aria-label="รหัสโครงการ">@item.ProjectCode</td>
+                                                    <td aria-label="รหัสโครงการ">@item.ProjectCode</td>
                                                     <!-- ชื่อโครงการ -->
-                                                    <td  aria-label="ชื่อโครงการ">@item.ProjectName</td>
+                                                    <td aria-label="ชื่อโครงการ">@item.ProjectName</td>
                                                     <!-- ชื่อหัวหน้าโครงการ -->
                                                     <td class="noWrapTable">
                                                         @if (item.Researcher_tbl != null)
@@ -309,16 +308,20 @@
                                                         }
                                                     </td>
                                                     <!-- วันคงเหลือ -->
-                                                    <td>
+                                                    <td class="text-center">
+
                                                         @{
                                                             if (item.ResearchExpirationDate.HasValue)
                                                             {
                                                                 var expirationDate = item.ResearchExpirationDate.Value;
-                                                                var remainingDays = (expirationDate - DateTime.Now).Days;
+                                                                var currentDateInBuddhistEra = DateTime.Now.AddYears(-543);
+                                                                var remainingDays = (expirationDate - currentDateInBuddhistEra).Days;
+
 
                                                                 if (remainingDays < 0)
                                                                 {
-                                                                    <span class="text-danger">หมดอายุแล้ว</span>
+                                                                     <span class="text-danger">หมดอายุแล้ว</span> <br />
+                                                                     <span class="text-danger">( @remainingDays วัน )</span>
                                                                 }
                                                                 else
                                                                 {
@@ -332,7 +335,7 @@
                                                         }
                                                     </td>
                                                     <!-- จัดการ -->
-                                                    <td >
+                                                    <td>
                                                         <div class="btn-group" role="group">
                                                             <a href="@Url.Action("Edit", "Research", new { id = item.ProjectID })"
                                                                class="btn btn-warning btn-sm"
@@ -364,8 +367,8 @@
 </div>
 
 @Html.AntiForgeryToken()
-
-<script>
+    
+    <script>
 
 
     // ฟังก์ชัน Confirm ลบ
@@ -411,13 +414,18 @@
         window.location = '@Url.Action("Create", "Research")';
     }
 
-    function exportToExcel() {
-        var fiscalYear = $('#fiscalYear').val(); // ดึงค่าปีที่เลือก (พ.ศ.)
-        var url = "@Url.Action("ExportAssetToExcel", "Export")" + (fiscalYear ? '?fiscalYear=' + fiscalYear : '');
-
-        // ทำการ redirect ไปยัง URL เพื่อดาวน์โหลดไฟล์
-        window.location.href = url;
+function exportToExcel() {
+    var fiscalYear = $('#fiscalYear').val(); // ดึงค่าปีที่เลือก (ค.ศ.)
+    if (fiscalYear) {
+        // แปลงเป็นจำนวนเต็มและบวก 543 เพื่อให้เป็น พ.ศ.
+        fiscalYear = parseInt(fiscalYear) - 543;
     }
+    var url = "@Url.Action("ExportAssetToExcel", "Export")" + (fiscalYear ? '?fiscalYear=' + fiscalYear : '');
+
+    // ทำการ redirect ไปยัง URL เพื่อดาวน์โหลดไฟล์
+    console.log('Export URL:', url); // ดีบัก URL
+    window.location.href = url;
+}
 
     // โหลดรายการปีเมื่อหน้าเว็บโหลด
     $(document).ready(function () {
@@ -437,4 +445,9 @@
             }
         });
     });
-</script>
+
+    $(document).ready(function() {
+        // โค้ดที่ใช้ $
+        $('#example').DataTable();
+    });
+    </script>

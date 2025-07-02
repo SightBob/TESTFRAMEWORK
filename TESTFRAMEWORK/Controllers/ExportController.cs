@@ -17,7 +17,7 @@ namespace TESTFRAMEWORK.Controllers
         private Research_DBEntities db = new Research_DBEntities();
 
         // Action เพื่อดึงรายการปีงบประมาณ (พ.ศ.)
-        [AuthorizeUser]
+
         public JsonResult GetFiscalYears()
         {
             try
@@ -25,7 +25,7 @@ namespace TESTFRAMEWORK.Controllers
                 // ดึงปีงบประมาณที่ไม่ซ้ำกันจาก ResearchProject_tbl และแปลงเป็นพ.ศ.
                 var fiscalYears = db.ResearchProject_tbl
                     .Where(p => p.FiscalYear.HasValue)
-                    .Select(p => p.FiscalYear.Value.Year + 543) // แปลงค.ศ. เป็นพ.ศ.
+                    .Select(p => p.FiscalYear.Value.Year + 543)
                     .Distinct()
                     .OrderByDescending(year => year)
                     .ToList();
@@ -39,7 +39,6 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // GET: Export
-        [AuthorizeUser]
         public ActionResult ExportAssetToExcel(string fiscalYear = null)
         {
             try

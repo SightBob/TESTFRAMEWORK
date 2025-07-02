@@ -279,7 +279,7 @@
                     <table class="table table-bordered align-middle">
                         <thead class="table-light text-center">
                             <tr>
-                                <th><input type="checkbox" id="selectAllFiles" onchange="toggleSelectAll(this)"></th>
+                                <th style="display:flex; align-items:center; justify-content:center;">ลบไฟล์<input type="checkbox" id="selectAllFiles" onchange="toggleSelectAll(this)"></th>
                                 <th>📄 ชื่อไฟล์</th>
                                 <th class="text-center">ดาวน์โหลด</th>
                             </tr>
@@ -315,10 +315,13 @@
             </div>
         }
 
-        <div class="form-group mt-4">
-            <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
-            <input type="file" name="files" multiple class="form-control" disabled />
-        </div>
+    <div class="form-group mt-4">
+        <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
+            <input type="file" name="files" multiple class="form-control" id="fileInput" accept=".pdf" disabled/>
+            <span id="fileError" class="text-danger"></span>
+            @Html.ValidationMessageFor(model => model.ResearchProject.ResearchFile_tbl, "", new { @class = "text-danger" })
+
+    </div>
 
         <div class="form-group mt-4">
             @Html.LabelFor(m => m.ResearchProject.StatusProjectID, "สถานะโครงการ", new { @class = "font-weight-bold" })
@@ -605,6 +608,39 @@ $(document).ready(function() {
         function removeAssistant(index) {
             $(`#assistant_${index}`).remove();
         }
+
+        // ฟังก์ชันตรวจสอบไฟล์
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const files = e.target.files; // ได้รายการไฟล์ที่เลือก
+            const maxSize = 5 * 1024 * 1024; // ขนาดสูงสุด 5MB (หน่วยเป็นไบต์)
+            const allowedExtension = '.pdf'; // นามสกุลที่อนุญาต
+            let errorMessage = ''; // เก็บข้อความแจ้งเตือน
+
+            // ตรวจสอบแต่ละไฟล์
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+
+                // ตรวจสอบนามสกุลไฟล์
+                if (fileExtension !== allowedExtension) {
+                    errorMessage += `ไฟล์ "${file.name}" ไม่ใช่ไฟล์ PDF<br>`;
+                }
+
+                // ตรวจสอบขนาดไฟล์
+                if (file.size > maxSize) {
+                    errorMessage += `ไฟล์ "${file.name}" มีขนาดเกิน 5MB<br>`;
+                }
+            }
+
+            // แสดงข้อความแจ้งเตือน
+            const errorElement = document.getElementById('fileError');
+            errorElement.innerHTML = errorMessage;
+
+            // ถ้ามีข้อผิดพลาด ล้างไฟล์ที่เลือก
+            if (errorMessage) {
+                e.target.value = ''; // รีเซ็ต input file
+            }
+        });
 
     </script>
 }

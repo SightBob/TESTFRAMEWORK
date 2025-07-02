@@ -211,7 +211,9 @@
         <h4 class="mb-3">📎 ไฟล์แนบ</h4>
         <div class="form-group mt-4">
             <label class="font-weight-bold">อัปโหลดไฟล์ใหม่ (เลือกหลายไฟล์ได้)</label>
-            <input type="file" name="files" multiple class="form-control" />
+            <input type="file" name="files" multiple class="form-control" id="fileInput" accept=".pdf" />
+            <span id="fileError" class="text-danger"></span>
+            @Html.ValidationMessageFor(model => model.ResearchProject.ResearchFile_tbl, "", new { @class = "text-danger" })
         </div>
 
         <div class="d-flex align-items-center justify-content-center mt-4">
@@ -439,46 +441,37 @@
             });
         });
 
-        $(document).ready(function () {
-            // Existing validation code...
+        // ฟังก์ชันตรวจสอบไฟล์
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const files = e.target.files; // ได้รายการไฟล์ที่เลือก
+            const maxSize = 5 * 1024 * 1024; // ขนาดสูงสุด 5MB (หน่วยเป็นไบต์)
+            const allowedExtension = '.pdf'; // นามสกุลที่อนุญาต
+            let errorMessage = ''; // เก็บข้อความแจ้งเตือน
 
-            // Custom validation for file upload
-            $.validator.addMethod("fileTypeAndSize", function (value, element) {
-                var files = $(element).get(0).files;
-                if (files.length === 0) return true; // No files selected is allowed
+            // ตรวจสอบแต่ละไฟล์
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
 
-                var maxSize = 5 * 1024 * 1024; // 5MB in bytes
-                var validTypes = ["application/pdf"]; // Only allow PDF
-
-                for (var i = 0; i < files.length; i++) {
-                    if (!validTypes.includes(files[i].type) || files[i].size > maxSize) {
-                        return false;
-                    }
+                // ตรวจสอบนามสกุลไฟล์
+                if (fileExtension !== allowedExtension) {
+                    errorMessage += `ไฟล์ "${file.name}" ไม่ใช่ไฟล์ PDF<br>`;
                 }
-                return true;
-            }, "กรุณาอัปโหลดไฟล์ PDF เท่านั้น และขนาดไฟล์ต้องไม่เกิน 5MB");
 
-            // Add rule to the form validation
-            $("form").validate({
-                // Existing rules...
-                rules: {
-                    "files": {
-                        fileTypeAndSize: true
-                    },
-                    // Existing rules...
-                },
-                // Existing settings...
-            });
-
-            // Prevent form submission if file validation fails
-            $("#saveBtn").on("click", function (e) {
-                if (!$("form").valid()) {
-                    e.preventDefault();
-                    return; 
+                // ตรวจสอบขนาดไฟล์
+                if (file.size > maxSize) {
+                    errorMessage += `ไฟล์ "${file.name}" มีขนาดเกิน 5MB<br>`;
                 }
-                $(this).prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...');
-                $("form").submit();
-            });
+            }
+
+            // แสดงข้อความแจ้งเตือน
+            const errorElement = document.getElementById('fileError');
+            errorElement.innerHTML = errorMessage;
+
+            // ถ้ามีข้อผิดพลาด ล้างไฟล์ที่เลือก
+            if (errorMessage) {
+                e.target.value = ''; // รีเซ็ต input file
+            }
         });
 
 
