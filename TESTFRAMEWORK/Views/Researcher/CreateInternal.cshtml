@@ -227,7 +227,7 @@
             </div>
 
             <div class="col-md-3">
-                @Html.LabelFor(m => m.TypeResearchId, "ประเภทผู้วิจัยร่วม", new { @class = "control-label col-md-12" })
+                @Html.LabelFor(m => m.TypeResearchId, "ประเภทผู้วิจัย", new { @class = "control-label col-md-12" })
                 <div class="col-md-12">
                     @Html.DropDownListFor(m => m.TypeResearchId, (SelectList)ViewBag.TypeResearch, "-- กรุณาเลือกประเภท --", new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.TypeResearchId, "", new { @class = "text-danger" })

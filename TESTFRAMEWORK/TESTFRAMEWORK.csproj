@@ -667,6 +667,7 @@
     <Content Include="Content\assets\img\layouts\layout-without-menu-light.png" />
     <Content Include="Content\assets\img\layouts\layout-without-navbar-dark.png" />
     <Content Include="Content\assets\img\layouts\layout-without-navbar-light.png" />
+    <Content Include="Content\assets\img\logo-sut.png" />
     <Content Include="Content\assets\img\pages\app-academy-tutor-1.png" />
     <Content Include="Content\assets\img\pages\app-academy-tutor-2.png" />
     <Content Include="Content\assets\img\pages\app-academy-tutor-3.png" />

@@ -140,7 +140,7 @@ namespace TESTFRAMEWORK.Controllers
                 db.Researcher_tbl.Add(researcher);
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Create");
             }
             catch (Exception ex)
             {
