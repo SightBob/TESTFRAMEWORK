@@ -107,33 +107,45 @@
       "type": "file"
     },
     {
+      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778833449271,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778833558220,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Web.config",
+      "accessCount": 3,
+      "lastAccessed": 1778833076855,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Global.asax.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778833512179,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ManageUserController.cs",
+      "accessCount": 2,
+      "lastAccessed": 1778833466405,
+      "type": "file"
+    },
+    {
       "path": "TESTFRAMEWORK\\packages.config",
       "accessCount": 1,
       "lastAccessed": 1778824357307,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Web.config",
-      "accessCount": 1,
-      "lastAccessed": 1778824357316,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Global.asax.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824357370,
-      "type": "file"
-    },
-    {
       "path": "TESTFRAMEWORK\\Controllers\\BaseController.cs",
       "accessCount": 1,
       "lastAccessed": 1778824373684,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824373702,
       "type": "file"
     },
     {
@@ -155,12 +167,6 @@
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824422092,
-      "type": "file"
-    },
-    {
       "path": "TESTFRAMEWORK\\Views\\Researcher\\Index.cshtml",
       "accessCount": 1,
       "lastAccessed": 1778832433148,
@@ -170,6 +176,42 @@
       "path": "TESTFRAMEWORK\\TESTFRAMEWORK.csproj",
       "accessCount": 1,
       "lastAccessed": 1778832688523,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\ConnectionStrings.Template.config",
+      "accessCount": 1,
+      "lastAccessed": 1778833042291,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\ConnectionStrings.config",
+      "accessCount": 1,
+      "lastAccessed": 1778833077487,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Home\\Error.cshtml",
+      "accessCount": 1,
+      "lastAccessed": 1778833622883,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Index.cshtml",
+      "accessCount": 1,
+      "lastAccessed": 1778833986255,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Create.cshtml",
+      "accessCount": 1,
+      "lastAccessed": 1778833986265,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Edit.cshtml",
+      "accessCount": 1,
+      "lastAccessed": 1778833986371,
       "type": "file"
     }
   ],

@@ -1,0 +1,39 @@
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i> เกิดข้อผิดพลาด</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-times-circle text-danger" style="font-size: 80px;"></i>
+                    </div>
+                    <h5 class="card-title">ขออภัย เกิดข้อผิดพลาดในการทำงาน</h5>
+                    <p class="card-text text-muted">
+                        ระบบไม่สามารถดำเนินการตามคำขอได้ในขณะนี้<br>
+                        กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ
+                    </p>
+                    <div class="mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary me-2">
+                            <i class="fas fa-home me-2"></i> กลับหน้าหลัก
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> กลับไปหน้าก่อนหน้า
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer text-muted text-center">
+                    <small>
+                        <i class="fas fa-envelope me-1"></i> หากปัญหายังคงอยู่ กรุณาติดต่อ: support@yourdomain.com
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

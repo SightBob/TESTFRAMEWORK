@@ -159,10 +159,40 @@ namespace TESTFRAMEWORK.Controllers
                         db.SaveChanges();
                     }
 
-                    // Save files
+                    // Save files with validation
                     var uploadedFiles = new List<ResearchFile_tbl>();
+                    var maxSize = 5 * 1024 * 1024; // 5MB limit
+                    var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png" };
+
                     foreach (var file in files.Where(f => f != null && f.ContentLength > 0))
                     {
+                        // Validate file size
+                        if (file.ContentLength > maxSize)
+                        {
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ขนาดเกิน 5MB");
+                            continue;
+                        }
+
+                        // Validate file extension
+                        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ไม่ใช่ประเภทที่อนุญาต (PDF, DOC, DOCX, XLS, XLSX, JPG, PNG)");
+                            continue;
+                        }
+
+                        // Validate MIME type (optional extra security)
+                        var allowedMimeTypes = new[] {
+                            "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "image/jpeg", "image/png"
+                        };
+                        if (!allowedMimeTypes.Contains(file.ContentType))
+                        {
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} มี MIME type ไม่ถูกต้อง");
+                            continue;
+                        }
+
                         using (var binaryReader = new BinaryReader(file.InputStream))
                         {
                             uploadedFiles.Add(new ResearchFile_tbl
@@ -174,6 +204,14 @@ namespace TESTFRAMEWORK.Controllers
                                 UploadDate = DateTime.Now
                             });
                         }
+                    }
+
+                    // If there are validation errors, rollback and return
+                    if (!ModelState.IsValid)
+                    {
+                        transaction.Rollback();
+                        LoadDropdowns(model);
+                        return View(model);
                     }
 
                     if (uploadedFiles.Any())
@@ -439,6 +477,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteFile(int fileId)
         {
             var file = db.ResearchFile_tbl.Find(fileId);

@@ -21,6 +21,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(PowerBI_Links model)
         {
             if (ModelState.IsValid)
@@ -38,6 +39,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Update(int linkID, string url)
         {
             if (string.IsNullOrEmpty(url))

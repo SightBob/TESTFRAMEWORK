@@ -35,6 +35,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult UpdateRole(int id, string role)
         {
             var user = db.Users.Find(id);
