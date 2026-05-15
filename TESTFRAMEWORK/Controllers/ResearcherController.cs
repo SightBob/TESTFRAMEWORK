@@ -140,7 +140,8 @@ namespace TESTFRAMEWORK.Controllers
                 db.Researcher_tbl.Add(researcher);
                 db.SaveChanges();
 
-                return RedirectToAction("Create");
+                TempData["SuccessMessage"] = "เพิ่มข้อมูลนักวิจัยสำเร็จแล้ว";
+                return RedirectToAction("CreateInternal");
             }
             catch (Exception ex)
             {

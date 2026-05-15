@@ -7,6 +7,7 @@
 
 <!-- Load Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 
@@ -124,6 +125,20 @@
         </div>
 
         <div class="card-body">
+            @* Success Alert *@
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: '@TempData["SuccessMessage"]',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#28a745'
+                    });
+                </script>
+            }
+
             @* Validation Summary *@
             @if (!ViewData.ModelState.IsValid)
             {

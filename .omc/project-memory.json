@@ -95,6 +95,18 @@
   },
   "hotPaths": [
     {
+      "path": "TESTFRAMEWORK\\Controllers\\ResearcherController.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778831777760,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Researcher\\CreateInternal.cshtml",
+      "accessCount": 4,
+      "lastAccessed": 1778832563539,
+      "type": "file"
+    },
+    {
       "path": "TESTFRAMEWORK\\packages.config",
       "accessCount": 1,
       "lastAccessed": 1778824357307,
@@ -146,6 +158,18 @@
       "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
       "accessCount": 1,
       "lastAccessed": 1778824422092,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Researcher\\Index.cshtml",
+      "accessCount": 1,
+      "lastAccessed": 1778832433148,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\TESTFRAMEWORK.csproj",
+      "accessCount": 1,
+      "lastAccessed": 1778832688523,
       "type": "file"
     }
   ],
