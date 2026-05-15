@@ -7,8 +7,8 @@
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @*<link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">*@
-@*<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>*@@*
-<script src="//cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>*@
+@*<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>*@
+@*<script src="//cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>*@
 <style>
     .container-custom {
         max-width: 95%;
@@ -223,9 +223,8 @@
                                                                     var expirationDate = item.ResearchExpirationDate.Value.Date;
 
                                                                     var cultureTh = new System.Globalization.CultureInfo("th-TH");
-                                                                    DateTime today = DateTime.ParseExact("29/05/2568", "dd/MM/yyyy", cultureTh);
-                                                                    today = today.AddYears(-543);
-                                                                    // ปรับปีหากตรวจพบว่าเป็น พ.ศ.
+                                                                    DateTime today = DateTime.Now;
+                                                                    // แปลงปี พ.ศ. เป็น ค.ศ. ถ้าจำเป็น
                                                                     if (today.Year > 2500)
                                                                     {
                                                                         today = today.AddYears(-543);

@@ -59,7 +59,7 @@
             <div class="col-md-4">
                 <div class="form-group mb-3">
                     @Html.LabelFor(model => model.ResearchProject.FiscalYear, "วันตอบรับเข้าเก็บข้อมูล", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required" })
+                    @Html.TextBoxFor(model => model.ResearchProject.FiscalYear, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "FiscalYearDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.FiscalYear, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -168,7 +168,7 @@
             <div class="col-md-6">
                 <div class="form-group mb-3">
                     @Html.LabelFor(model => model.ResearchProject.ECApprovalDate, "วันที่อนุมัติ EC", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECApprovalDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "ECApprovalDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ECApprovalDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -176,7 +176,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ResearchProject.ECExpirationDate, "วันหมดอายุ EC", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ECExpirationDate, "{0:dd-MM-yyyy}", new { @class = "form-control date_ec", id = "RequestDate", type = "date" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ECExpirationDate, "{0:dd-MM-yyyy}", new { @class = "form-control date_ec", id = "ECExpirationDate", type = "date" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ECExpirationDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -184,7 +184,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ResearchProject.ResearchApprovalDate, "วันที่อนุมัติ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required"  })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchApprovalDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "ResearchApprovalDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchApprovalDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -192,7 +192,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ResearchProject.ResearchExpirationDate, "วันหมดอายุ (ขอเข้าเก็บข้อมูล)", new { @class = "font-weight-bold" })
-                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "RequestDate", required = "required" })
+                    @Html.TextBoxFor(model => model.ResearchProject.ResearchExpirationDate, "{0:dd-MM-yyyy}", new { @class = "form-control", type = "date", id = "ResearchExpirationDate", required = "required" })
                     @Html.ValidationMessageFor(model => model.ResearchProject.ResearchExpirationDate, "", new { @class = "text-danger" })
                 </div>
             </div>
