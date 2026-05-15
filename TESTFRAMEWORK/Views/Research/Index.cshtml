@@ -423,6 +423,7 @@ function exportToExcel() {
     var fiscalYear = $('#fiscalYear').val();
     if (fiscalYear) {
         fiscalYear = parseInt(fiscalYear) - 543;
+        if (isNaN(fiscalYear)) fiscalYear = '';
     }
     var url = "@Url.Action("ExportAssetToExcel", "Export")" + (fiscalYear ? '?fiscalYear=' + fiscalYear : '');
 

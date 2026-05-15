@@ -96,62 +96,248 @@
   "hotPaths": [
     {
       "path": "TESTFRAMEWORK\\Views\\Research\\Edit.cshtml",
-      "accessCount": 20,
-      "lastAccessed": 1778838890705,
+      "accessCount": 27,
+      "lastAccessed": 1778847098741,
       "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK",
+      "accessCount": 24,
+      "lastAccessed": 1778844075393,
+      "type": "directory"
     },
     {
       "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
-      "accessCount": 10,
-      "lastAccessed": 1778838808067,
+      "accessCount": 21,
+      "lastAccessed": 1778847517531,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Views\\Research\\Create.cshtml",
-      "accessCount": 8,
-      "lastAccessed": 1778834798316,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Views\\Research\\Index.cshtml",
-      "accessCount": 5,
-      "lastAccessed": 1778834592656,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Global.asax.cs",
-      "accessCount": 5,
-      "lastAccessed": 1778836914295,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
-      "accessCount": 5,
-      "lastAccessed": 1778838297938,
+      "path": "TESTFRAMEWORK\\Views\\ManageUser\\Index.cshtml",
+      "accessCount": 18,
+      "lastAccessed": 1778844956075,
       "type": "file"
     },
     {
       "path": "TESTFRAMEWORK\\Controllers\\ResearcherController.cs",
-      "accessCount": 4,
-      "lastAccessed": 1778831777760,
+      "accessCount": 13,
+      "lastAccessed": 1778847363546,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Views\\Researcher\\CreateInternal.cshtml",
-      "accessCount": 4,
-      "lastAccessed": 1778832563539,
+      "path": "TESTFRAMEWORK\\Filters\\AuthorizeUserAttribute.cs",
+      "accessCount": 11,
+      "lastAccessed": 1778844075222,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Web.config",
-      "accessCount": 3,
-      "lastAccessed": 1778833076855,
+      "path": "TESTFRAMEWORK\\App_Start\\RouteConfig.cs",
+      "accessCount": 11,
+      "lastAccessed": 1778844075255,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Create.cshtml",
+      "accessCount": 10,
+      "lastAccessed": 1778844086249,
       "type": "file"
     },
     {
       "path": "TESTFRAMEWORK\\Controllers\\ManageUserController.cs",
-      "accessCount": 2,
-      "lastAccessed": 1778833466405,
+      "accessCount": 10,
+      "lastAccessed": 1778844126731,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Index.cshtml",
+      "accessCount": 10,
+      "lastAccessed": 1778846907227,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Shared\\_Layout.cshtml",
+      "accessCount": 10,
+      "lastAccessed": 1778847393262,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\AuthController.cs",
+      "accessCount": 9,
+      "lastAccessed": 1778844956067,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
+      "accessCount": 8,
+      "lastAccessed": 1778844082466,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Global.asax.cs",
+      "accessCount": 7,
+      "lastAccessed": 1778840091978,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Web.config",
+      "accessCount": 7,
+      "lastAccessed": 1778844075143,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\UsersController.cs",
+      "accessCount": 7,
+      "lastAccessed": 1778846627665,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models",
+      "accessCount": 7,
+      "lastAccessed": 1778847435619,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers",
+      "accessCount": 5,
+      "lastAccessed": 1778841032527,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Researcher\\CreateInternal.cshtml",
+      "accessCount": 5,
+      "lastAccessed": 1778844097554,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\UserModel.cs",
+      "accessCount": 5,
+      "lastAccessed": 1778844147627,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ExportController.cs",
+      "accessCount": 5,
+      "lastAccessed": 1778846715322,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views",
+      "accessCount": 4,
+      "lastAccessed": 1778841032503,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\BaseController.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778844082370,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\ResearchProject_tbl.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778844105909,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\Users.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778844147571,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\DivisionController.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778846544604,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Researcher\\Index.cshtml",
+      "accessCount": 4,
+      "lastAccessed": 1778847287256,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\ResearchProjectViewModel.cs",
+      "accessCount": 4,
+      "lastAccessed": 1778847474990,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\packages.config",
+      "accessCount": 3,
+      "lastAccessed": 1778840150772,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\App_Start\\BundleConfig.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844075279,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\App_Start\\FilterConfig.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844075316,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\ConnectionStrings.config",
+      "accessCount": 3,
+      "lastAccessed": 1778844075331,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\WorkGroupsController.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844082342,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ChartController.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844082436,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Home\\Error.cshtml",
+      "accessCount": 3,
+      "lastAccessed": 1778844086189,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\Researcher_tbl.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844105675,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\DepartmentViewModel.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844120891,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\ResearcherViewModel.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844120912,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\DivisionViewModel.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844120952,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\WorkGroupViewModel.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844120986,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\ResearchModel.Context.cs",
+      "accessCount": 3,
+      "lastAccessed": 1778844121013,
       "type": "file"
     },
     {
@@ -161,63 +347,39 @@
       "type": "directory"
     },
     {
-      "path": "TESTFRAMEWORK\\Views\\Home\\Error.cshtml",
+      "path": "TESTFRAMEWORK\\ConnectionStrings.Template.config",
       "accessCount": 2,
-      "lastAccessed": 1778838263051,
+      "lastAccessed": 1778840150835,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\packages.config",
-      "accessCount": 1,
-      "lastAccessed": 1778824357307,
+      "path": "TESTFRAMEWORK\\Scripts",
+      "accessCount": 2,
+      "lastAccessed": 1778840618237,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Content",
+      "accessCount": 2,
+      "lastAccessed": 1778840618276,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\_ViewStart.cshtml",
+      "accessCount": 2,
+      "lastAccessed": 1778844097409,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Controllers\\BaseController.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824373684,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Models\\UserModel.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824373717,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Controllers\\AuthController.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824373723,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Models\\ResearchProject_tbl.cs",
-      "accessCount": 1,
-      "lastAccessed": 1778824422082,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Views\\Researcher\\Index.cshtml",
-      "accessCount": 1,
-      "lastAccessed": 1778832433148,
+      "path": "TESTFRAMEWORK\\Models\\work_groups.cs",
+      "accessCount": 2,
+      "lastAccessed": 1778844106007,
       "type": "file"
     },
     {
       "path": "TESTFRAMEWORK\\TESTFRAMEWORK.csproj",
-      "accessCount": 1,
-      "lastAccessed": 1778832688523,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\ConnectionStrings.Template.config",
-      "accessCount": 1,
-      "lastAccessed": 1778833042291,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\ConnectionStrings.config",
-      "accessCount": 1,
-      "lastAccessed": 1778833077487,
+      "accessCount": 2,
+      "lastAccessed": 1778847454184,
       "type": "file"
     },
     {
@@ -225,6 +387,12 @@
       "accessCount": 1,
       "lastAccessed": 1778838335516,
       "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Filters",
+      "accessCount": 1,
+      "lastAccessed": 1778839875031,
+      "type": "directory"
     }
   ],
   "userDirectives": []

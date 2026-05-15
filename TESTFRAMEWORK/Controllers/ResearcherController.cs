@@ -299,7 +299,7 @@ namespace TESTFRAMEWORK.Controllers
             ViewBag.WorkGroupList = new SelectList(db.work_groups, "id", "name");
 
             var listItems = db.TypeResearch
-                .Where(tr => tr.type_name != "บุคคลภายนอก")
+                .Where(tr => tr.id != 4)
                 .Select(tr => new SelectListItem
                 {
                     Value = tr.id.ToString(),
@@ -327,22 +327,6 @@ namespace TESTFRAMEWORK.Controllers
         [ValidateAntiForgeryToken]
 
         public JsonResult Delete(string id)
-        {
-            var researcher = db.Researcher_tbl.FirstOrDefault(r => r.ResearcherNumber == id);
-            if (researcher == null)
-            {
-                return Json(new { success = false, message = "ไม่พบนักวิจัยที่ต้องการลบ" });
-            }
-
-            db.Researcher_tbl.Remove(researcher);
-            db.SaveChanges();
-
-            return Json(new { success = true });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult DeleteResearcher(string id)
         {
             var researcher = db.Researcher_tbl.FirstOrDefault(r => r.ResearcherNumber == id);
             if (researcher == null)

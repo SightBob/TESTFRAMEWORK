@@ -342,7 +342,8 @@ namespace TESTFRAMEWORK.Controllers
                     Response.AddHeader("content-disposition", $"attachment; filename=ResearchProjects_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
                     Response.BinaryWrite(package.GetAsByteArray());
                     Response.Flush();
-                    Response.End();
+                    Response.SuppressContent = true;
+                    return new EmptyResult();
                 }
 
                 return Json(new { returnMessage = "OK" }, JsonRequestBehavior.AllowGet);

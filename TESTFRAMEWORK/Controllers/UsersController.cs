@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TESTFRAMEWORK.Models;
+using BCrypt.Net;
 
 namespace TESTFRAMEWORK.Controllers
 {
@@ -46,10 +47,11 @@ namespace TESTFRAMEWORK.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,PasswordHash,Username,Role")] Users user)
+        public ActionResult Create([Bind(Include = "UserId,Username,Role")] Users user, string password)
         {
             if (ModelState.IsValid)
             {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
                 db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -78,12 +80,21 @@ namespace TESTFRAMEWORK.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,PasswordHash,Username,Role")] Users user)
+        public ActionResult Edit([Bind(Include = "UserId,Username,Role")] Users user, string password)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                var existing = db.Users.Find(user.UserId);
+                if (existing != null)
+                {
+                    existing.Username = user.Username;
+                    existing.Role = user.Role;
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        existing.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
+                    }
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
             return View(user);

@@ -1,9 +1,11 @@
 ﻿@model List<TESTFRAMEWORK.Models.Users>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "จัดการผู้ใช้งาน";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <style>
@@ -112,7 +114,6 @@
         }
 
     .btn-primary {
-        background-color: #F26522;
         border: none;
         border-radius: 8px;
         font-weight: 500;
@@ -180,7 +181,7 @@
         <div class="col-xl-12">
             <div class="card mb-4 fade-in">
                 <div class="d-flex justify-content-between align-items-center p-3">
-                    <h3 class="fw-bold text-dark">📑 ตารางเก็บข้อมูลวิจัย</h3>
+                    <h3 class="fw-bold text-dark">👥 จัดการผู้ใช้งาน</h3>
                     <div class="d-flex align-items-center gap-3">
                         <button class="btn btn-custom text-white d-flex align-items-center gap-2"
                                 data-bs-toggle="modal" data-bs-target="#registerModal">
@@ -208,7 +209,7 @@
                                     <td id="role-@user.UserId">@user.Role</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-warning edit-btn" data-id="@user.UserId">แก้ไข</button>
-                                        @Html.ActionLink("ลบ", "Delete", new { id = user.UserId }, new { onclick = "return confirm('คุณแน่ใจหรือไม่?');", @class = "btn btn-sm btn-danger" })
+                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(@user.UserId, '@user.Username')">ลบ</button>
                                     </td>
                                 </tr>
                             }
@@ -225,6 +226,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="editForm">
+                @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">แก้ไขบทบาท</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -275,6 +277,13 @@
                         <label class="form-label" for="confirmPassword">ยืนยันรหัสผ่าน</label>
                         <input type="password" name="confirmPassword" class="form-control" required />
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="role">บทบาท</label>
+                        <select name="role" class="form-control" required>
+                            <option value="User">ผู้ใช้</option>
+                            <option value="Admin">ผู้ดูแล</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary w-100">สมัครสมาชิก</button>
                 </form>
             </div>
@@ -283,9 +292,13 @@
 </div>
 
 <!-- Scripts -->
+@section scripts {
 <script>
     // Edit Role Modal
     let editModal = new bootstrap.Modal(document.getElementById('editModal'));
+
+    // Register Modal
+    let registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
 
     $('.edit-btn').click(function () {
         const id = $(this).data('id');
@@ -296,6 +309,14 @@
                 $('#editRole').val(data.Role);
                 editModal.show();
             }
+        }).fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถโหลดข้อมูลผู้ใช้ได้',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#F26522'
+            });
         });
     });
 
@@ -303,15 +324,99 @@
         e.preventDefault();
         const id = $('#editUserId').val();
         const role = $('#editRole').val();
-        $.post('/ManageUser/UpdateRole', { id: id, role: role }, function (response) {
-            if (response.success) {
-                $('#role-' + id).text(role);
-                editModal.hide();
-            } else {
-                alert('ไม่สามารถอัปเดตบทบาทได้');
+        const token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/ManageUser/UpdateRole',
+            data: { id: id, role: role, __RequestVerificationToken: token },
+            success: function (response) {
+                if (response.success) {
+                    $('#role-' + id).text(role);
+                    editModal.hide();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: 'อัปเดตบทบาทเรียบร้อยแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#28a745',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถอัปเดตบทบาทได้',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#F26522'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#F26522'
+                });
             }
         });
     });
+
+    // Delete Confirmation with SweetAlert2
+    function confirmDelete(userId, username) {
+        Swal.fire({
+            title: 'ยืนยันการลบ?',
+            html: 'คุณต้องการลบผู้ใช้ <strong>' + username + '</strong> ใช่หรือไม่?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const token = $('input[name="__RequestVerificationToken"]').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/ManageUser/Delete',
+                    data: { id: userId, __RequestVerificationToken: token },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'ลบสำเร็จ!',
+                                text: response.message,
+                                confirmButtonText: 'ตกลง',
+                                confirmButtonColor: '#28a745'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: response.message,
+                                confirmButtonText: 'ตกลง',
+                                confirmButtonColor: '#F26522'
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์',
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#F26522'
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     // Register Modal - AJAX
     $(document).ready(function () {
@@ -325,17 +430,38 @@
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        $('#registerModal').modal('hide');
-                        alert("✅ สมัครสมาชิกสำเร็จ: " + response.message);
-                        location.reload();
+                        registerModal.hide();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สมัครสมาชิกสำเร็จ!',
+                            text: response.message,
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#28a745',
+                            timer: 2000
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
-                        alert("❌ ไม่สามารถสมัครสมาชิกได้: " + response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'ไม่สามารถสมัครสมาชิกได้',
+                            text: response.message,
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#F26522'
+                        });
                     }
                 },
                 error: function () {
-                    alert("เกิดข้อผิดพลาดขณะส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล กรุณาลองใหม่อีกครั้ง',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#F26522'
+                    });
                 }
             });
         });
     });
 </script>
+}

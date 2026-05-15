@@ -395,31 +395,6 @@
             }
         }
 
-function enableEditing() {
-    // Enable all form elements
-    document.querySelectorAll('input, textarea, select').forEach(function(element) {
-        element.removeAttribute('disabled');
-    });
-
-    // Enable all buttons except the Edit button itself
-    document.querySelectorAll('button:not(#editButton)').forEach(function(button) {
-        button.removeAttribute('disabled');
-    });
-
-    // Enable the submit button
-    document.getElementById('saveBtn').removeAttribute('disabled');
-
-    // Enable file delete buttons
-    document.querySelectorAll('button[onclick^="confirmDelete"]').forEach(function(button) {
-        button.removeAttribute('disabled');
-    });
-
-    // Re-initialize Select2 on all selects to ensure they're editable
-    $('.js-example-basic-single').select2('destroy').select2();
-    $('.type_ec').select2('destroy').select2();
-
-}
-
 // Remove the empty addAssistant function declaration and keep only the complete one
 // Remove the line: function addAssistant() { ... }
 

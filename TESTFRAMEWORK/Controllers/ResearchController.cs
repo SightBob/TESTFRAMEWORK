@@ -424,14 +424,15 @@ namespace TESTFRAMEWORK.Controllers
 
                 // Handle new file uploads
                 var maxSize = 5 * 1024 * 1024; // 5MB
+                var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png" };
                 if (files != null)
                 {
                     foreach (var file in files.Where(f => f != null && f.ContentLength > 0))
                     {
                         var fileExtension = Path.GetExtension(file.FileName).ToLower();
-                        if (fileExtension != ".pdf")
+                        if (!allowedExtensions.Contains(fileExtension))
                         {
-                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ต้องเป็นไฟล์ PDF เท่านั้น");
+                            ModelState.AddModelError("files", $"ไฟล์ {file.FileName} ไม่ใช่ประเภทที่อนุญาต (PDF, DOC, DOCX, XLS, XLSX, JPG, PNG)");
                             continue;
                         }
 
@@ -565,7 +566,8 @@ namespace TESTFRAMEWORK.Controllers
             {
                 // ดึงปีงบประมาณที่ไม่ซ้ำกันจาก ResearchProject_tbl
                 var fiscalYears = db.ResearchProject_tbl
-                    .Select(p => p.FiscalYear.Value) // สมมติว่า FiscalYear เป็น DateTime และต้องการเฉพาะปี
+                    .Where(p => p.FiscalYear.HasValue)
+                    .Select(p => p.FiscalYear.Value)
                     .Distinct()
                     .OrderByDescending(year => year)
                     .ToList();

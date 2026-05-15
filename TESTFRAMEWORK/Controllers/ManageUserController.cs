@@ -20,6 +20,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         [HttpGet]
+        [AuthorizeUser]
         public JsonResult GetUser(int id)
         {
             var user = db.Users.Find(id);
@@ -49,6 +50,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // Edit Role of user
+        [AuthorizeUser]
         public ActionResult Edit(int id)
         {
             var user = db.Users.Find(id);
@@ -85,16 +87,26 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // Delete user
-        public ActionResult Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public JsonResult Delete(int id)
         {
-            var user = db.Users.Find(id);
-            if (user == null)
-                return HttpNotFound();
+            try
+            {
+                var user = db.Users.Find(id);
+                if (user == null)
+                    return Json(new { success = false, message = "ไม่พบผู้ใช้" });
 
-            db.Users.Remove(user);
-            db.SaveChanges();
+                db.Users.Remove(user);
+                db.SaveChanges();
 
-            return RedirectToAction("Index");
+                return Json(new { success = true, message = "ลบผู้ใช้สำเร็จ" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "เกิดข้อผิดพลาด: " + ex.Message });
+            }
         }
 
         protected override void Dispose(bool disposing)

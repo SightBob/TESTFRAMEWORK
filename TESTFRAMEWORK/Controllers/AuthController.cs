@@ -74,24 +74,21 @@ namespace TESTFRAMEWORK.Controllers
         // POST: Auth/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string username, string password, string confirmPassword)
+        public ActionResult Register(string username, string password, string confirmPassword, string role)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
             {
-                ViewBag.Error = "กรุณากรอกข้อมูลให้ครบถ้วน";
-                return View();
+                return Json(new { success = false, message = "กรุณากรอกข้อมูลให้ครบถ้วน" });
             }
 
             if (password != confirmPassword)
             {
-                ViewBag.Error = "รหัสผ่านไม่ตรงกัน";
-                return View();
+                return Json(new { success = false, message = "รหัสผ่านไม่ตรงกัน" });
             }
 
             if (db.Users.Any(u => u.Username == username))
             {
-                ViewBag.Error = "Username นี้ถูกใช้ไปแล้ว";
-                return View();
+                return Json(new { success = false, message = "Username นี้ถูกใช้ไปแล้ว" });
             }
 
             // เข้ารหัสรหัสผ่านด้วย BCrypt (ใช้เวอร์ชันที่ปลอดภัยและไม่กำหนด salt เอง)
@@ -101,14 +98,13 @@ namespace TESTFRAMEWORK.Controllers
             {
                 Username = username,
                 PasswordHash = hashedPassword,
-                Role = "User"
+                Role = string.IsNullOrEmpty(role) ? "User" : role
             };
 
             db.Users.Add(newUser);
             db.SaveChanges();
 
-            ViewBag.Success = "สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ";
-            return RedirectToAction("Login");
+            return Json(new { success = true, message = "สมัครสมาชิกสำเร็จ!" });
         }
     }
 }
