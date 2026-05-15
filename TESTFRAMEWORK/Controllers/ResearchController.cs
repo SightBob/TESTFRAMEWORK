@@ -501,6 +501,20 @@ namespace TESTFRAMEWORK.Controllers
             return File(file.FileData, file.FileType, file.FileName);
         }
 
+        // ✅ Action สำหรับดูไฟล์ PDF ใน Browser (ไม่ต้องดาวน์โหลด)
+        public ActionResult ViewFile(int fileId)
+        {
+            var file = db.ResearchFile_tbl.Find(fileId);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Return file inline (not as attachment)
+            Response.Headers.Add("Content-Disposition", "inline; filename=" + file.FileName);
+            return File(file.FileData, file.FileType);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)

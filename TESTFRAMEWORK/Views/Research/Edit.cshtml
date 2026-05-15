@@ -281,6 +281,7 @@
                             <tr>
                                 <th style="display:flex; align-items:center; justify-content:center;">ลบไฟล์<input type="checkbox" id="selectAllFiles" onchange="toggleSelectAll(this)"></th>
                                 <th>📄 ชื่อไฟล์</th>
+                                <th class="text-center">ดูไฟล์</th>
                                 <th class="text-center">ดาวน์โหลด</th>
                             </tr>
                         </thead>
@@ -292,8 +293,15 @@
                                         <input type="checkbox" name="filesToDelete" value="@file.FileID" />
                                     </td>
                                     <td>
-                                        <i class="bi bi-file-earmark-text text-primary"></i>
-                                        @file.FileName
+                                        <a href="@Url.Action("ViewFile", "Research", new { fileId = file.FileID })" target="_blank" class="text-decoration-none" title="คลิกเพื่อดูไฟล์">
+                                            <i class="bi bi-file-earmark-text text-primary"></i>
+                                            @file.FileName
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("ViewFile", "Research", new { fileId = file.FileID })" target="_blank" class="btn btn-outline-info btn-sm" title="ดูไฟล์ PDF">
+                                            <i class="bi bi-eye"></i> ดู
+                                        </a>
                                     </td>
                                     <td class="text-center">
                                         <a href="@Url.Action("DownloadFile", "Research", new { fileId = file.FileID })" class="btn btn-outline-primary btn-sm">
