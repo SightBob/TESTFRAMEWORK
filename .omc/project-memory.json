@@ -95,15 +95,39 @@
   },
   "hotPaths": [
     {
-      "path": "TESTFRAMEWORK\\Views\\Research\\Create.cshtml",
-      "accessCount": 6,
-      "lastAccessed": 1778834231395,
+      "path": "TESTFRAMEWORK\\Views\\Research\\Edit.cshtml",
+      "accessCount": 17,
+      "lastAccessed": 1778838082558,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Views\\Research\\Edit.cshtml",
-      "accessCount": 6,
-      "lastAccessed": 1778834277891,
+      "path": "TESTFRAMEWORK\\Views\\Research\\Create.cshtml",
+      "accessCount": 8,
+      "lastAccessed": 1778834798316,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
+      "accessCount": 7,
+      "lastAccessed": 1778835621570,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research\\Index.cshtml",
+      "accessCount": 5,
+      "lastAccessed": 1778834592656,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Global.asax.cs",
+      "accessCount": 5,
+      "lastAccessed": 1778836914295,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
+      "accessCount": 5,
+      "lastAccessed": 1778838297938,
       "type": "file"
     },
     {
@@ -119,39 +143,27 @@
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
-      "accessCount": 4,
-      "lastAccessed": 1778833449271,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
-      "accessCount": 4,
-      "lastAccessed": 1778833558220,
-      "type": "file"
-    },
-    {
-      "path": "TESTFRAMEWORK\\Views\\Research\\Index.cshtml",
-      "accessCount": 4,
-      "lastAccessed": 1778834194238,
-      "type": "file"
-    },
-    {
       "path": "TESTFRAMEWORK\\Web.config",
       "accessCount": 3,
       "lastAccessed": 1778833076855,
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Global.asax.cs",
-      "accessCount": 3,
-      "lastAccessed": 1778833512179,
-      "type": "file"
-    },
-    {
       "path": "TESTFRAMEWORK\\Controllers\\ManageUserController.cs",
       "accessCount": 2,
       "lastAccessed": 1778833466405,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Research",
+      "accessCount": 2,
+      "lastAccessed": 1778838016022,
+      "type": "directory"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Views\\Home\\Error.cshtml",
+      "accessCount": 2,
+      "lastAccessed": 1778838263051,
       "type": "file"
     },
     {
@@ -209,9 +221,9 @@
       "type": "file"
     },
     {
-      "path": "TESTFRAMEWORK\\Views\\Home\\Error.cshtml",
+      "path": "TESTFRAMEWORK\\Controllers\\HomeController.cs",
       "accessCount": 1,
-      "lastAccessed": 1778833622883,
+      "lastAccessed": 1778838335516,
       "type": "file"
     }
   ],

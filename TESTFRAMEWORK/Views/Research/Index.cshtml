@@ -420,16 +420,54 @@
     }
 
 function exportToExcel() {
-    var fiscalYear = $('#fiscalYear').val(); // ดึงค่าปีที่เลือก (ค.ศ.)
+    var fiscalYear = $('#fiscalYear').val();
     if (fiscalYear) {
-        // แปลงเป็นจำนวนเต็มและบวก 543 เพื่อให้เป็น พ.ศ.
         fiscalYear = parseInt(fiscalYear) - 543;
     }
     var url = "@Url.Action("ExportAssetToExcel", "Export")" + (fiscalYear ? '?fiscalYear=' + fiscalYear : '');
 
-    // ทำการ redirect ไปยัง URL เพื่อดาวน์โหลดไฟล์
-    console.log('Export URL:', url); // ดีบัก URL
-    window.location.href = url;
+    // Show loading state
+    Swal.fire({
+        title: 'กำลังสร้างไฟล์ Excel...',
+        text: 'กรุณารอสักครู่',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Use fetch to handle the download
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Export failed');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create download link
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'Research_Data_' + new Date().toISOString().slice(0,10) + '.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
+            document.body.removeChild(a);
+
+            Swal.close();
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถสร้างไฟล์ได้ กรุณาลองใหม่อีกครั้ง',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#F26522'
+            });
+        });
 }
 
     // โหลดรายการปีเมื่อหน้าเว็บโหลด
