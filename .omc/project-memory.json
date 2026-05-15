@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778824272437,
+  "projectRoot": "C:\\Users\\IHCK\\source\\repos\\TESTFRAMEWORK",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "Controllers": {
+      "path": "Controllers",
+      "purpose": "Controllers",
+      "fileCount": 1,
+      "lastAccessed": 1778824272418,
+      "keyFiles": [
+        "ResearchController.cs"
+      ]
+    },
+    "Models": {
+      "path": "Models",
+      "purpose": "Data models",
+      "fileCount": 1,
+      "lastAccessed": 1778824272418,
+      "keyFiles": [
+        "ResearchProject_tbl.cs"
+      ]
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778824272419,
+      "keyFiles": []
+    },
+    "TESTFRAMEWORK": {
+      "path": "TESTFRAMEWORK",
+      "purpose": null,
+      "fileCount": 10,
+      "lastAccessed": 1778824272419,
+      "keyFiles": [
+        "favicon.ico",
+        "Global.asax",
+        "Global.asax.cs",
+        "packages.config",
+        "TESTFRAMEWORK.csproj"
+      ]
+    },
+    "TESTFRAMEWORK\\bin": {
+      "path": "TESTFRAMEWORK\\bin",
+      "purpose": "Executable scripts",
+      "fileCount": 65,
+      "lastAccessed": 1778824272421,
+      "keyFiles": [
+        "Antlr3.Runtime.dll",
+        "Antlr3.Runtime.pdb",
+        "BCrypt.Net-Next.dll"
+      ]
+    },
+    "TESTFRAMEWORK\\Controllers": {
+      "path": "TESTFRAMEWORK\\Controllers",
+      "purpose": "Controllers",
+      "fileCount": 11,
+      "lastAccessed": 1778824272421,
+      "keyFiles": [
+        "AuthController.cs",
+        "BaseController.cs",
+        "ChartController.cs"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "TESTFRAMEWORK\\packages.config",
+      "accessCount": 1,
+      "lastAccessed": 1778824357307,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Web.config",
+      "accessCount": 1,
+      "lastAccessed": 1778824357316,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Global.asax.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824357370,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\BaseController.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824373684,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\ResearchController.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824373702,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\UserModel.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824373717,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\AuthController.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824373723,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Models\\ResearchProject_tbl.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824422082,
+      "type": "file"
+    },
+    {
+      "path": "TESTFRAMEWORK\\Controllers\\DashBoardController.cs",
+      "accessCount": 1,
+      "lastAccessed": 1778824422092,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
