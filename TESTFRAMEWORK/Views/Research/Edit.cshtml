@@ -130,7 +130,7 @@
             <div class="col-md-12">
                 <div class="form-group mb-3">
                     @Html.Label("ประเภท EC", new { @class = "font-weight-bold" })
-                    @Html.DropDownListFor(m => m.ResearchProject.TypeECID, ViewBag.TypeECList as SelectList, "-- เลือกประเภท EC --", new { @class = "form-control type_ec", @disabled = "disabled" })
+                    @Html.DropDownListFor(m => m.ResearchProject.TypeECID, Model.TypeECList, "-- เลือกประเภท EC --", new { @class = "form-control type_ec", @disabled = "disabled" })
                 </div>
             </div>
 
@@ -354,7 +354,7 @@
 
         <div class="form-group mt-4">
             @Html.LabelFor(m => m.ResearchProject.StatusProjectID, "สถานะโครงการ", new { @class = "font-weight-bold" })
-            @Html.DropDownListFor(m => m.ResearchProject.StatusProjectID, ViewBag.StatusProjectList as SelectList, "-- เลือกสถานะ --", new { @class = "form-control", @disabled = "disabled" })
+            @Html.DropDownListFor(m => m.ResearchProject.StatusProjectID, Model.StatusProjectList, "-- เลือกสถานะ --", new { @class = "form-control", @disabled = "disabled" })
         </div>
 
         <div class="d-flex align-items-center justify-content-center mt-4">

@@ -4,10 +4,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using TESTFRAMEWORK.Filters;
+using TESTFRAMEWORK.Helpers;
 using TESTFRAMEWORK.Models;
 using System.Data.Entity;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace TESTFRAMEWORK.Controllers
@@ -138,7 +137,7 @@ namespace TESTFRAMEWORK.Controllers
                     // กรองตามปีงบประมาณ (พ.ศ.) ถ้ามีการเลือก
                     if (!string.IsNullOrEmpty(fiscalYear) && int.TryParse(fiscalYear, out int selectedYear))
                     {
-                        int convertedYear = selectedYear > 2500 ? selectedYear - 543 : selectedYear;
+                        int convertedYear = selectedYear > ProjectConstants.ThaiYearThreshold ? selectedYear - ProjectConstants.BuddhistOffset : selectedYear;
                         dataQuery = dataQuery.Where(p => p.FiscalYear.HasValue && p.FiscalYear.Value.Year == convertedYear);
                     }
 
@@ -186,11 +185,7 @@ namespace TESTFRAMEWORK.Controllers
                         worksheet.Cells[$"B{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 3. วัน/เดือน/ปี (ใช้วันที่อนุมัติ)
-                        worksheet.Cells[$"C{start_row}"].Value = d.ECApprovalDate.HasValue
-                            ? d.ECApprovalDate.Value.Year > 2500
-                                ? d.ECApprovalDate.Value.AddYears(-543).ToString("dd/MM/yyyy")
-                                : d.ECApprovalDate.Value.ToString("dd/MM/yyyy")
-                            : "-";
+                        worksheet.Cells[$"C{start_row}"].Value = ThaiCalendarHelper.ToGregorianString(d.ECApprovalDate);
                         worksheet.Cells[$"C{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 4. รหัสโครงการ
@@ -241,35 +236,19 @@ namespace TESTFRAMEWORK.Controllers
                         worksheet.Cells[$"K{start_row}"].Value = d.ECApprovalCode ?? "-";
 
                         // 12. วันที่รับรอง EC SUT
-                        worksheet.Cells[$"L{start_row}"].Value = d.ECApprovalDate.HasValue
-                            ? d.ECApprovalDate.Value.Year > 2500
-                                ? d.ECApprovalDate.Value.AddYears(-543).ToString("dd/MM/yyyy")
-                                : d.ECApprovalDate.Value.ToString("dd/MM/yyyy")
-                            : "-";
+                        worksheet.Cells[$"L{start_row}"].Value = ThaiCalendarHelper.ToGregorianString(d.ECApprovalDate);
                         worksheet.Cells[$"L{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 13. วันหมดอายุ EC SUT
-                        worksheet.Cells[$"M{start_row}"].Value = d.ECExpirationDate.HasValue
-                            ? d.ECExpirationDate.Value.Year > 2500
-                                ? d.ECExpirationDate.Value.AddYears(-543).ToString("dd/MM/yyyy")
-                                : d.ECExpirationDate.Value.ToString("dd/MM/yyyy")
-                            : "-";
+                        worksheet.Cells[$"M{start_row}"].Value = ThaiCalendarHelper.ToGregorianString(d.ECExpirationDate);
                         worksheet.Cells[$"M{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 14. วันที่อนุมัติ รพ.มทส
-                        worksheet.Cells[$"N{start_row}"].Value = d.ResearchApprovalDate.HasValue
-                            ? d.ResearchApprovalDate.Value.Year > 2500
-                                ? d.ResearchApprovalDate.Value.AddYears(-543).ToString("dd/MM/yyyy")
-                                : d.ResearchApprovalDate.Value.ToString("dd/MM/yyyy")
-                            : "-";
+                        worksheet.Cells[$"N{start_row}"].Value = ThaiCalendarHelper.ToGregorianString(d.ResearchApprovalDate);
                         worksheet.Cells[$"N{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 15. วันหมดอายุ รพ.มทส
-                        worksheet.Cells[$"O{start_row}"].Value = d.ResearchExpirationDate.HasValue
-                            ? d.ResearchExpirationDate.Value.Year > 2500
-                                ? d.ResearchExpirationDate.Value.AddYears(-543).ToString("dd/MM/yyyy")
-                                : d.ResearchExpirationDate.Value.ToString("dd/MM/yyyy")
-                            : "-";
+                        worksheet.Cells[$"O{start_row}"].Value = ThaiCalendarHelper.ToGregorianString(d.ResearchExpirationDate);
                         worksheet.Cells[$"O{start_row}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                         // 16. สถานะ

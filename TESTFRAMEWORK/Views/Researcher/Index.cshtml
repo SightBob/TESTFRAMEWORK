@@ -83,6 +83,19 @@
                             <path d="M8 1a.5.5 0 0 1 .5.5v6h6a.5.5 0 0 1 0 1h-6v6a.5.5 0 0 1-1 0v-6h-6a.5.5 0 0 1 0-1h6v-6A.5.5 0 0 1 8 1z" stroke="white" stroke-width="1.5" />
                         </svg>เพิ่มนักวิจัย
                     </a>
+                    <a href="@Url.Action("DownloadTemplate", "Researcher")" class="btn btn-success text-white" style="border-radius: 30px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-download m-md-1" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                        </svg>ดาวน์โหลด Template
+                    </a>
+                    <button type="button" class="btn btn-primary text-white" id="btnImport" style="border-radius: 30px; background-color: #007bff;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="currentColor" class="bi bi-upload m-md-1" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                        </svg>นำเข้า Excel
+                    </button>
+                    <input type="file" id="importFile" name="importFile" accept=".xlsx,.xls" style="display: none;" />
                     
                 </div>
                 <div class="card-header p-0">
@@ -227,5 +240,72 @@
                 }
             });
         }
+
+        // Import Excel
+        $('#btnImport').click(function () {
+            $('#importFile').click();
+        });
+
+        $('#importFile').change(function () {
+            var fileInput = $(this);
+            if (fileInput.val() === '') return;
+
+            var formData = new FormData();
+            formData.append('excelFile', fileInput[0].files[0]);
+            formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+            Swal.fire({
+                title: 'กำลังนำเข้าข้อมูล...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: function () { Swal.showLoading(); }
+            });
+
+            $.ajax({
+                url: '@Url.Action("ImportFromExcel", "Researcher")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success && response.imported > 0) {
+                        var errorText = response.errors && response.errors.length > 0
+                            ? '\n\nรายการที่มีปัญหา:\n' + response.errors.join('\n')
+                            : '';
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'นำเข้าสำเร็จ!',
+                            html: response.message + errorText.replace(/\n/g, '<br>'),
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#28a745',
+                            width: 600
+                        }).then(function () { location.reload(); });
+                    } else {
+                        var errorMsg = response.message || 'ไม่สามารถนำเข้าได้';
+                        if (response.errors && response.errors.length > 0) {
+                            errorMsg += '\n\n' + response.errors.join('\n');
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'นำเข้าไม่สำเร็จ',
+                            html: errorMsg.replace(/\n/g, '<br>'),
+                            confirmButtonText: 'ตกลง',
+                            width: 600
+                        });
+                    }
+                    fileInput.val('');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถอัปโหลดไฟล์ได้ กรุณาลองใหม่',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    fileInput.val('');
+                }
+            });
+        });
     </script>
 }

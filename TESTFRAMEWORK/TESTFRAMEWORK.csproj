@@ -202,6 +202,8 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\WorkGroupsController.cs" />
     <Compile Include="Filters\AuthorizeUserAttribute.cs" />
+    <Compile Include="Helpers\ProjectConstants.cs" />
+    <Compile Include="Helpers\ThaiCalendarHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

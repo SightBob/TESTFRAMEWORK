@@ -4,10 +4,10 @@ using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TESTFRAMEWORK.Filters;
+using TESTFRAMEWORK.Helpers;
 using TESTFRAMEWORK.Models;
 
 namespace TESTFRAMEWORK.Controllers
@@ -23,7 +23,7 @@ namespace TESTFRAMEWORK.Controllers
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)
-                             .Where(p => p.StatusProject_tbl.StatusProjectID == 1)
+                             .Where(p => p.StatusProject_tbl.StatusProjectID == ProjectConstants.StatusActive)
                              .OrderBy(p => p.ResearchExpirationDate)
                              .ToList();
 
@@ -36,7 +36,7 @@ namespace TESTFRAMEWORK.Controllers
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)
-                             .Where(p => p.StatusProject_tbl.StatusProjectID == 2)
+                             .Where(p => p.StatusProject_tbl.StatusProjectID == ProjectConstants.StatusSuccess)
                              .OrderByDescending(p => p.ProjectID)
 
                              .ToList();
@@ -52,7 +52,7 @@ namespace TESTFRAMEWORK.Controllers
             var projects = db.ResearchProject_tbl
                              .Include(p => p.TypeEC_tbl)
                              .Include(p => p.StatusProject_tbl)
-                             .Where(p => p.StatusProject_tbl.StatusProjectID == 3)
+                             .Where(p => p.StatusProject_tbl.StatusProjectID == ProjectConstants.StatusExpired)
                              .OrderByDescending(p => p.ProjectID)
                              .ToList();
 
@@ -65,38 +65,27 @@ namespace TESTFRAMEWORK.Controllers
         {
             try
             {
-                // ดึงข้อมูลรายชื่อนักวิจัยทั้งหมด (ใช้ SelectListItem ตั้งแต่ SQL Query เพื่อลด ToList() ซ้ำซ้อน)
-                var researchers = db.Researcher_tbl
-              .Select(r => new SelectListItem
-              {
-                  Value = r.ResearcherNumber,
-                  Text = r.work_group_id == null
-                      ? "(บุคคลภายนอก) " + r.Name
-                      : r.work_group_id == 9
-                          ? "(นักศึกษา) " + r.Name
-                          : "(คนทำงานใน รพ.) " + r.title + " " + r.Name
-              })
-              .OrderBy(r => r.Text)
-              .ToList();
+                // ดึงข้อมูลรายชื่อนักวิจัยทั้งหมด
+                var researchers = GetResearcherSelectList();
 
                 // สร้าง ViewModel เพื่อส่งไปยัง View
                 var viewModel = new ResearchProjectViewModel
                 {
                     ResearchProject = new ResearchProject_tbl(),
                     ResearchAssistants = new List<ResearchAssistantViewModel>(),
-                    HeadResearcherList = researchers
+                    HeadResearcherList = researchers,
+                    TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName"),
+                    StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus")
                 };
 
-                // เตรียม SelectList สำหรับ DropDown
-                ViewBag.TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName");
-                ViewBag.StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus");
                 ViewBag.HeadResearcherList = new SelectList(researchers, "Value", "Text");
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "เกิดข้อผิดพลาดในการโหลดหน้า: " + ex.Message);
+                System.Diagnostics.Trace.TraceError("ResearchController.Create (GET): {0}", ex);
+                ModelState.AddModelError("", "เกิดข้อผิดพลาดในการโหลดหน้า กรุณาลองใหม่");
                 return View("Error");
             }
         }
@@ -127,18 +116,10 @@ namespace TESTFRAMEWORK.Controllers
                         TypeECID = researchProject.TypeECID,
                         HeadResearcherId = researchProject.HeadResearcherId,
                         ECApprovalCode = researchProject.ECApprovalCode ?? "",
-                        ECApprovalDate = researchProject.ECApprovalDate?.Year > 2500 ?
-                                         researchProject.ECApprovalDate.Value.AddYears(-543) :
-                                         researchProject.ECApprovalDate,
-                        ECExpirationDate = researchProject.ECExpirationDate?.Year > 2500 ?
-                                           researchProject.ECExpirationDate.Value.AddYears(-543) :
-                                           researchProject.ECExpirationDate,
-                        ResearchApprovalDate = researchProject.ResearchApprovalDate?.Year > 2500 ?
-                                               researchProject.ResearchApprovalDate.Value.AddYears(-543) :
-                                               researchProject.ResearchApprovalDate,
-                        ResearchExpirationDate = researchProject.ResearchExpirationDate?.Year > 2500 ?
-                                                 researchProject.ResearchExpirationDate.Value.AddYears(-543) :
-                                                 researchProject.ResearchExpirationDate,
+                        ECApprovalDate = ThaiCalendarHelper.ToGregorian(researchProject.ECApprovalDate),
+                        ECExpirationDate = ThaiCalendarHelper.ToGregorian(researchProject.ECExpirationDate),
+                        ResearchApprovalDate = ThaiCalendarHelper.ToGregorian(researchProject.ResearchApprovalDate),
+                        ResearchExpirationDate = ThaiCalendarHelper.ToGregorian(researchProject.ResearchExpirationDate),
                         Note = researchProject.Note ?? "",
                         StatusProjectID = 1
                     };
@@ -161,7 +142,7 @@ namespace TESTFRAMEWORK.Controllers
 
                     // Save files with validation
                     var uploadedFiles = new List<ResearchFile_tbl>();
-                    var maxSize = 5 * 1024 * 1024; // 5MB limit
+                    var maxSize = ProjectConstants.MaxFileSizeBytes;
                     var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png" };
 
                     foreach (var file in files.Where(f => f != null && f.ContentLength > 0))
@@ -226,14 +207,8 @@ namespace TESTFRAMEWORK.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Exception deepestException = ex;
-                    string allExceptionMessages = ex.Message;
-                    while (deepestException.InnerException != null)
-                    {
-                        deepestException = deepestException.InnerException;
-                        allExceptionMessages += " -> " + deepestException.Message;
-                    }
-                    ModelState.AddModelError("", "เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + allExceptionMessages);
+                    System.Diagnostics.Trace.TraceError("ResearchController.Create (POST): {0}", ex);
+                    ModelState.AddModelError("", "เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่");
                     LoadDropdowns(model);
                     return View(model);
                 }
@@ -241,21 +216,30 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // ✅ ฟังก์ชันช่วยโหลด Dropdown Lists
-        private void LoadDropdowns(ResearchProjectViewModel model)
+        private List<SelectListItem> GetResearcherSelectList()
         {
-            var researchers = db.Researcher_tbl
-                                .Select(r => new SelectListItem
-                                {
-                                    Value = r.ResearcherNumber,
-                                    Text = r.title + " " + r.Name
-                                })
-                                .ToList();
+            return db.Researcher_tbl
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ResearcherNumber,
+                    Text = r.work_group_id == null
+                        ? "(บุคคลภายนอก) " + r.Name
+                        : r.work_group_id == ProjectConstants.WorkGroupStudent
+                            ? "(นักศึกษา) " + r.Name
+                            : "(คนทำงานใน รพ.) " + r.title + " " + r.Name
+                })
+                .OrderBy(r => r.Text)
+                .ToList();
+        }
 
-            ViewBag.TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName");
-            ViewBag.StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus");
-            ViewBag.HeadResearcherList = new SelectList(researchers, "Value", "Text");
+        private void LoadDropdowns(ResearchProjectViewModel model, int? selectedTypeEC = null, int? selectedStatus = null, string selectedHeadResearcher = null)
+        {
+            var researchers = GetResearcherSelectList();
 
+            model.TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName", selectedTypeEC);
+            model.StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus", selectedStatus);
             model.HeadResearcherList = researchers;
+            ViewBag.HeadResearcherList = new SelectList(researchers, "Value", "Text", selectedHeadResearcher);
         }
 
         // GET: ดึงข้อมูลนักวิจัยจาก ResearcherNumber
@@ -294,7 +278,8 @@ namespace TESTFRAMEWORK.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { error = "เกิดข้อผิดพลาด: " + ex.Message }, JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Trace.TraceError("ResearchController.GetResearcherDetails: {0}", ex);
+                return Json(new { error = "เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาลองใหม่" }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -314,18 +299,7 @@ namespace TESTFRAMEWORK.Controllers
             }
 
             // ดึงข้อมูลรายชื่อนักวิจัยทั้งหมด มาใช้ทำ DropDownList
-            var researchers = db.Researcher_tbl
-               .Select(r => new SelectListItem
-               {
-                   Value = r.ResearcherNumber,
-                   Text = r.work_group_id == null
-                       ? "(บุคคลภายนอก) " + r.Name
-                       : r.work_group_id == 9
-                           ? "(นักศึกษา) " + r.Name
-                           : "(คนทำงานใน รพ.) " + r.title + " " + r.Name
-               })
-               .OrderBy(r => r.Text)
-               .ToList();
+            var researchers = GetResearcherSelectList();
 
             // ดึงข้อมูลผู้วิจัยร่วมของโครงการนี้
             var assistants = db.ResearchAssistant_tbl
@@ -347,12 +321,11 @@ namespace TESTFRAMEWORK.Controllers
                 ResearchProject = project,
                 ResearchAssistants = assistants,
                 HeadResearcherList = researchers,
-                AttachedFiles = files
+                AttachedFiles = files,
+                TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName", project.TypeECID),
+                StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus", project.StatusProjectID)
             };
 
-            // เตรียม SelectList สำหรับ DropDown
-            ViewBag.TypeECList = new SelectList(db.TypeEC_tbl, "TypeECID", "ECTypeName", project.TypeECID);
-            ViewBag.StatusProjectList = new SelectList(db.StatusProject_tbl, "StatusProjectID", "TypeStatus", project.StatusProjectID);
             ViewBag.HeadResearcherList = new SelectList(researchers, "Value", "Text", project.HeadResearcherId);
 
             return View(viewModel);
@@ -379,14 +352,10 @@ namespace TESTFRAMEWORK.Controllers
                 project.sut_hospital_grant_code = project.sut_hospital_grant_code ?? "";
                 project.HeadResearcherId = model.ResearchProject.HeadResearcherId;
                 project.ECApprovalCode = model.ResearchProject.ECApprovalCode ?? "";
-                project.ECApprovalDate = model.ResearchProject.ECApprovalDate?.Year > 2500 ?
-                    model.ResearchProject.ECApprovalDate.Value.AddYears(-543) : model.ResearchProject.ECApprovalDate ?? DateTime.Now;
-                project.ECExpirationDate = model.ResearchProject.ECExpirationDate?.Year > 2500 ?
-                    model.ResearchProject.ECExpirationDate.Value.AddYears(-543) : model.ResearchProject.ECExpirationDate ?? DateTime.Now.AddYears(1);
-                project.ResearchApprovalDate = model.ResearchProject.ResearchApprovalDate?.Year > 2500 ?
-                    model.ResearchProject.ResearchApprovalDate.Value.AddYears(-543) : model.ResearchProject.ResearchApprovalDate ?? DateTime.Now;
-                project.ResearchExpirationDate = model.ResearchProject.ResearchExpirationDate?.Year > 2500 ?
-                    model.ResearchProject.ResearchExpirationDate.Value.AddYears(-543) : model.ResearchProject.ResearchExpirationDate ?? DateTime.Now.AddYears(1);
+                project.ECApprovalDate = ThaiCalendarHelper.ToGregorianOrDefault(model.ResearchProject.ECApprovalDate, DateTime.Now);
+                project.ECExpirationDate = ThaiCalendarHelper.ToGregorianOrDefault(model.ResearchProject.ECExpirationDate, DateTime.Now.AddYears(1));
+                project.ResearchApprovalDate = ThaiCalendarHelper.ToGregorianOrDefault(model.ResearchProject.ResearchApprovalDate, DateTime.Now);
+                project.ResearchExpirationDate = ThaiCalendarHelper.ToGregorianOrDefault(model.ResearchProject.ResearchExpirationDate, DateTime.Now.AddYears(1));
                 project.Note = model.ResearchProject.Note ?? "";
                 project.StatusProjectID = model.ResearchProject.StatusProjectID;
 
@@ -423,7 +392,7 @@ namespace TESTFRAMEWORK.Controllers
                 }
 
                 // Handle new file uploads
-                var maxSize = 5 * 1024 * 1024; // 5MB
+                var maxSize = ProjectConstants.MaxFileSizeBytes;
                 var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png" };
                 if (files != null)
                 {
@@ -491,6 +460,7 @@ namespace TESTFRAMEWORK.Controllers
             return Json(new { success = false, message = "ไม่พบไฟล์ที่ต้องการลบ" });
         }
 
+        [AuthorizeUser]
         public ActionResult DownloadFile(int fileId)
         {
             var file = db.ResearchFile_tbl.Find(fileId);
@@ -503,6 +473,7 @@ namespace TESTFRAMEWORK.Controllers
         }
 
         // ✅ Action สำหรับดูไฟล์ PDF ใน Browser (ไม่ต้องดาวน์โหลด)
+        [AuthorizeUser]
         public ActionResult ViewFile(int fileId)
         {
             var file = db.ResearchFile_tbl.Find(fileId);
@@ -552,8 +523,8 @@ namespace TESTFRAMEWORK.Controllers
             }
             catch (Exception ex)
             {
-                // ส่ง JSON กลับไปบอกว่าลบไม่สำเร็จ พร้อมข้อความผิดพลาด
-                return Json(new { success = false, message = ex.Message });
+                System.Diagnostics.Trace.TraceError("ResearchController.Delete: {0}", ex);
+                return Json(new { success = false, message = "เกิดข้อผิดพลาดในการลบข้อมูล กรุณาลองใหม่" });
             }
         }
 
@@ -576,7 +547,8 @@ namespace TESTFRAMEWORK.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { returnMessage = $"เกิดข้อผิดพลาด: {ex.Message}" }, JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Trace.TraceError("ResearchController.GetFiscalYears: {0}", ex);
+                return Json(new { returnMessage = "เกิดข้อผิดพลาดในการดึงข้อมูลปีงบประมาณ กรุณาลองใหม่" }, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -12,6 +12,9 @@ namespace TESTFRAMEWORK.Models
         public List<ResearchAssistantViewModel> ResearchAssistants { get; set; }
         public List<SelectListItem> HeadResearcherList { get; set; }
         public List<ResearchFile_tbl> AttachedFiles { get; set; }
+
+        public SelectList TypeECList { get; set; }
+        public SelectList StatusProjectList { get; set; }
     }
     public class ResearchAssistantViewModel
     {
