@@ -209,6 +209,7 @@
                                     <td id="role-@user.UserId">@user.Role</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-warning edit-btn" data-id="@user.UserId">แก้ไข</button>
+                                        <button class="btn btn-sm btn-info text-white" onclick="openResetPassword(@user.UserId, '@user.Username')">รีเซ็ตรหัส</button>
                                         <button class="btn btn-sm btn-danger" onclick="confirmDelete(@user.UserId, '@user.Username')">ลบ</button>
                                     </td>
                                 </tr>
@@ -287,6 +288,40 @@
                     <button type="submit" class="btn btn-primary w-100">สมัครสมาชิก</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="resetPasswordForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetPasswordModalLabel">รีเซ็ตรหัสผ่าน</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="resetUserId" />
+                    <div class="mb-3">
+                        <label class="form-label">ผู้ใช้</label>
+                        <input type="text" class="form-control" id="resetUsername" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">รหัสผ่านใหม่</label>
+                        <input type="password" class="form-control" id="resetNewPassword" required minlength="6" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
+                        <input type="password" class="form-control" id="resetConfirmPassword" required minlength="6" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -461,6 +496,73 @@
                     });
                 }
             });
+        });
+    });
+
+    // Reset Password Modal
+    let resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+
+    function openResetPassword(userId, username) {
+        $('#resetUserId').val(userId);
+        $('#resetUsername').val(username);
+        $('#resetNewPassword').val('');
+        $('#resetConfirmPassword').val('');
+        resetPasswordModal.show();
+    }
+
+    $('#resetPasswordForm').submit(function (e) {
+        e.preventDefault();
+        const id = $('#resetUserId').val();
+        const newPassword = $('#resetNewPassword').val();
+        const confirmPassword = $('#resetConfirmPassword').val();
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'รหัสผ่านไม่ตรงกัน',
+                text: 'กรุณายืนยันรหัสผ่านให้ตรงกัน',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#F26522'
+            });
+            return;
+        }
+
+        const token = $('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/ManageUser/ResetPassword',
+            data: { id: id, newPassword: newPassword, __RequestVerificationToken: token },
+            success: function (response) {
+                if (response.success) {
+                    resetPasswordModal.hide();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: response.message,
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#28a745',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: response.message,
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#F26522'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#F26522'
+                });
+            }
         });
     });
 </script>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TESTFRAMEWORK.Models;
+using TESTFRAMEWORK.Filters;
 using BCrypt.Net;
 using System.Web.Security;
 
@@ -63,6 +64,45 @@ namespace TESTFRAMEWORK.Controllers
         {
             Session.Clear();
             return RedirectToAction("Login");
+        }
+
+        // GET: Auth/ChangePassword
+        [AuthorizeUser]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        // POST: Auth/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            var userId = Session["UserId"];
+            if (userId == null)
+                return Json(new { success = false, message = "กรุณาเข้าสู่ระบบใหม่" });
+
+            if (string.IsNullOrWhiteSpace(currentPassword) || string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmPassword))
+                return Json(new { success = false, message = "กรุณากรอกข้อมูลให้ครบถ้วน" });
+
+            if (newPassword.Length < 6)
+                return Json(new { success = false, message = "รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร" });
+
+            if (newPassword != confirmPassword)
+                return Json(new { success = false, message = "รหัสผ่านใหม่ไม่ตรงกัน" });
+
+            var user = db.Users.Find(userId);
+            if (user == null)
+                return Json(new { success = false, message = "ไม่พบข้อมูลผู้ใช้" });
+
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+                return Json(new { success = false, message = "รหัสผ่านปัจจุบันไม่ถูกต้อง" });
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            db.SaveChanges();
+
+            return Json(new { success = true, message = "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว" });
         }
 
         // GET: Auth/Register

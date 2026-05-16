@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using TESTFRAMEWORK.Filters;
 using TESTFRAMEWORK.Models;
+using BCrypt.Net;
 
 namespace TESTFRAMEWORK.Controllers
 {
@@ -106,6 +107,33 @@ namespace TESTFRAMEWORK.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "เกิดข้อผิดพลาด: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public JsonResult ResetPassword(int id, string newPassword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+                    return Json(new { success = false, message = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร" });
+
+                var user = db.Users.Find(id);
+                if (user == null)
+                    return Json(new { success = false, message = "ไม่พบผู้ใช้" });
+
+                // fully-qualified call to avoid namespace/class ambiguity
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว" });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("ManageUserController.ResetPassword: {0}", ex);
+                return Json(new { success = false, message = "เกิดข้อผิดพลาด กรุณาลองใหม่" });
             }
         }
 
